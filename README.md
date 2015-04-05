@@ -49,6 +49,9 @@ Periods, question marks, and exclamation points end sentences unless the
 next word is not capitalized or the word in front of the punctuation is
 both capitalized and in a pre-compiled set of abbreviations.
 
+Or, just use an natural language processing library, but those are huge
+and surprisingly not much better than the dumb way.
+
 
 ## Strip
 
