@@ -16,36 +16,38 @@ in the audio.
 import unittest
 import re
 import sys
+import util
+import itertools
 
 
 class TestSimple(unittest.TestCase):
     def test_simple_statement(self):
-        self.assertEqual(split("I ate a sandwich."), ["I ate a sandwich."])
+        self.assertEqual(sentences("I ate a sandwich."), ["I ate a sandwich."])
 
     def test_two_statements(self):
-        self.assertEqual(split("I ate a sandwich.  It was good."),
+        self.assertEqual(sentences("I ate a sandwich.  It was good."),
                 ["I ate a sandwich.", "It was good."])
 
     def test_question_statement(self):
-        self.assertEqual(split("Who knows?  I don't."),
+        self.assertEqual(sentences("Who knows?  I don't."),
                 ["Who knows?", "I don't."])
 
     def test_extra_punctuation(self):
-        self.assertEqual(split("I asked him, \"How?\"  He didn't answer."),
+        self.assertEqual(sentences("I asked him, \"How?\"  He didn't answer."),
                 ["I asked him, \"How?\"",  "He didn't answer."])
 
     def test_abbreviation(self):
-        self.assertEqual(split("The U.S.A. is a country."),
+        self.assertEqual(sentences("The U.S.A. is a country."),
                 ["The U.S.A. is a country."])
 
     def test_abbreviated_name(self):
-        self.assertEqual(split("Mr. Smith ate a sandwich."),
+        self.assertEqual(sentences("Mr. Smith ate a sandwich."),
                 ["Mr. Smith ate a sandwich."])
-        self.assertEqual(split("Brian P. Jaress is my name."),
+        self.assertEqual(sentences("Brian P. Jaress is my name."),
                 ["Brian P. Jaress is my name."])
 
     def test_proper_acronym(self):
-        self.assertEqual(split("The U.S. Government collects taxes."),
+        self.assertEqual(sentences("The U.S. Government collects taxes."),
                 ["The U.S. Government collects taxes."])
 
 
@@ -55,7 +57,7 @@ class TestGoldenRules(unittest.TestCase):
     """
 
     def test_abbreviated_title(self):
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             At some schools, even professionals boasting Ph.D. degrees
             are coming back to school for Master's degrees
             """)), 1)
@@ -63,14 +65,14 @@ class TestGoldenRules(unittest.TestCase):
     def skip_test_informal(self):
         """ Not supported (grammatical error).
         """
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             If Harvard doesn't come through, I 'll take the test to get
             into Yale. many parents set goals for their children, or
             maybe they don't set a goal.
             """)), 2)
 
     def test_abbreviation_name(self):
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             He adds, in a far less amused tone, that the government has
             been talking about making Mt. Kuanyin a national park for a
             long time, and has banned construction or use of the
@@ -83,7 +85,7 @@ class TestGoldenRules(unittest.TestCase):
 
         """
 
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             The luxury auto maker last year sold 1,214 cars in the U.S.
             Howard Mosher, president and chief executive officer, said
             he anticipates growth for the luxury auto maker in Britain
@@ -97,7 +99,7 @@ class TestGoldenRules(unittest.TestCase):
 
         """
 
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             No, to my mind, the Journal did not "defend sleaze, fraud,
             waste, embezzlement, influence-peddling and abuse of the
             public trust..." It defended appropriate constitutional
@@ -108,7 +110,7 @@ class TestGoldenRules(unittest.TestCase):
         """Don't know how to distinguish that "I'll" isn't the start of
         a new sentence.
         """
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             After seeing the list of what would not be open and/or on
             duty... which I'm also quite sure is not complete... I 'll
             go out on a limb.... and predict... that this will not
@@ -116,7 +118,7 @@ class TestGoldenRules(unittest.TestCase):
             """)), 1)
 
     def test_initials(self):
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             Bharat Ratna Avul Pakir Jainulabdeen Abdul Kalam is also
             called as Dr. A.P.J Abdul Kalam.
             """)), 1)
@@ -124,7 +126,7 @@ class TestGoldenRules(unittest.TestCase):
     def skip_test_letter_end(self):
         """Not supported, don't see an easy way to do it.
         """
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             The agency said it confirmed American Continental's
             preferred stock rating at C. American Continental's thrift
             unit, Los Angeles-based Lincoln Savings & Loan Association,
@@ -134,7 +136,7 @@ class TestGoldenRules(unittest.TestCase):
             """)), 2)
 
     def test_quote_end(self):
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             Wang first asked: "Are you sure you want the original
             inscription ground off?" Without thinking twice about it,
             Huang said yes.
@@ -146,7 +148,7 @@ class TestGoldenRules(unittest.TestCase):
 
         """
 
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             "It's too much, there's only us two, how are we going to eat
             this?" I asked young Zhao as I looked at him in surprise.
             """)), 1)
@@ -154,7 +156,7 @@ class TestGoldenRules(unittest.TestCase):
     def test_nonstandard(self):
         """I'm not even sure what the right answer is here.
         """
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             The JW considers itself THE kingdom of God on earth.
             ('Kindom Hall') So it is only to be expected that they do
             not see a reason to run to and report everything to the
@@ -162,20 +164,22 @@ class TestGoldenRules(unittest.TestCase):
             """)), 2)
 
     def test_url(self):
-        self.assertEqual(len(split("""
+        self.assertEqual(len(sentences("""
             Google Search is at http://www.google.com.  It is a search engine.
             """)), 2)
 
 
 
-def split(string):
-    """Splits a string into sentences.
+def sentences(words):
+    """Splits words into sentences.
 
     Everything else in the module is a helper or test for this function.
     """
+    if isinstance(words, str):
+        words = words.split()
     sentence_groups = [[]]
     prev = ""
-    for word in string.split():
+    for word in words:
         #log(word)
         if len(prev) > 0 and ends_sentence(prev, word):
             sentence_groups.append([word])
@@ -258,7 +262,7 @@ ABBREVIATED_NAMES = frozenset(word for word in
         """.split())
 
 if __name__ == '__main__':
-    for paragraph in sys.stdin.read().split(sep="\n\n"):
-        for line in split(paragraph):
-            print(line)
+    for paragraph in util.paragraph_words(sys.stdin):
+        for sentence in sentences(paragraph):
+            print(sentence)
         print()
