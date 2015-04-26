@@ -22,13 +22,25 @@ SEEN_ARTICLES_FILE = "seen_articles.txt"
 SEPARATOR = '\n---\n'
 
 INTRO = """
-Introduction, where we explain what this is about.  Include a disclaimer
-about accuracy and mispronunciations.
+This is Artificial News, where a computer reads from Wikipedia.
+
+I am a computer.  My pronunciation is sometimes wrong.  News and
+information I read comes from Wikipedia and is not guaranteed to be
+correct.
 """.strip()
 
 CLOSING = """
-Closing.  Repeat disclaimers and mention
+This episode of Artificial News is now over.
+
+I am a computer.  My pronunciation is sometimes wrong.  News and
+information I read comes from Wikipedia and is not guaranteed to be
+correct.
+
+For more information on this show, including content licensing
+information, go to
 b j a r e s s dot com / news.
+
+Thank you for listening.
 """.strip()
 
 class Headline:
