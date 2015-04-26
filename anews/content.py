@@ -57,7 +57,6 @@ class Headline:
         return set(self.links.keys()).difference(seen)
 
     def article_text(self):
-        # TODO get section if there's a hash
         if self.text == None and len(self.links) > 0:
             parts = [formatted(self.headline)]
 
