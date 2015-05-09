@@ -14,7 +14,7 @@ voices/bin/flite_hts_engine \
      -p  290.0\
      -a  0.55\
      -g  0.0\
-     -b  0.2\
+     -b  -0.8\
      -u  0.5\
      -jm 0.8 \
      -o  "$OUTFILE" \
