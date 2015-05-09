@@ -38,8 +38,8 @@ be correct.
 
 For more information on this show, including content licensing
 information, go to
-bee, jay, a, are, ee, ess, ess, dot com / news.
-That's
+bee jeiris dot com slash news.
+The spelling is
 Bravo,
 Juliette,
 Alpha,
