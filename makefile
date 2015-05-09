@@ -8,7 +8,9 @@ today: $(TODAY).artificialnews.mp3
 	anews/content.py > $@
 
 %.segmented.txt : %.raw.txt
-	anews/sentences.py < $^ > $@
+	# Strip out footnotes that are sometimes left in,
+	# then segment into sentences.
+	grep -v '^\^' $^ | anews/sentences.py > $@
 
 %.m3u : %.segmented.txt
 	./text2m3u.hs < $^ > $@
