@@ -15,6 +15,7 @@ today: $(TODAY).artificialnews.mp3
 
 %.artificialnews.mp3 : %.m3u clips/pause.wav
 	sox -v 0.7 $< -t wav - rate -v 44100 | lame \
+		-b 128 -q 2 \
 		--add-id3v2 \
 		--tt "$(TODAY)" \
 		--ta "Artificial News" \
