@@ -25,16 +25,16 @@ INTRO = """
 This is Artificial News, where a computer reads from Wikipedia.
 
 I am a computer.  My pronunciation is sometimes wrong.  News and
-information I read comes from Wikipedia and is not guaranteed to be
-correct.
+information in this show comes from Wikipedia and is not guaranteed to
+be correct.
 """.strip()
 
 CLOSING = """
 This episode of Artificial News is now over.
 
 I am a computer.  My pronunciation is sometimes wrong.  News and
-information I read comes from Wikipedia and is not guaranteed to be
-correct.
+information in this show comes from Wikipedia and is not guaranteed to
+be correct.
 
 For more information on this show, including content licensing
 information, go to
