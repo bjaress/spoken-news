@@ -71,7 +71,7 @@ class Headline:
 
             for href, title in self.links.items():
                 page = wikipedia.page(title=title,
-                        auto_suggest=True, redirect=True)
+                        auto_suggest=False, redirect=True)
                 text = None
                 if '#' in href:
                     section = href.split('#')[-1]
