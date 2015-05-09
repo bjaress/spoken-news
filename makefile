@@ -14,7 +14,12 @@ today: $(TODAY).artificialnews.mp3
 	./text2m3u.hs < $^ > $@
 
 %.artificialnews.mp3 : %.m3u clips/pause.wav
-	sox -v 0.7 $< -t wav - rate -v 44100 | lame - $@
+	sox -v 0.7 $< -t wav - rate -v 44100 | lame \
+		--add-id3v2 \
+		--tt "$(TODAY)" \
+		--ta "Artificial News" \
+		--tc "bjaress.com/news" \
+		- $@
 
 
 clips/pause.wav : clips/pause.seconds
