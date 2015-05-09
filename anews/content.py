@@ -38,7 +38,16 @@ be correct.
 
 For more information on this show, including content licensing
 information, go to
-b j a r e s s dot com / news.
+bee, jay, a, are, ee, ess, ess, dot com / news.
+That's
+Bravo,
+Juliette,
+Alpha,
+Romeo,
+Echo,
+Sierra,
+Sierra,
+dot com / news.
 
 Thank you for listening.
 """.strip()
