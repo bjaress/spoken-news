@@ -11,7 +11,7 @@ voices/bin/flite_hts_engine \
      -cf voices/hts_voice_cstr_uk_female-1.0/gv-lf0.pdf      -cm voices/hts_voice_cstr_uk_female-1.0/gv-mgc.pdf    -ef voices/hts_voice_cstr_uk_female-1.0/tree-gv-lf0.inf \
      -em voices/hts_voice_cstr_uk_female-1.0/tree-gv-mgc.inf -k  voices/hts_voice_cstr_uk_female-1.0/gv-switch.inf \
      -s  48000.0\
-     -p  290.0\
+     -p  300.0\
      -a  0.55\
      -g  0.0\
      -b  -0.8\
