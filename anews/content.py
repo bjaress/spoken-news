@@ -21,37 +21,6 @@ SEEN_ARTICLES_FILE = "seen_articles.txt"
 
 SEPARATOR = '\n---\n'
 
-INTRO = """
-This is Artificial News, where a computer reads from Wikipedia.
-
-I am a computer.  My pronunciation is sometimes wrong.  News and
-information in this show comes from Wikipedia and is not guaranteed to
-be correct.
-""".strip()
-
-CLOSING = """
-This episode of Artificial News is now over.
-
-I am a computer.  My pronunciation is sometimes wrong.  News and
-information in this show comes from Wikipedia and is not guaranteed to
-be correct.
-
-For more information on this show, including content licensing
-information, go to
-bee jeiris dot com slash news.
-The spelling is
-Bravo,
-Juliette,
-Alpha,
-Romeo,
-Echo,
-Sierra,
-Sierra,
-dot com / news.
-
-Thank you for listening.
-""".strip()
-
 class Headline:
     def __init__(self, elem):
         self.headline = elem.text.strip()
@@ -117,16 +86,11 @@ def main():
 
     headlines = (Headline(elem) for elem in soup.find_all('li'))
 
-    print(INTRO)
-
     for headline in headlines:
         if headline.unseen(seen_articles):
             print(SEPARATOR)
             print(headline.article_text())
             seen_articles.extend(headline.unseen(seen_articles))
-
-    print(SEPARATOR)
-    print(CLOSING)
 
     save_seen(seen_articles)
 

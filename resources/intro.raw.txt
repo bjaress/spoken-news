@@ -1,0 +1,6 @@
+This is Artificial News, where a computer reads from Wikipedia.
+
+I am a computer.  My pronunciation is sometimes wrong.  News and
+information in this show comes from Wikipedia and is not guaranteed to
+be correct.
+

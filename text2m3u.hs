@@ -12,9 +12,9 @@ main = mainwrapper $ do
 
 translate :: String -> IO ()
 translate "---" =
-    putStrLn "clips/chime.wav"
+    putStrLn "resources/chime.wav"
 translate "" =
-    putStrLn "clips/pause.wav"
+    putStrLn "resources/pause.wav"
 translate line = do
     wav <- temp_file 100 "/tmp/" ".wav"
     txt <- temp_file 100 "/tmp/" ".txt"
