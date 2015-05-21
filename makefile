@@ -19,7 +19,7 @@ today: $(TODAY).spoken-news.mp3
 %.spoken-news.mp3 : %.m3u resources/pause.wav
 	sox -v 0.7 $< -t wav - rate -v 44100 | lame \
 		-b 128 -q 2 \
-		--tt "Artificial News $*" \
+		--tt "Spoken News $*" \
 		--ta "bjaress.com/news" \
 		- $@
 
