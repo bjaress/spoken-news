@@ -8,9 +8,10 @@ today: $(TODAY).artificialnews.mp3
 	snews/content.py > $@
 
 %.segmented.txt : resources/intro.raw.txt %.raw.txt resources/closing.raw.txt
-	# Strip out footnotes that are sometimes left in,
-	# then segment into sentences.
-	cat $^ | grep -v '^\^' | snews/sentences.py > $@
+	# Add internal date stamp, strip out footnotes that are sometimes
+	# left in, then segment into sentences.
+	(date --date="$*" "+%A, %-d %B %Y" ; echo) |\
+		cat - $^ | grep -v '^\^' | snews/sentences.py > $@
 
 %.m3u : %.segmented.txt
 	./text2m3u.hs < $^ > $@
@@ -18,7 +19,7 @@ today: $(TODAY).artificialnews.mp3
 %.artificialnews.mp3 : %.m3u resources/pause.wav
 	sox -v 0.7 $< -t wav - rate -v 44100 | lame \
 		-b 128 -q 2 \
-		--tt "Artificial News $(TODAY)" \
+		--tt "Artificial News $*" \
 		--ta "bjaress.com/news" \
 		- $@
 
