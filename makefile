@@ -2,7 +2,7 @@
 TODAY:=$(shell date --iso)
 .PRECIOUS: $(TODAY).raw.txt
 
-today: $(TODAY).artificialnews.mp3
+today: $(TODAY).spoken-news.mp3
 
 %.raw.txt :
 	snews/content.py > $@
@@ -16,7 +16,7 @@ today: $(TODAY).artificialnews.mp3
 %.m3u : %.segmented.txt
 	./text2m3u.hs < $^ > $@
 
-%.artificialnews.mp3 : %.m3u resources/pause.wav
+%.spoken-news.mp3 : %.m3u resources/pause.wav
 	sox -v 0.7 $< -t wav - rate -v 44100 | lame \
 		-b 128 -q 2 \
 		--tt "Artificial News $*" \
