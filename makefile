@@ -5,12 +5,12 @@ TODAY:=$(shell date --iso)
 today: $(TODAY).artificialnews.mp3
 
 %.raw.txt :
-	anews/content.py > $@
+	snews/content.py > $@
 
 %.segmented.txt : resources/intro.raw.txt %.raw.txt resources/closing.raw.txt
 	# Strip out footnotes that are sometimes left in,
 	# then segment into sentences.
-	cat $^ | grep -v '^\^' | anews/sentences.py > $@
+	cat $^ | grep -v '^\^' | snews/sentences.py > $@
 
 %.m3u : %.segmented.txt
 	./text2m3u.hs < $^ > $@
