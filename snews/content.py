@@ -84,7 +84,7 @@ def main():
     in_the_news = wikipedia.page(pageid=IN_THE_NEWS_ID)
     soup = BeautifulSoup(in_the_news.html())
 
-    headlines = (Headline(elem) for elem in soup.find_all('li'))
+    headlines = (Headline(elem) for elem in soup.ul.find_all('li'))
 
     for headline in headlines:
         if headline.unseen(seen_articles):

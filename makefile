@@ -8,12 +8,16 @@ today: $(TODAY).spoken-news.mp3
 	snews/content.py > $@
 
 %.segmented.txt : resources/intro.raw.txt %.raw.txt resources/closing.raw.txt
-	# Add internal date stamp, strip out footnotes that are sometimes
-	# left in, then segment into sentences.
-	(date --date="$*" "+%A, %-d %B %Y" ; echo) |\
-		cat - $^ | grep -v '^\^' | snews/sentences.py > $@
+	# strip out footnotes that are sometimes left in, then segment into
+	# sentences.
+	cat $^ | grep -v '^\^' | snews/sentences.py > $@
 
-%.m3u : %.segmented.txt
+%.phonetic.txt : %.segmented.txt
+	# add datestamp and substitute some phonetic spellings
+	(date --date="$*" "+%A, %-d %B %Y" ; echo) |\
+		cat - $^ | ./phonetic.sed > $@
+
+%.m3u : %.phonetic.txt
 	./text2m3u.hs < $^ > $@
 
 %.spoken-news.mp3 : %.m3u resources/pause.wav
