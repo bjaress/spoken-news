@@ -24,9 +24,9 @@ License][wikipedia_license].
 # Voice
 
 The voice comes from the [free voice model and software download][voice]
-provided by [Junichi Yamagishi][]. Junichi releases the voices under
-either the [New BSD license](http://www.opensource.org/) or [Creative
-Common Attribution (CC BY)](http://creativecommons.org).
+provided by [Junichi Yamagishi][] under either the [New BSD
+license](http://www.opensource.org/) or [Creative Common Attribution (CC
+BY)](http://creativecommons.org).
 
 [Junichi Yamagishi]: http://homepages.inf.ed.ac.uk/jyamagis/index.html
 [voice]: http://homepages.inf.ed.ac.uk/jyamagis/software/page54/page54.html
