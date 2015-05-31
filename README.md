@@ -25,7 +25,7 @@ License][wikipedia_license].
 
 The voice comes from the [free voice model and software download][voice]
 provided by [Junichi Yamagishi][] under either the [New BSD
-license](http://www.opensource.org/) or [Creative Common Attribution (CC
+license](http://www.opensource.org/) or [Creative Commons Attribution (CC
 BY)](http://creativecommons.org).
 
 [Junichi Yamagishi]: http://homepages.inf.ed.ac.uk/jyamagis/index.html
