@@ -14,8 +14,8 @@ today: $(TODAY).spoken-news.mp3
 
 %.phonetic.txt : %.segmented.txt
 	# add datestamp and substitute some phonetic spellings
-	(date --date="$*" "+%A, %-d %B %Y" ; echo) |\
-		cat - $^ | ./phonetic.sed > $@
+	(date --date="$*" "+%A, %-d %B %Y" ; echo) | cat - $^ |\
+		./phonetic.sed | snews/lang.py > $@
 
 %.m3u : %.phonetic.txt
 	./text2m3u.hs < $^ > $@

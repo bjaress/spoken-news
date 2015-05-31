@@ -1,0 +1,2 @@
+Instead of removing parenthesized expressions when retrieving content,
+    do something more sophisticated during sentence segmentation.
