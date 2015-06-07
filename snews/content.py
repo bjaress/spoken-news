@@ -34,11 +34,13 @@ class Headline:
     def unseen(self, seen):
         return set(self.links.keys()).difference(seen)
 
-    def article_text(self):
+    def article_text(self, seen_articles):
         if self.text == None and len(self.links) > 0:
             parts = [formatted(self.headline)]
 
             for href, title in self.links.items():
+                if href in seen_articles:
+                    continue
                 page = wikipedia.page(title=title,
                         auto_suggest=False, redirect=True)
                 text = None
@@ -89,7 +91,7 @@ def main():
     for headline in headlines:
         if headline.unseen(seen_articles):
             print(SEPARATOR)
-            print(headline.article_text())
+            print(headline.article_text(seen_articles))
             seen_articles.extend(headline.unseen(seen_articles))
 
     save_seen(seen_articles)
