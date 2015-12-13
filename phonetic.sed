@@ -11,6 +11,7 @@ s/\<Tbilisi\>/Tuh-beel-see/g
 s/\<US\$/\$/g
 s/\<U\.S\.\>/You Ess/g
 s/\<US\>/You Ess/g
+s/\<Nkurunziza\>/Nick-run-zeeza/g
 
 s/\<AD\>/A.D./g
 s/\<\/h\>/ per hour/g
