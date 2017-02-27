@@ -258,7 +258,6 @@ ABBREVIATED_NAMES = frozenset(word for word in
         Lt
         Pvt
         Sgt
-
         """.split())
 
 if __name__ == '__main__':
