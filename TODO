@@ -1,5 +1,5 @@
-Dockerized FastAPI app
-GCP Cloud Run
-scheduled pub/sub trigger
-automatic loading to SoundCloud
-postast-rss-to-YouTube
+x   Dockerized FastAPI app
+    GCP Cloud Run
+    scheduled pub/sub trigger
+    automatic loading to SoundCloud
+    podcast-rss-to-YouTube
