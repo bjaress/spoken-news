@@ -1,0 +1,9 @@
+FROM debian:bullseye-slim
+
+RUN apt-get --yes update
+RUN apt-get --yes upgrade
+RUN apt-get --yes install cucumber
+
+COPY features /features
+
+CMD ["cucumber", "features"]
