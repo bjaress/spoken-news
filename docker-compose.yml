@@ -5,4 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.tests
     environment:
-      app.url: http://www.google.com
+      app.url: http://app
+
+  app:
+    build: .
