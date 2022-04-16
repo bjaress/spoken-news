@@ -1,2 +1,5 @@
-Instead of removing parenthesized expressions when retrieving content,
-    do something more sophisticated during sentence segmentation.
+Dockerized FastAPI app
+GCP Cloud Run
+scheduled pub/sub trigger
+automatic loading to SoundCloud
+postast-rss-to-YouTube

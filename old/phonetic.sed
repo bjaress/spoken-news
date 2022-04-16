@@ -22,6 +22,8 @@ s/\<EU\>/E You/g
 s/\<Fallujah\>/Fah Loojah/g
 s/\<Castile\>/Cahsteel/g
 s/\<Tshisekedi\>/Shisekedi/g
+s/\<Psamtik I\>/Psamtik The First/g
+s/\<Ramesses II\>/Ramesses The Second/g
 
 s/\<Jr\./Junior/g
 s/\<AD\>/A.D./g
