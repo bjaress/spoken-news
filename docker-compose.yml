@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.tests
     environment:
-      app.url: http://app
+      app.url: http://app:8000
 
   app:
     build: .

@@ -1,0 +1,2 @@
+PyHamcrest ~= 2.0.3
+hypothesis ~= 6.43.2
