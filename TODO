@@ -2,4 +2,6 @@ x   Dockerized FastAPI app
     GCP Cloud Run
     scheduled pub/sub trigger
     automatic loading to SoundCloud
+    text-to-speech
+    get info from Wikipedia
     podcast-rss-to-YouTube
