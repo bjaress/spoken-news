@@ -1,0 +1,10 @@
+#! /bin/bash
+
+image=gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+
+exec docker run --rm -i -t \
+    --user `id -u`:`id -g` \
+    --volume "${PWD}":/app \
+    --workdir /app \
+    --env HOME=/app/auth \
+    "${image}" gcloud "$@"

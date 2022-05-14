@@ -1,0 +1,11 @@
+#! /bin/bash
+
+image=hashicorp/terraform:1.1.9
+
+
+exec docker run --rm -i -t \
+    --user `id -u`:`id -g` \
+    --volume "${PWD}":/app \
+    --workdir /app \
+    --env GOOGLE_APPLICATION_CREDENTIALS=/app/auth/.config/gcloud/application_default_credentials.json \
+    "${image}" "$@"

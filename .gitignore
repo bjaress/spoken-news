@@ -1,3 +1,5 @@
 /old
 /built
 __pycache__
+/auth
+/.terraform*
