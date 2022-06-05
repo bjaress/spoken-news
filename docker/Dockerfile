@@ -1,4 +1,4 @@
-FROM python:3 as requirements
+FROM python:3-alpine as requirements
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
@@ -21,8 +21,8 @@ RUN mkdir /work
 RUN chmod +wr /work
 WORKDIR /work
 
-EXPOSE 8000
-
 USER nobody
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY docker/entrypoint.sh entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
+
 COPY --from=test /app/ app/

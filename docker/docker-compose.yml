@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  app-tests:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.tests
+    environment:
+      app.url: http://app:8000
+
+  app:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    environment:
+      PORT: 8000
