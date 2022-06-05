@@ -47,15 +47,15 @@ resource "google_cloud_run_service" "run_service" {
   depends_on = [google_project_service.run_api]
 }
 
-### TODO replace with scheduled pub/sub
-# Allow unauthenticated users to invoke the service
-resource "google_cloud_run_service_iam_member" "run_all_users" {
-  service  = google_cloud_run_service.run_service.name
-  location = google_cloud_run_service.run_service.location
-  role     = "roles/run.invoker"
-  member   = "allUsers"
-}
-# Display the service URL
-output "service_url" {
-  value = google_cloud_run_service.run_service.status[0].url
-}
+#### TODO replace with scheduled pub/sub
+## Allow unauthenticated users to invoke the service
+#resource "google_cloud_run_service_iam_member" "run_all_users" {
+#  service  = google_cloud_run_service.run_service.name
+#  location = google_cloud_run_service.run_service.location
+#  role     = "roles/run.invoker"
+#  member   = "allUsers"
+#}
+## Display the service URL
+#output "service_url" {
+#  value = google_cloud_run_service.run_service.status[0].url
+#}
