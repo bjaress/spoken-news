@@ -1,8 +1,7 @@
-# https://ruanmartinelli.com/posts/terraform-cloud-run
-# https://github.com/RitreshGirdhar/google-cloud-run-with-scheduler-terraform
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service
+# https://ruanmartinelli.com/posts/terraform-cloud-run
 
-#TODO pub/sub triggering, custom image
 provider "google" {
   project = "spoken-news"
 }
@@ -43,19 +42,47 @@ resource "google_cloud_run_service" "run_service" {
     latest_revision = true
   }
 
+  metadata {
+    annotations = {
+      "run.googleapis.com/ingress" = "internal"
+    }
+  }
+
   # Waits for the Cloud Run API to be enabled
   depends_on = [google_project_service.run_api]
 }
 
-#### TODO replace with scheduled pub/sub
-## Allow unauthenticated users to invoke the service
-#resource "google_cloud_run_service_iam_member" "run_all_users" {
-#  service  = google_cloud_run_service.run_service.name
-#  location = google_cloud_run_service.run_service.location
-#  role     = "roles/run.invoker"
-#  member   = "allUsers"
-#}
-## Display the service URL
-#output "service_url" {
-#  value = google_cloud_run_service.run_service.status[0].url
-#}
+
+resource "google_pubsub_topic" "news_topic" {
+  name = "news-trigger-topic"
+}
+
+resource "google_service_account" "pubsub_invoker" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+resource "google_cloud_run_service_iam_binding" "pubsub_to_run_invoker" {
+  location = google_cloud_run_service.run_service.location
+  service = google_cloud_run_service.run_service.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${google_service_account.pubsub_invoker.email}"]
+  depends_on = [ google_cloud_run_service.run_service
+               , google_service_account.pubsub_invoker
+               ]
+}
+
+resource "google_pubsub_subscription" "news_subscription" {
+  name  = "news-trigger-topic-subscription"
+  topic = google_pubsub_topic.news_topic.name
+  push_config {
+    push_endpoint = google_cloud_run_service.run_service.status[0].url
+    oidc_token {
+      service_account_email = google_service_account.pubsub_invoker.email
+    }
+    attributes = {
+      # Controls format
+      x-goog-version = "v1"
+    }
+  }
+}
