@@ -6,6 +6,7 @@ services:
       dockerfile: ./docker/Dockerfile.tests
     environment:
       app.url: http://app:8000
+      storage.url: http://storage:8080
 
   app:
     build:
@@ -13,3 +14,6 @@ services:
       dockerfile: ./docker/Dockerfile
     environment:
       PORT: 8000
+
+  storage:
+    image: wiremock/wiremock
