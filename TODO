@@ -1,8 +1,24 @@
 x   Dockerized FastAPI app
 x   GCP Cloud Run
 x   pub/sub trigger
-    text-to-speech
     automatic loading to SoundCloud
+        background:
+            https://developers.soundcloud.com/docs/api/guide
+            need to store and re-use refresh tokens
+                where?
+                    https://cloud.google.com/storage/docs/overview
+                    http://cloud.google.com/training/course/gcp-fundamentals-aws
+                how to mock locally?
+                    no emulator for object storage, use wiremock
+                        https://wiremock.org/docs/api/
+        local emulation of storage
+            https://cloud.google.com/storage/docs/json_api
+            https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
+        python access to storage
+            https://googleapis.dev/python/storage/latest/client.html
+        refreshing to get access token
+        saving new refresh token
+    text-to-speech
     get info from Wikipedia
     two voices in the same sound file
     scheduled pub/sub
