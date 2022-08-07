@@ -1,6 +1,7 @@
-/old
-/built
-__pycache__
 /auth
+/built
+/old
+__pycache__
 /.terraform*
 terraform.tfstate
+/venv

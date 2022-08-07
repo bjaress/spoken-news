@@ -31,6 +31,6 @@ Given(/^there is an old refresh token stored$/) do
   # TODO mock refresh token
   # https://cloud.google.com/storage/docs/json_api
   # https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
-  response = HTTParty.post("#{$storage}/__admin/mappings", {})
-  expect(response.code).to eq(200)
+  # response = HTTParty.post("#{$storage}/__admin/mappings", {})
+  # expect(response.code).to eq(200)
 end

@@ -13,7 +13,8 @@ RUN pip install -r requirements-dev.txt
 COPY app/ app/
 COPY test/ test/
 RUN python -m unittest
-
+# run without --check to reformat if needed
+RUN black --check app test
 
 FROM requirements as app
 
