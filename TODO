@@ -1,26 +1,37 @@
 x   Dockerized FastAPI app
 x   GCP Cloud Run
 x   pub/sub trigger
-    automatic loading to SoundCloud
+    automatic uploading of files
         background:
-            https://developers.soundcloud.com/docs/api/guide
-            need to store and re-use refresh tokens
-                where?
-                    https://cloud.google.com/storage/docs/overview
-                    http://cloud.google.com/training/course/gcp-fundamentals-aws
-                how to mock locally?
-                    no emulator for object storage, use wiremock
-                        https://wiremock.org/docs/api/
-        local emulation of storage
-            https://cloud.google.com/storage/docs/json_api
-            https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
-        python access to storage
-            https://googleapis.dev/python/storage/latest/client.html
-        refreshing to get access token
-        saving new refresh token
+                https://developers.spreaker.com/api/
+                https://developers.spreaker.com/guides/authentication/
+                https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
+        X spreaker account
+            credentials in pass
+        X register app
+        X authorize as user
+            use curl
+            https://www.spreaker.com/oauth2/authorize?client_id=6070&response_type=code&state=112c1343-0726-4172-b813-bb3dbac75a1f&scope=basic&redirect_uri=https%3A%2F%2Fbjaress.com
+            curl -X POST
+                -F "grant_type=authorization_code"
+                -F "client_id=6070"
+                -F "client_secret=$(</tmp/client_secret)"
+                -F "redirect_uri=https://bjaress.com"
+                -F "code=???"
+                https://api.spreaker.com/oauth2/token
+                | tee /tmp/lines
+            save in auth/
+        creds in POST
+        uploading track
+            static file for now
     text-to-speech
+        static text for now
     get info from Wikipedia
     two voices in the same sound file
     scheduled pub/sub
+    refreshing oauth token
+        Original token is good for 10 years, but in theory we should
+        support refresh.  That will require saving the refresh token in
+        between runs, probably in a storage bucket.
     podcast-rss-to-YouTube
 

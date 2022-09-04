@@ -10,13 +10,13 @@ FROM requirements as test
 COPY requirements-dev.txt .
 RUN pip install -r requirements-dev.txt
 
-COPY app/ app/
+COPY api/ api/
 COPY test/ test/
 RUN python -m unittest
 # run without --check to reformat if needed
-RUN black --check app test
+RUN black --check api test
 
-FROM requirements as app
+FROM requirements as api
 
 RUN mkdir /work
 RUN chmod +wr /work
@@ -26,4 +26,4 @@ USER nobody
 COPY docker/entrypoint.sh entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
 
-COPY --from=test /app/ app/
+COPY --from=test /api/ api/

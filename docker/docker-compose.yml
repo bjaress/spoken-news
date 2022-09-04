@@ -7,6 +7,7 @@ services:
     environment:
       app.url: http://app:8000
       storage.url: http://storage:8080
+      spreaker.url: http://storage:8080
 
   app:
     build:

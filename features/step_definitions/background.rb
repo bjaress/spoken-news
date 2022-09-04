@@ -20,17 +20,23 @@ end
 
 Given(/^the service is healthy$/) do
   poll("health check", 200) do
-    HTTParty.get("#{$app}/health").code
+    HTTParty.get("#{$url[:app]}/health").code
   end
 end
 
-Given(/^there is an old refresh token stored$/) do
-  poll("wiremock startup check", 200) do
-    HTTParty.get("#{$storage}/__admin/mappings").code
+Given(/^Spreaker API is available$/) do
+  poll("wiremock startup check/reset", 200) do
+    HTTParty.post("#{$url[:storage]}/__admin/reset").code
   end
-  # TODO mock refresh token
-  # https://cloud.google.com/storage/docs/json_api
-  # https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
-  # response = HTTParty.post("#{$storage}/__admin/mappings", {})
-  # expect(response.code).to eq(200)
+  #https://developers.spreaker.com/api/
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
+    :body => {
+      :request => {
+        :urlPath => "/v2/shows/#{$showId}/episodes"},
+      :response => {
+        :status => 200
+      }
+    }.to_json
+  })
+  expect(response.code).to eq(201)
 end
