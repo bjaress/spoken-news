@@ -26,7 +26,7 @@ end
 
 Given(/^Spreaker API is available$/) do
   poll("wiremock startup check/reset", 200) do
-    HTTParty.post("#{$url[:storage]}/__admin/reset").code
+    HTTParty.post("#{$url[:spreaker]}/__admin/reset").code
   end
   #https://developers.spreaker.com/api/
   response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {

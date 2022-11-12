@@ -6,8 +6,7 @@ services:
       dockerfile: ./docker/Dockerfile.tests
     environment:
       app.url: http://app:8000
-      storage.url: http://storage:8080
-      spreaker.url: http://storage:8080
+      spreaker.url: http://wiremock:8080
 
   app:
     build:
@@ -16,5 +15,5 @@ services:
     environment:
       PORT: 8000
 
-  storage:
+  wiremock:
     image: wiremock/wiremock

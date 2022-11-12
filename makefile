@@ -1,5 +1,5 @@
 
-code=$(shell find app -type f)
+code=$(shell find api -type f)
 unit_tests=$(shell find test -type f)
 features=$(shell find features -type f)
 
