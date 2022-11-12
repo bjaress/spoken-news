@@ -29,5 +29,5 @@ Then(/^an audio file is uploaded to Spreaker$/) do
   upload_request = body["requests"][0]
   puts(upload_request)
   expect(upload_request["headers"]["Authorization"]).to eq("Bearer DUMMY_TOKEN")
-  expect(upload_request["headers"]["Content-Type"]).to eq("multipart/form-data")
+  expect(upload_request["headers"]["Content-Type"]).to include("multipart/form-data")
 end

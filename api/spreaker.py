@@ -19,4 +19,5 @@ class Client:
             headers={
                 "Authorization": f"Bearer {self.config.token}",
             },
+            files=[("media_file", ("dummy.mp3", b"dummy", "audio/mp3"))],
         )
