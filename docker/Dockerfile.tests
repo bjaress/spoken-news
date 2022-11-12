@@ -5,6 +5,9 @@ RUN apt-get --yes upgrade
 RUN apt-get --yes install cucumber
 RUN apt-get --yes install ruby-httparty
 RUN apt-get --yes install ruby-rspec
+# https://stackoverflow.com/a/73551605
+RUN apt-get --yes install ruby-rack
+
 
 CMD ["cucumber", "features"]
 
