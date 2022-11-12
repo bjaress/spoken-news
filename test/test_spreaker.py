@@ -17,5 +17,6 @@ class TestSpreaker(unittest.TestCase):
             "THE_URL/v2/shows/0/episodes",
             headers={
                 "Authorization": "Bearer THE_TOKEN",
+                "Content-Type": "multipart/form-data",
             },
         )
