@@ -14,4 +14,9 @@ class Client:
         self.requests = requests
 
     def upload(self):
-        self.requests.post(f"{self.config.url}/v2/shows/{self.config.show_id}/episodes")
+        self.requests.post(
+            f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
+            headers={
+                "Authorization": f"Bearer {self.config.token}",
+            },
+        )
