@@ -13,4 +13,8 @@ class TestSpreaker(unittest.TestCase):
 
         requests.post.assert_not_called()
         client.upload()
-        requests.post.assert_called_with("THE_URL/v2/shows/0/episodes")
+        requests.post.assert_called_with(
+            "THE_URL/v2/shows/0/episodes",
+            headers={
+                "Authorization": "Bearer THE_TOKEN",
+                })
