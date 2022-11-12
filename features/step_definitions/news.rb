@@ -28,6 +28,9 @@ Then(/^an audio file is uploaded to Spreaker$/) do
   expect(body["requests"].length).to eq(1)
   upload_request = body["requests"][0]
   puts(upload_request)
-  expect(upload_request["headers"]["Authorization"]).to eq("Bearer DUMMY_TOKEN")
-  expect(upload_request["headers"]["Content-Type"]).to include("multipart/form-data")
+  headers = upload_request["headers"]
+  expect(headers["Authorization"]).to eq("Bearer DUMMY_TOKEN")
+  # There's extra stuff in the content-type to specify the boundary
+  # between parts.
+  expect(headers["Content-Type"]).to include("multipart/form-data")
 end

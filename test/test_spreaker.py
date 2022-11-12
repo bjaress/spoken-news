@@ -18,5 +18,6 @@ class TestSpreaker(unittest.TestCase):
             headers={
                 "Authorization": "Bearer THE_TOKEN",
             },
+            # presence of files triggers the correct content-type
             files=[("media_file", ("dummy.mp3", b"dummy", "audio/mp3"))],
         )
