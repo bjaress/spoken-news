@@ -27,7 +27,7 @@ $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 
 
 $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
-		requirements.txt requirements-dev.txt
+		requirements.txt requirements-dev.txt .dockerignore
 	docker build --iidfile $(docker_hash) --file docker/Dockerfile .
 	# Allow building on a with uncommitted changes, but don't tag for push unless
 	# it's clean.
