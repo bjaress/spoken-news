@@ -12,7 +12,7 @@ class NewsTrigger(BaseModel):
 @app.post("/")
 def generate_news(trigger: NewsTrigger):
     spreaker_client = spreaker.Client(trigger.spreaker)
-    spreaker_client.upload()
+    spreaker_client.upload(title="Dummy Title", audio=b"dummy")
     return {"message": "Hello, World!!"}
 
 

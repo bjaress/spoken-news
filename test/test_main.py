@@ -13,4 +13,6 @@ class TestMain(unittest.TestCase):
         response = main.generate_news(trigger)
 
         spreaker_Client.assert_called_with(trigger.spreaker)
-        spreaker_Client.return_value.upload.assert_called_with()
+        spreaker_Client.return_value.upload.assert_called_with(
+            title="Dummy Title", audio=b"dummy"
+        )

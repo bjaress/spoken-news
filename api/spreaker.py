@@ -13,11 +13,12 @@ class Client:
         self.config = config
         self.requests = requests
 
-    def upload(self):
+    def upload(self, title, audio):
         self.requests.post(
             f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
             headers={
                 "Authorization": f"Bearer {self.config.token}",
             },
-            files=[("media_file", ("dummy.mp3", b"dummy", "audio/mp3"))],
+            files=[("media_file", ("audio.mp3", audio, "audio/mp3"))],
+            data={"title": title},
         )
