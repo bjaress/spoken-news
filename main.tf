@@ -57,6 +57,10 @@ resource "google_pubsub_topic" "news_topic" {
   name = "news-trigger-topic"
 }
 
+resource "google_pubsub_topic" "news_topic_dlq" {
+  name = "news-trigger-topic-dlq"
+}
+
 resource "google_service_account" "pubsub_invoker" {
   account_id   = "cloud-run-pubsub-invoker"
   display_name = "Cloud Run Pub/Sub Invoker"
@@ -75,6 +79,7 @@ resource "google_cloud_run_service_iam_binding" "pubsub_to_run_invoker" {
 resource "google_pubsub_subscription" "news_subscription" {
   name  = "news-trigger-topic-subscription"
   topic = google_pubsub_topic.news_topic.name
+
   push_config {
     push_endpoint = google_cloud_run_service.run_service.status[0].url
     oidc_token {
@@ -84,5 +89,15 @@ resource "google_pubsub_subscription" "news_subscription" {
       # Controls format
       x-goog-version = "v1"
     }
+  }
+
+  message_retention_duration = "600s"
+  ack_deadline_seconds = 60
+  retry_policy {
+    minimum_backoff = "60s"
+  }
+  dead_letter_policy {
+    dead_letter_topic = google_pubsub_topic.news_topic_dlq.id
+    max_delivery_attempts = 5
   }
 }

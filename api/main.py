@@ -1,18 +1,20 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from api import spreaker
+from api import models
+
+import pydub.generators as pdgen
 
 app = FastAPI()
 
 
-class NewsTrigger(BaseModel):
-    spreaker: spreaker.Config
-
-
 @app.post("/")
-def generate_news(trigger: NewsTrigger):
-    spreaker_client = spreaker.Client(trigger.spreaker)
-    spreaker_client.upload(title="Dummy Title", audio=b"dummy")
+def generate_news(trigger: models.PubSubTrigger):
+    spreaker_client = spreaker.Client(trigger.message.attributes)
+
+    spreaker_client.upload(
+        title="Dummy Title",
+        audio=pdgen.Sine(261.63).to_audio_segment().export(format="mp3"),
+    )
     return {"message": "Hello, World!!"}
 
 

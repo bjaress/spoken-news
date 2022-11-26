@@ -9,10 +9,7 @@ class TestMain(unittest.TestCase):
     @unittest.mock.patch("api.spreaker.Client")
     def test_news(self, spreaker_Client):
         trigger = Mock()
-        spreaker = Mock()
         response = main.generate_news(trigger)
 
-        spreaker_Client.assert_called_with(trigger.spreaker)
-        spreaker_Client.return_value.upload.assert_called_with(
-            title="Dummy Title", audio=b"dummy"
-        )
+        spreaker_Client.assert_called_with(trigger.message.attributes)
+        spreaker_Client.return_value.upload.assert_called()
