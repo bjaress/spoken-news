@@ -1,37 +1,12 @@
 x   Dockerized FastAPI app
 x   GCP Cloud Run
 x   pub/sub trigger
-    automatic uploading of files
-        background:
-                https://developers.spreaker.com/api/
-                https://developers.spreaker.com/guides/authentication/
-                https://wiremock.org/docs/api/#tag/Stub-Mappings/paths/~1__admin~1mappings/post
-        X spreaker account
-            credentials in pass
-        X register app
-        X authorize as user
-            use curl
-            https://www.spreaker.com/oauth2/authorize?client_id=6070&response_type=code&state=112c1343-0726-4172-b813-bb3dbac75a1f&scope=basic&redirect_uri=https%3A%2F%2Fbjaress.com
-            curl -X POST
-                -F "grant_type=authorization_code"
-                -F "client_id=6070"
-                -F "client_secret=$(</tmp/client_secret)"
-                -F "redirect_uri=https://bjaress.com"
-                -F "code=???"
-                https://api.spreaker.com/oauth2/token
-                | tee /tmp/lines
-            save in auth/
-        creds in POST
-        uploading track
-            static file for now
+X   automatic uploading of files
+    scheduled pub/sub
+        https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job
     text-to-speech
         static text for now
     get info from Wikipedia
     two voices in the same sound file
-    scheduled pub/sub
-    refreshing oauth token
-        Original token is good for 10 years, but in theory we should
-        support refresh.  That will require saving the refresh token in
-        between runs, probably in a storage bucket.
-    podcast-rss-to-YouTube
+    podcast-on youtube
 
