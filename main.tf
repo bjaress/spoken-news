@@ -2,8 +2,15 @@
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service
 # https://ruanmartinelli.com/posts/terraform-cloud-run
 
+
+# https://fabianlee.org/2021/09/24/terraform-using-json-files-as-input-variables-and-local-variables/
+locals {
+  spreaker_access = jsondecode(file("${path.module}/auth/.spreaker/access.json"))
+}
+
 provider "google" {
   project = "spoken-news"
+  region = "us-west1"
 }
 
 # Might be a chicken-and-egg problem here
@@ -99,5 +106,34 @@ resource "google_pubsub_subscription" "news_subscription" {
   dead_letter_policy {
     dead_letter_topic = google_pubsub_topic.news_topic_dlq.id
     max_delivery_attempts = 5
+  }
+}
+
+
+resource "google_cloud_scheduler_job" "scheduled-job" {
+  name        = "news-job"
+  description = "trigger the news process"
+
+  # https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules
+  # https://www.shellhacks.com/crontab-format-cron-job-examples-linux/
+  # .---------------- minute (0 - 59)
+  # | .-------------- hour (0 - 23)
+  # | | .------------ day of month (1 - 31)
+  # | | | .---------- month (1 - 12) OR jan,feb,mar ...
+  # | | | | .-------- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue ...
+  # | | | | |
+  # * * * * *
+  schedule = "45 15 22 12 *"
+  time_zone = "America/Los_Angeles"
+
+  pubsub_target {
+    # topic.id is the topic's full resource name.
+    topic_name = google_pubsub_topic.news_topic.id
+    attributes = {
+      # will be recieved by the POST endpoint
+      spreaker_url = "https://api.spreaker.com"
+      spreaker_show_id = 5657024
+      spreaker_token = local.spreaker_access.access_token
+    }
   }
 }

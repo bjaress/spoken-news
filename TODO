@@ -2,11 +2,20 @@ x   Dockerized FastAPI app
 x   GCP Cloud Run
 x   pub/sub trigger
 X   automatic uploading of files
-    scheduled pub/sub
-        https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job
+X   scheduled pub/sub
     text-to-speech
         static text for now
     get info from Wikipedia
-    two voices in the same sound file
+        just headline for now
+    async
+        in parallel
+            get wikipedia article list
+            get voices list
+            check spreaker access
+        issue HTTP response 202 (or failure)
+        in background https://fastapi.tiangolo.com/tutorial/background-tasks/
+            construct script from articles
+            script -> mp3
+            upload
     podcast-on youtube
 
