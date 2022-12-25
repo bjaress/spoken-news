@@ -21,6 +21,19 @@ When(/^the scheduled time arrives$/) do
   expect(response.code).to eq(200)
 end
 
+Then(/^audio is generated from text$/) do
+  #https://cloud.google.com/text-to-speech/docs/basics
+  response = HTTParty.post("#{$url[:google]}/__admin/requests/find", {
+    :body => {
+      :method => "POST",
+      :urlPath => "/v1/text:synthesize"
+    }.to_json
+  })
+
+  requests = JSON.parse(response.body)["requests"]
+  expect(requests).to have_attributes(length: 1)
+end
+
 Then(/^an audio file is uploaded to Spreaker$/) do
   #https://developers.spreaker.com/api/
   #https://wiremock.org/docs/api/#tag/Requests/paths/~1__admin~1requests~1find/post

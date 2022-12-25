@@ -25,14 +25,33 @@ Given(/^the service is healthy$/) do
 end
 
 Given(/^Spreaker API is available$/) do
-  poll("wiremock startup check/reset", 200) do
+  poll("spreaker wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:spreaker]}/__admin/reset").code
   end
   #https://developers.spreaker.com/api/
   response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
     :body => {
       :request => {
-        :urlPath => "/v2/shows/#{$showId}/episodes"},
+        :urlPath => "/v2/shows/#{$showId}/episodes"
+      },
+      :response => {
+        :status => 200
+      }
+    }.to_json
+  })
+  expect(response.code).to eq(201)
+end
+
+Given(/^Google text-to-speech API is available$/) do
+  poll("google wiremock startup check/reset", 200) do
+    HTTParty.post("#{$url[:google]}/__admin/reset").code
+  end
+  #https://cloud.google.com/text-to-speech/docs/basics
+  response = HTTParty.post("#{$url[:google]}/__admin/mappings", {
+    :body => {
+      :request => {
+        :urlPath => "/v1/text:synthesize"
+      },
       :response => {
         :status => 200
       }

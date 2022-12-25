@@ -12,10 +12,14 @@ X   scheduled pub/sub
             get wikipedia article list
             get voices list
             check spreaker access
-        issue HTTP response 202 (or failure)
+        issue HTTP response 202 (or transient error)
         in background https://fastapi.tiangolo.com/tutorial/background-tasks/
             construct script from articles
+                ordering of article contents
+                enforce character limit
             script -> mp3
             upload
-    podcast-on youtube
+    podcast on youtube
+        channel
+        sprout settings
 
