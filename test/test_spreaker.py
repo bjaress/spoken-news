@@ -3,14 +3,15 @@ import hamcrest as h
 from unittest.mock import Mock
 
 from api import spreaker
-from api import models
 
 
 class TestSpreaker(unittest.TestCase):
     def test_upload(self):
-        config = models.Attributes(
-            spreaker_url="THE_URL", spreaker_token="THE_TOKEN", spreaker_show_id=0
-        )
+        config = {
+            'url': "THE_URL",
+            'token': "THE_TOKEN",
+            'show_id': 0,
+        }
         requests = Mock()
         client = spreaker.Client(config, requests=requests)
 

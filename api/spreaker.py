@@ -1,15 +1,14 @@
 from pydantic import BaseModel
 import requests
 import logging
-from api import models
 
 
 class Client:
-    def __init__(self, config: models.Attributes, requests=requests):
+    def __init__(self, config, requests=requests):
         self.requests = requests
-        self.url = config.spreaker_url
-        self.token = config.spreaker_token
-        self.show_id = config.spreaker_show_id
+        self.url = config['url']
+        self.token = config['token']
+        self.show_id = config['show_id']
 
     def upload(self, title, audio):
         response = self.requests.post(
