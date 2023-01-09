@@ -1,8 +1,10 @@
 import requests
 
+
 class Client:
     def __init__(self, config, requests=requests):
-        pass
+        self.requests = requests
+        self.config = config
 
     def speak(self, words):
-        pass
+        self.requests.post(url=(self.config["server"] + "/v1/text:synthesize"))

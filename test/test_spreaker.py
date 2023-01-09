@@ -8,9 +8,9 @@ from api import spreaker
 class TestSpreaker(unittest.TestCase):
     def test_upload(self):
         config = {
-            'url': "THE_URL",
-            'token': "THE_TOKEN",
-            'show_id': 0,
+            "url": "THE_URL",
+            "token": "THE_TOKEN",
+            "show_id": 0,
         }
         requests = Mock()
         client = spreaker.Client(config, requests=requests)

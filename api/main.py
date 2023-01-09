@@ -12,10 +12,10 @@ app = FastAPI()
 def generate_news(trigger: models.PubSubTrigger):
     attributes = split_attributes(trigger)
 
-    tts_client = tts.Client(attributes['tts'])
-    tts_client.speak()
+    tts_client = tts.Client(attributes["tts"])
+    tts_client.speak("words")
 
-    spreaker_client = spreaker.Client(attributes['spreaker'])
+    spreaker_client = spreaker.Client(attributes["spreaker"])
 
     spreaker_client.upload(
         title="Dummy Title",
@@ -23,15 +23,17 @@ def generate_news(trigger: models.PubSubTrigger):
     )
     return {"message": "Hello, World!!"}
 
+
 def split_attributes(trigger: models.PubSubTrigger):
     # { 'foo_bar_baz': 'qux' } => { 'foo': { 'bar_baz': 'qux' } }
     result = {}
     for key, value in trigger.message.attributes.dict().items():
-        prefix, suffix = key.split('_', maxsplit=1)
+        prefix, suffix = key.split("_", maxsplit=1)
         if prefix not in result:
             result[prefix] = {}
         result[prefix][suffix] = value
     return result
+
 
 @app.get("/health")
 def health():

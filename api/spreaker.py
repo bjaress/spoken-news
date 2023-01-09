@@ -6,9 +6,9 @@ import logging
 class Client:
     def __init__(self, config, requests=requests):
         self.requests = requests
-        self.url = config['url']
-        self.token = config['token']
-        self.show_id = config['show_id']
+        self.url = config["url"]
+        self.token = config["token"]
+        self.show_id = config["show_id"]
 
     def upload(self, title, audio):
         response = self.requests.post(

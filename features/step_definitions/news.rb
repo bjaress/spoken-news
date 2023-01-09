@@ -2,7 +2,6 @@ require 'httparty'
 require 'rspec'
 
 When(/^the scheduled time arrives$/) do
-  #TODO Need to match pubsub push format:
   # https://cloud.google.com/pubsub/docs/push#receive_push
   response = HTTParty.post($url[:app], {
     :headers => {'content-type': 'application/json'},
@@ -11,7 +10,9 @@ When(/^the scheduled time arrives$/) do
         :attributes => {
           :spreaker_url => $url[:spreaker],
           :spreaker_token => "DUMMY_TOKEN",
-          :spreaker_show_id => $showId
+          :spreaker_show_id => $showId,
+          :tts_api_key => "DUMMY_KEY",
+          :tts_server => $url[:google]
         },
         :messageId => "blahblah"
       },
