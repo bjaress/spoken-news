@@ -14,5 +14,5 @@ class TestTtsClient(unittest.TestCase):
 
         client.speak("THE_WORDS")
         requests.post.assert_called_with(
-            url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY"
+            url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY", json={}
         )

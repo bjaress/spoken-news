@@ -12,5 +12,6 @@ class Client:
                 self.config["server"]
                 + "/v1/text:synthesize?key="
                 + self.config["api_key"]
-            )
+            ),
+            json={},
         )
