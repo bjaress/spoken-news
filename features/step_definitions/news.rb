@@ -36,6 +36,7 @@ Then(/^audio is generated from text$/) do
   request = requests[0]
 
   expect(request["url"]).to include("key=DUMMY_KEY")
+  body = JSON.parse(request["body"])
 end
 
 Then(/^an audio file is uploaded to Spreaker$/) do
