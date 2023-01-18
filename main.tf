@@ -6,6 +6,7 @@
 # https://fabianlee.org/2021/09/24/terraform-using-json-files-as-input-variables-and-local-variables/
 locals {
   spreaker_access = jsondecode(file("${path.module}/auth/.spreaker/access.json"))
+  google_access = jsondecode(file("${path.module}/auth/.google/access.json"))
 }
 
 provider "google" {
@@ -134,6 +135,7 @@ resource "google_cloud_scheduler_job" "scheduled-job" {
       spreaker_url = "https://api.spreaker.com"
       spreaker_show_id = 5657024
       spreaker_token = local.spreaker_access.access_token
+      tts_api_key = local.google_access.api_key
     }
   }
 }
