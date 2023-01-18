@@ -38,9 +38,9 @@ Then(/^audio is generated from text$/) do
   expect(request["url"]).to include("key=DUMMY_KEY")
   body = JSON.parse(request["body"])
   expect(body["input"]).to have_key("text")
-  expect(body["input"]["voice"]).to include("languageCode" => "en")
-  expect(body["input"]["voice"]).to have_key("name")
-  expect(body["input"]["voice"]).to have_key("ssmlGender")
+  expect(body["voice"]).to have_key("languageCode")
+  expect(body["voice"]).to have_key("name")
+  expect(body["voice"]).to have_key("ssmlGender")
   expect(body["audioConfig"]).to include("audioEncoding" => "MP3")
 end
 

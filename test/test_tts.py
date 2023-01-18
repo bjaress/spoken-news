@@ -14,5 +14,14 @@ class TestTtsClient(unittest.TestCase):
 
         client.speak("THE_WORDS")
         requests.post.assert_called_with(
-            url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY", json={}
+            url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY",
+            json={
+                "input": {"text": "THE_WORDS"},
+                "voice": {
+                    "languageCode": "en-gb",
+                    "name": "en-GB-Standard-A",
+                    "ssmlGender": "FEMALE",
+                },
+                "audioConfig": {"audioEncoding": "MP3"},
+            },
         )
