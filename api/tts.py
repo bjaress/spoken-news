@@ -1,4 +1,7 @@
 import requests
+import base64
+
+# https://cloud.google.com/text-to-speech/docs/basics
 
 
 class Client:
@@ -7,7 +10,7 @@ class Client:
         self.url = f"{config['server']}/v1/text:synthesize?key={config['api_key']}"
 
     def speak(self, words):
-        self.requests.post(
+        response = self.requests.post(
             url=self.url,
             json={
                 "input": {"text": words},
@@ -19,3 +22,4 @@ class Client:
                 "audioConfig": {"audioEncoding": "MP3"},
             },
         )
+        return base64.b64decode(response.json()["audioContent"])

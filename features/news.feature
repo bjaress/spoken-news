@@ -8,4 +8,4 @@ Background:
 Scenario: Uploading sound
     When the scheduled time arrives
     Then audio is generated from text
-    Then an audio file is uploaded to Spreaker
+    Then the audio file is uploaded to Spreaker

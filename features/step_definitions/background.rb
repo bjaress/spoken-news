@@ -46,6 +46,9 @@ Given(/^Google text-to-speech API is available$/) do
   poll("google wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:google]}/__admin/reset").code
   end
+  # Ruby Rack parser can't han't handle actual mp3 data
+  # This is the base64 encoding of "foo"
+  @mp3base64 = "Zm9v"
   #https://cloud.google.com/text-to-speech/docs/basics
   response = HTTParty.post("#{$url[:google]}/__admin/mappings", {
     :body => {
@@ -53,7 +56,10 @@ Given(/^Google text-to-speech API is available$/) do
         :urlPath => "/v1/text:synthesize"
       },
       :response => {
-        :status => 200
+        :status => 200,
+        :jsonBody => {
+          :audioContent => @mp3base64
+        }
       }
     }.to_json
   })

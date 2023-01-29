@@ -13,13 +13,13 @@ def generate_news(trigger: models.PubSubTrigger):
     attributes = split_attributes(trigger)
 
     tts_client = tts.Client(attributes["tts"])
-    tts_client.speak("words")
 
     spreaker_client = spreaker.Client(attributes["spreaker"])
 
     spreaker_client.upload(
         title="Dummy Title",
-        audio=pdgen.Sine(261.63).to_audio_segment().export(format="mp3"),
+        # audio=pdgen.Sine(261.63).to_audio_segment().export(format="mp3"),
+        audio=tts_client.speak("words"),
     )
     return {"message": "Hello, World!!"}
 

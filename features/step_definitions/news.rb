@@ -1,5 +1,6 @@
 require 'httparty'
 require 'rspec'
+require 'base64'
 
 When(/^the scheduled time arrives$/) do
   # https://cloud.google.com/pubsub/docs/push#receive_push
@@ -44,7 +45,7 @@ Then(/^audio is generated from text$/) do
   expect(body["audioConfig"]).to include("audioEncoding" => "MP3")
 end
 
-Then(/^an audio file is uploaded to Spreaker$/) do
+Then(/^the audio file is uploaded to Spreaker$/) do
   #https://developers.spreaker.com/api/
   #https://wiremock.org/docs/api/#tag/Requests/paths/~1__admin~1requests~1find/post
   response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
@@ -63,11 +64,16 @@ Then(/^an audio file is uploaded to Spreaker$/) do
   # between parts.
   expect(content_type).to include("multipart/form-data")
 
-  # Parser can't han't handle actual mp3 data
   # https://stackoverflow.com/a/73551605
   # http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
-  #parsed = parse_multipart_form(content_type, upload_request["body"])
-  #expect(parsed.params).to have_key("title")
-  #expect(parsed.params["media_file"][:filename]).to eq("audio.mp3")
-  #expect(parsed.params["media_file"][:type]).to eq("audio/mp3")
+  parsed = parse_multipart_form(
+    content_type, upload_request["body"].gsub(/\r?\n/, "\r\n"))
+  expect(parsed.params).to have_key("title")
+  expect(parsed.params["media_file"][:filename]).to eq("audio.mp3")
+  expect(parsed.params["media_file"][:type]).to eq("audio/mp3")
+  puts(parsed.params)
+
+  mp3data = parsed.params["media_file"][:tempfile].read
+  mp3base64 = Base64.encode64(mp3data).strip
+  expect(mp3base64).to eq(@mp3base64)
 end

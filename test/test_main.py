@@ -18,6 +18,7 @@ class TestMain(unittest.TestCase):
             "spreaker_show_id": "THE_SPREAKER_SHOW_ID",
         }
 
+        tts_Client.return_value.speak.return_value = b"THE_MP3_DATA"
         response = main.generate_news(trigger)
 
         tts_Client.assert_called_with(
@@ -32,4 +33,7 @@ class TestMain(unittest.TestCase):
                 "show_id": "THE_SPREAKER_SHOW_ID",
             }
         )
-        spreaker_Client.return_value.upload.assert_called()
+        spreaker_Client.return_value.upload.assert_called_with(
+            title="Dummy Title",
+            audio=b"THE_MP3_DATA",
+        )
