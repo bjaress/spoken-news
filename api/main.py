@@ -18,8 +18,7 @@ def generate_news(trigger: models.PubSubTrigger):
 
     spreaker_client.upload(
         title="Dummy Title",
-        # audio=pdgen.Sine(261.63).to_audio_segment().export(format="mp3"),
-        audio=tts_client.speak("words"),
+        audio=tts_client.speak("Hello, World!"),
     )
     return {"message": "Hello, World!!"}
 

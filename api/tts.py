@@ -3,6 +3,8 @@ import base64
 
 # https://cloud.google.com/text-to-speech/docs/basics
 
+import logging
+
 
 class Client:
     def __init__(self, config, requests=requests):
@@ -22,4 +24,6 @@ class Client:
                 "audioConfig": {"audioEncoding": "MP3"},
             },
         )
+        logging.info(f"TTS Request: {response.status_code}")
+        logging.debug(str(response)[:20])
         return base64.b64decode(response.json()["audioContent"])

@@ -19,4 +19,5 @@ class Client:
             files=[("media_file", ("audio.mp3", audio, "audio/mp3"))],
             data={"title": title},
         )
+        # response.raise_for_status()
         logging.info(f"Spreaker Request: {response.status_code}")

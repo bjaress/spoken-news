@@ -24,7 +24,7 @@ class TestMain(unittest.TestCase):
         tts_Client.assert_called_with(
             {"api_key": "THE_TTS_API_KEY", "server": "THE_TTS_SERVER"}
         )
-        tts_Client.return_value.speak.assert_called_with("words")
+        tts_Client.return_value.speak.assert_called_with("Hello, World!")
 
         spreaker_Client.assert_called_with(
             {
