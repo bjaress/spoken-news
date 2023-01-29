@@ -25,5 +25,4 @@ class Client:
             },
         )
         logging.info(f"TTS Request: {response.status_code}")
-        logging.debug(str(response)[:20])
         return base64.b64decode(response.json()["audioContent"])

@@ -10,9 +10,10 @@ X   text-to-speech
         https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize
         https://cloud.google.com/docs/authentication/api-keys
         static text for now
-    better logging and error handling
+    better logging
     get info from Wikipedia
         just headline for now
+    error handling
     async
         in parallel
             get wikipedia article list
