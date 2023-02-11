@@ -10,10 +10,21 @@ X   text-to-speech
         https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize
         https://cloud.google.com/docs/authentication/api-keys
         static text for now
-    better logging
-    get info from Wikipedia
-        just headline for now
-    error handling
+X   better logging
+    get info from Wikipedia (just headline for now)
+        wikipediaapi package
+            https://pypi.org/project/Wikipedia-API/
+        use HTML extraction (plain text extraction elides paragraph breaks)
+            news = wikipediaapi.Wikipedia(language='en',
+                extract_format=wikipediaapi.ExtractFormat.HTML
+                ).page("Template:In_the_news").summary
+        beautiful soup
+            soup = BeautifulSoup(news, 'html.parser')
+            .text
+        strip parenthesized expressions, as in old version
+    better error handling
+    not re-doing existing episodes
+        track which pages an episode contains in metadata?
     async
         in parallel
             get wikipedia article list

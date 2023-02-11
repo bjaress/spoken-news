@@ -4,8 +4,6 @@ from api import spreaker
 from api import models
 import logging
 
-import pydub.generators as pdgen
-
 app = FastAPI()
 logging.basicConfig(level=logging.DEBUG)
 
