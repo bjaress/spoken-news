@@ -24,6 +24,12 @@ Given(/^the service is healthy$/) do
   end
 end
 
+Given(/^Wikipedia is available$/) do
+  poll("wikipedia wiremock startup check/reset", 200) do
+    HTTParty.post("#{$url[:wikipedia]}/__admin/reset").code
+  end
+end
+
 Given(/^Spreaker API is available$/) do
   poll("spreaker wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:spreaker]}/__admin/reset").code

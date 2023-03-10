@@ -23,6 +23,18 @@ When(/^the scheduled time arrives$/) do
   expect(response.code).to eq(200)
 end
 
+Then(/^news is retrieved from Wikipedia$/)
+  #found inside the wikipediaapi python package
+  response = HTTParty.post("#{$url[:wikipedia]}/__admin/requests/find", {
+    :body => {
+      :method => "GET",
+      :urlPath => "/w/api.php"
+    }.to_json
+  })
+  requests = JSON.parse(response.body)["requests"]
+  expect(requests).to have_attributes(length: 1)
+end
+
 Then(/^audio is generated from text$/) do
   #https://cloud.google.com/text-to-speech/docs/basics
   response = HTTParty.post("#{$url[:google]}/__admin/requests/find", {
