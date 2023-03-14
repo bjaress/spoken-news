@@ -137,6 +137,8 @@ resource "google_cloud_scheduler_job" "scheduled-job" {
       spreaker_token = local.spreaker_access.access_token
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
+      wikipedia_url = "https://en.wikipedia.org"
+      wikipedia_headlines_page = "Template:In_the_news"
     }
   }
 }

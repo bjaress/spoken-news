@@ -4,27 +4,25 @@ import hamcrest as ham
 
 import api.wikipedia as wikipedia
 
+
 class TestClient(unittest.TestCase):
     def test_headlines_happypath(self):
-        external=mock.MagicMock()
-        client = wikipedia.Client(wikipediaapi=external)
+        requests = mock.MagicMock()
+        client = wikipedia.Client(
+            {"url": "THE_URL", "headlines_page": "THE_HEADLINES"}, requests=requests
+        )
 
-        external.Wikipedia.assert_called_once_with(
-            language='en',
-            extract_format=external.ExtractFormat.HTML)
+        requests.get.assert_not_called()
 
-        page_fetch = external.Wikipedia.return_value.page
-        page_fetch.return_value.summary = """
-            <ul>
-                <li>
-                    Some <a href="thingy/or/event">news</a> happened.
-                </li>
-            </ul>
-            """
-        headlines = client.headlines()
-        page_fetch.assert_called_once_with(wikipedia.HEADLINE_PAGE)
+        client.headlines()
 
-        ham.assert_that(headlines,
-            ham.contains_exactly(
-                ham.all_of(
-                    ham.has_property("text", "Some news happened."))))
+        requests.get.assert_called_once_with(
+            "THE_URL/w/api.php",
+            params={
+                "action": "parse",
+                "section": 0,
+                "prop": "text",
+                "format": "json",
+                "page": "THE_HEADLINES",
+            },
+        )

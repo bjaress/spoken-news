@@ -6,39 +6,8 @@ X   scheduled pub/sub
 X   text-to-speech
 X   better logging
     get info from Wikipedia (just headline for now)
-        wikipediaapi package
-            https://pypi.org/project/Wikipedia-API/
         figure out what to mock in testing
-            THIS DOESN'T HAVE LINKS!!
-            https://en.wikipedia.org:443/w/api.php?action=query&prop=extracts&titles=Template%3AIn_the_news&format=json&redirects=1
-            {
-              "batchcomplete": "",
-              "warnings": {
-                "extracts": {
-                  "*": "HTML may be malformed and/or unbalanced and may omit inline images. Use at your own risk. Known problems are listed at https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:TextExtracts#Caveats."
-                }
-              },
-              "query": {
-                "normalized": [
-                  {
-                    "from": "Template:In_the_news",
-                    "to": "Template:In the news"
-                  }
-                ],
-                "pages": {
-                  "482256": {
-                    "pageid": 482256,
-                    "ns": 10,
-                    "title": "Template:In the news",
-                    "extract": "<ul><li>In <b>the Estonian parliamentary election</b>, the Reform Party, led by Kaja Kallas <i>(pictured)</i>, wins the most seats in the Riigikogu.</li>\n<li><b>Cyclone Freddy</b> leaves at least 29 people dead in Madagascar, Mozambique and Zimbabwe.</li>\n<li>Bola Tinubu, of the ruling All Progressives Congress, is <b>elected</b> President of Nigeria.</li>\n<li><b>A train crash</b> in Thessaly, Greece, kills at least 57 people.</li>\n<li>At least 67 migrants are killed in <b>a shipwreck</b> off the coast of Calabria, Italy.</li></ul>\n<link rel=\"mw-deduplicated-inline-style\" href=\"mw-data:TemplateStyles:r1129693374\">"
-                  }
-                }
-              }
-            }
-        use HTML extraction (plain text extraction elides paragraph breaks)
-            news = wikipediaapi.Wikipedia(language='en',
-                extract_format=wikipediaapi.ExtractFormat.HTML
-                ).page("Template:In_the_news").summary
+            https://en.wikipedia.org/w/api.php?action=parse&section=0&prop=text&format=json&page=Template:In_the_news
         beautiful soup
             soup = BeautifulSoup(news, 'html.parser')
             .text

@@ -13,7 +13,9 @@ When(/^the scheduled time arrives$/) do
           :spreaker_token => "DUMMY_TOKEN",
           :spreaker_show_id => $showId,
           :tts_api_key => "DUMMY_KEY",
-          :tts_server => $url[:google]
+          :tts_server => $url[:google],
+          :wikipedia_url => $url[:wikipedia],
+          :wikipedia_headlines_page => "Template:In_the_news"
         },
         :messageId => "blahblah"
       },
@@ -28,7 +30,14 @@ Then(/^news is retrieved from Wikipedia$/) do
   response = HTTParty.post("#{$url[:wikipedia]}/__admin/requests/find", {
     :body => {
       :method => "GET",
-      :urlPath => "/w/api.php"
+      :urlPath => "/w/api.php",
+      :queryParameters => {
+        :action => {:equalTo => "parse"},
+        :format => {:equalTo => "json"},
+        :prop => {:equalTo => "text"},
+        :page => {:equalTo => "Template:In_the_news"},
+        :section => {:equalTo => "0"}
+      }
     }.to_json
   })
   requests = JSON.parse(response.body)["requests"]
