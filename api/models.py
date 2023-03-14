@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+import typing
 
 class Attributes(BaseModel):
     spreaker_url: str
@@ -15,3 +15,6 @@ class Message(BaseModel):
 
 class PubSubTrigger(BaseModel):
     message: Message
+
+class Headline(BaseModel):
+    text: str

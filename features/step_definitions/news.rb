@@ -23,7 +23,7 @@ When(/^the scheduled time arrives$/) do
   expect(response.code).to eq(200)
 end
 
-Then(/^news is retrieved from Wikipedia$/)
+Then(/^news is retrieved from Wikipedia$/) do
   #found inside the wikipediaapi python package
   response = HTTParty.post("#{$url[:wikipedia]}/__admin/requests/find", {
     :body => {
