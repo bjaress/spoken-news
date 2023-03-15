@@ -28,6 +28,29 @@ Given(/^Wikipedia is available$/) do
   poll("wikipedia wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:wikipedia]}/__admin/reset").code
   end
+  response = HTTParty.post("#{$url[:wikipedia]}/__admin/mappings", {
+    :body => {
+      :request => {
+        :urlPath => "/w/api.php",
+        :queryParameters => {
+          :page => {:equalTo => "Template:In_the_news"}
+        }
+      },
+      :response => {
+        :status => 200,
+        :jsonBody => {
+          :parse =>  {
+            :title =>  "Template:In the news",
+            :pageid =>  482256,
+            :text =>  {
+              :* =>  "<div><ul><li>An <a href=\"/wiki/Thing\">Event</a> occurred.</li></ul></div>"
+            }
+          }
+        }
+      }
+    }.to_json
+  })
+  expect(response.code).to eq(201)
 end
 
 Given(/^Spreaker API is available$/) do
