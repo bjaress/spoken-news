@@ -18,3 +18,7 @@ class Message(BaseModel):
 
 class PubSubTrigger(BaseModel):
     message: Message
+
+
+class Headline(BaseModel):
+    text: str

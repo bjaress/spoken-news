@@ -1,4 +1,8 @@
 import requests
+from api import models
+from bs4 import BeautifulSoup
+
+import logging
 
 API_PATH = "/w/api.php"
 
@@ -10,7 +14,7 @@ class Client:
         self.endpoint = self.options["url"] + API_PATH
 
     def headlines(self):
-        self.requests.get(
+        response = self.requests.get(
             self.endpoint,
             params={
                 "action": "parse",
@@ -20,3 +24,10 @@ class Client:
                 "page": self.options["headlines_page"],
             },
         )
+        logging.info(f"Wikipedia Request: {response.status_code}")
+
+        html = response.json()["parse"]["text"]["*"]
+        soup = BeautifulSoup(html, "html.parser")
+
+        headlines = [models.Headline(text=soup.li.text)]
+        return headlines

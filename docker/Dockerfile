@@ -1,6 +1,5 @@
 FROM python:3-alpine as requirements
 
-RUN apk add ffmpeg #for pydub
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 

@@ -14,7 +14,19 @@ class TestClient(unittest.TestCase):
 
         requests.get.assert_not_called()
 
-        client.headlines()
+        requests.get.return_value.json.return_value = {
+            "parse": {
+                "text": {
+                    "*": """
+                    <ul>
+                        <li>Hello, <a href="/wiki/Earth">World</a>!</li>
+                    </ul>
+                    """
+                }
+            }
+        }
+
+        headlines = client.headlines()
 
         requests.get.assert_called_once_with(
             "THE_URL/w/api.php",
@@ -25,4 +37,8 @@ class TestClient(unittest.TestCase):
                 "format": "json",
                 "page": "THE_HEADLINES",
             },
+        )
+
+        ham.assert_that(
+            headlines, ham.contains_exactly(ham.has_property("text", "Hello, World!"))
         )

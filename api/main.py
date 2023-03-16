@@ -17,16 +17,13 @@ def generate_news(trigger: models.PubSubTrigger):
     tts_client = tts.Client(attributes["tts"])
     spreaker_client = spreaker.Client(attributes["spreaker"])
 
-    try:
-        wikipedia_client.headlines()
-    except:
-        pass
+    message = wikipedia_client.headlines()[0].text
 
     spreaker_client.upload(
-        title="Dummy Title",
-        audio=tts_client.speak("Hello, World!"),
+        title=message,
+        audio=tts_client.speak(message),
     )
-    return {"message": "Hello, World!!"}
+    return {"message": message}
 
 
 def split_attributes(trigger: models.PubSubTrigger):

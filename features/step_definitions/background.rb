@@ -43,7 +43,7 @@ Given(/^Wikipedia is available$/) do
             :title =>  "Template:In the news",
             :pageid =>  482256,
             :text =>  {
-              :* =>  "<div><ul><li>An <a href=\"/wiki/Thing\">Event</a> occurred.</li></ul></div>"
+              :* =>  "<div><ul><li>An <a href=\"/wiki/Thing\">event</a> occurred.</li></ul></div>"
             }
           }
         }

@@ -15,19 +15,22 @@ X   better logging
                 soup = BeautifulSoup(news, 'html.parser')
                 .text
     better error handling
+    multiple headlines
     not re-doing existing episodes
         track which pages an episode contains in metadata?
-    strip parenthesized expressions, as in old version
-    async
-        in parallel
-            get wikipedia headline list
-            get voices list
-            get past episode list
+        get past episode list
+        compare to headlines
+    article text
+        construct full script
+        ordering of article contents
+        enforce character limit
+        strip parenthesized expressions, as in old version
+    choose voice/random voice from list
+        tweak speed and pitch
+    async?
+        parallelize?
         issue HTTP response 202 (or transient error)
         in background https://fastapi.tiangolo.com/tutorial/background-tasks/
-            construct script from articles
-                ordering of article contents
-                enforce character limit
             script -> mp3
             upload
     podcast on youtube

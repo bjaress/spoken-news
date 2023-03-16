@@ -21,6 +21,8 @@ class TestMain(unittest.TestCase):
             "wikipedia_headlines_page": "THE_WIKIPEDIA_HEADLINES",
         }
 
+        headline = wikipedia_Client.return_value.headlines.return_value[0]
+        headline.text = "Hello, Wikipedia!"
         tts_Client.return_value.speak.return_value = b"THE_MP3_DATA"
         response = main.generate_news(trigger)
 
@@ -32,7 +34,7 @@ class TestMain(unittest.TestCase):
         tts_Client.assert_called_with(
             {"api_key": "THE_TTS_API_KEY", "server": "THE_TTS_SERVER"}
         )
-        tts_Client.return_value.speak.assert_called_with("Hello, World!")
+        tts_Client.return_value.speak.assert_called_with(headline.text)
 
         spreaker_Client.assert_called_with(
             {
@@ -42,6 +44,6 @@ class TestMain(unittest.TestCase):
             }
         )
         spreaker_Client.return_value.upload.assert_called_with(
-            title="Dummy Title",
+            title=headline.text,
             audio=b"THE_MP3_DATA",
         )
