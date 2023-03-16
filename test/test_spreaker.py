@@ -1,5 +1,6 @@
 import unittest
-import hamcrest as h
+import hamcrest as ham
+import hypothesis as hyp
 from unittest.mock import Mock
 
 from api import spreaker
@@ -8,18 +9,19 @@ from requests.exceptions import HTTPError
 
 
 class TestSpreaker(unittest.TestCase):
-    def test_upload(self):
+    def setUp(self):
         config = {
             "url": "THE_URL",
             "token": "THE_TOKEN",
             "show_id": 0,
         }
-        requests = Mock()
-        client = spreaker.Client(config, requests=requests)
+        self.requests = Mock()
+        self.client = spreaker.Client(config, requests=self.requests)
 
-        requests.post.assert_not_called()
-        client.upload(title="THE_TITLE", audio=b"THE_AUDIO")
-        requests.post.assert_called_with(
+    def test_upload(self):
+        self.requests.post.assert_not_called()
+        self.client.upload(title="THE_TITLE", audio=b"THE_AUDIO")
+        self.requests.post.assert_called_with(
             "THE_URL/v2/shows/0/episodes",
             headers={
                 "Authorization": "Bearer THE_TOKEN",
@@ -29,15 +31,36 @@ class TestSpreaker(unittest.TestCase):
             data={"title": "THE_TITLE"},
         )
 
+    def test_truncate_title(self):
+        self.client.upload(title=("a" * 141), audio=b"THE_AUDIO")
+        ham.assert_that(
+            self.requests.post.call_args.kwargs,
+            ham.has_entry("data", ham.has_entry("title", "a" * 137 + "...")),
+        )
 
-#    def test_failed_upload(self):
-#        config = {
-#            "url": "THE_URL",
-#            "token": "THE_TOKEN",
-#            "show_id": 0,
-#        }
-#        requests = Mock()
-#        client = spreaker.Client(config, requests=requests)
-#        requests.post.return_value.raise_for_status.side_effect=HTTPError()
-#        with self.assertRaises(HTTPError):
-#            client.upload(title="THE_TITLE", audio=b"THE_AUDIO")
+    @hyp.given(hyp.strategies.text(max_size=spreaker.TITLE_LIMIT))
+    def test_truncate_title_short(self, title):
+        self.client.upload(title=title, audio=b"THE_AUDIO")
+        ham.assert_that(
+            self.requests.post.call_args.kwargs,
+            ham.has_entry("data", ham.has_entry("title", title)),
+        )
+
+    @hyp.given(hyp.strategies.text(min_size=2))
+    def test_truncate_title_short(self, title):
+        # It's slow to produce very long text in Hypothesis
+        title = ("a" * (spreaker.TITLE_LIMIT - 1)) + title
+        self.client.upload(title=title, audio=b"THE_AUDIO")
+        ham.assert_that(
+            self.requests.post.call_args.kwargs,
+            ham.has_entry(
+                "data",
+                ham.has_entry(
+                    "title",
+                    ham.all_of(
+                        ham.has_length(spreaker.TITLE_LIMIT),
+                        ham.ends_with(spreaker.ELLIPSIS),
+                    ),
+                ),
+            ),
+        )

@@ -59,7 +59,7 @@ Then(/^audio is generated from text$/) do
 
   expect(request["url"]).to include("key=DUMMY_KEY")
   body = JSON.parse(request["body"])
-  expect(body["input"]).to include("text" => "An event occurred.")
+  expect(body["input"]["text"]).to include("An event occurred.")
   expect(body["voice"]).to have_key("languageCode")
   expect(body["voice"]).to have_key("name")
   expect(body["voice"]).to have_key("ssmlGender")
@@ -92,9 +92,17 @@ Then(/^the audio file is uploaded to Spreaker$/) do
   expect(parsed.params).to have_key("title")
   expect(parsed.params["media_file"][:filename]).to eq("audio.mp3")
   expect(parsed.params["media_file"][:type]).to eq("audio/mp3")
-  puts(parsed.params)
 
   mp3data = parsed.params["media_file"][:tempfile].read
   mp3base64 = Base64.encode64(mp3data).strip
   expect(mp3base64).to eq(@mp3base64)
+
+  @spreaker_params = parsed.params
+end
+
+Then(/^the episode title is based on the headline$/) do
+  expect(@spreaker_params["title"]).to eq(
+      "An event occurred. For a variety of reasons, it takes " +
+      "Wikipedia many characters to form a headline about it, but " +
+      "this will be truncated f...")
 end

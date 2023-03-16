@@ -2,6 +2,9 @@ from pydantic import BaseModel
 import requests
 import logging
 
+TITLE_LIMIT = 140  # Spreaker limit
+ELLIPSIS = "..."
+
 
 class Client:
     def __init__(self, config, requests=requests):
@@ -17,7 +20,11 @@ class Client:
                 "Authorization": f"Bearer {self.token}",
             },
             files=[("media_file", ("audio.mp3", audio, "audio/mp3"))],
-            data={"title": title},
+            data={"title": truncate_episode_title(title)},
         )
-        # response.raise_for_status()
-        logging.info(f"Spreaker Request: {response.status_code}")
+
+
+def truncate_episode_title(title):
+    if len(title) > TITLE_LIMIT:
+        return title[: TITLE_LIMIT - len(ELLIPSIS)] + ELLIPSIS
+    return title

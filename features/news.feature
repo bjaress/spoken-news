@@ -11,3 +11,6 @@ Scenario: Uploading sound
     Then news is retrieved from Wikipedia
     Then audio is generated from text
     Then the audio file is uploaded to Spreaker
+    And the episode title is based on the headline
+
+
