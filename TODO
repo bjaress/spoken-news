@@ -6,20 +6,23 @@ X   scheduled pub/sub
 X   text-to-speech
 X   better logging
     get info from Wikipedia (just headline for now)
-        figure out what to mock in testing
+    X   figure out what to mock in testing
             https://en.wikipedia.org/w/api.php?action=parse&section=0&prop=text&format=json&page=Template:In_the_news
-        beautiful soup
-            soup = BeautifulSoup(news, 'html.parser')
-            .text
-        strip parenthesized expressions, as in old version
+    X   hit the endpoint
+    X   mock the endpoint
+        carry over text from wikipedia to tts
+            beautiful soup
+                soup = BeautifulSoup(news, 'html.parser')
+                .text
     better error handling
     not re-doing existing episodes
         track which pages an episode contains in metadata?
+    strip parenthesized expressions, as in old version
     async
         in parallel
-            get wikipedia article list
+            get wikipedia headline list
             get voices list
-            check spreaker access
+            get past episode list
         issue HTTP response 202 (or transient error)
         in background https://fastapi.tiangolo.com/tutorial/background-tasks/
             construct script from articles
