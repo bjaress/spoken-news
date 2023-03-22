@@ -1,3 +1,5 @@
+require 'httparty'
+
 $showId = 1234
 
 class UrlLookup
@@ -7,3 +9,20 @@ class UrlLookup
   end
 end
 $url = UrlLookup.new
+
+def poll(description, target)
+  for attempt in 0..300
+    puts("Trying #{description}.")
+    STDOUT.flush
+    begin
+      break if target == yield
+      puts("Was not #{target}.")
+      STDOUT.flush
+    rescue => error
+      puts(error)
+    end
+    sleep(1)
+  end
+  puts("Done trying #{description}.")
+  STDOUT.flush
+end

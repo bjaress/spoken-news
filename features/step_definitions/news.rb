@@ -2,6 +2,12 @@ require 'httparty'
 require 'rspec'
 require 'base64'
 
+Given(/^the service is healthy$/) do
+  poll("health check", 200) do
+    HTTParty.get("#{$url[:app]}/health").code
+  end
+end
+
 When(/^the scheduled time arrives$/) do
   # https://cloud.google.com/pubsub/docs/push#receive_push
   response = HTTParty.post($url[:app], {
@@ -23,83 +29,4 @@ When(/^the scheduled time arrives$/) do
     }.to_json
   })
   expect(response.code).to eq(200)
-end
-
-Then(/^news is retrieved from Wikipedia$/) do
-  #found inside the wikipediaapi python package
-  response = HTTParty.post("#{$url[:wikipedia]}/__admin/requests/find", {
-    :body => {
-      :method => "GET",
-      :urlPath => "/w/api.php",
-      :queryParameters => {
-        :action => {:equalTo => "parse"},
-        :format => {:equalTo => "json"},
-        :prop => {:equalTo => "text"},
-        :page => {:equalTo => "Template:In_the_news"},
-        :section => {:equalTo => "0"}
-      }
-    }.to_json
-  })
-  requests = JSON.parse(response.body)["requests"]
-  expect(requests).to have_attributes(length: 1)
-end
-
-Then(/^audio is generated about (.*)$/) do |topic|
-  #https://cloud.google.com/text-to-speech/docs/basics
-  response = HTTParty.post("#{$url[:google]}/__admin/requests/find", {
-    :body => {
-      :method => "POST",
-      :urlPath => "/v1/text:synthesize"
-    }.to_json
-  })
-
-  requests = JSON.parse(response.body)["requests"]
-  expect(requests).to have_attributes(length: 1)
-  request = requests[0]
-
-  expect(request["url"]).to include("key=DUMMY_KEY")
-  body = JSON.parse(request["body"])
-  expect(body["input"]["text"]).to eq($NEWS[topic][:episode_contents])
-  expect(body["voice"]).to have_key("languageCode")
-  expect(body["voice"]).to have_key("name")
-  expect(body["voice"]).to have_key("ssmlGender")
-  expect(body["audioConfig"]).to include("audioEncoding" => "MP3")
-end
-
-Then(/^the audio file is uploaded to Spreaker$/) do
-  #https://developers.spreaker.com/api/
-  #https://wiremock.org/docs/api/#tag/Requests/paths/~1__admin~1requests~1find/post
-  response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
-    :body => {
-      :method => "POST",
-      :urlPath => "/v2/shows/#{$showId}/episodes"
-    }.to_json
-  })
-
-  upload_request = JSON.parse(response.body)["requests"][0]
-  headers = upload_request["headers"]
-  expect(headers["Authorization"]).to eq("Bearer DUMMY_TOKEN")
-
-  content_type = headers["Content-Type"]
-  # There's extra stuff in the content-type to specify the boundary
-  # between parts.
-  expect(content_type).to include("multipart/form-data")
-
-  # https://stackoverflow.com/a/73551605
-  # http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
-  parsed = parse_multipart_form(
-    content_type, upload_request["body"].gsub(/\r?\n/, "\r\n"))
-  expect(parsed.params).to have_key("title")
-  expect(parsed.params["media_file"][:filename]).to eq("audio.mp3")
-  expect(parsed.params["media_file"][:type]).to eq("audio/mp3")
-
-  mp3data = parsed.params["media_file"][:tempfile].read
-  mp3base64 = Base64.encode64(mp3data).strip
-  expect(mp3base64).to eq(@mp3base64)
-
-  @spreaker_params = parsed.params
-end
-
-Then(/^the episode title is about (.*)$/) do |topic|
-  expect(@spreaker_params["title"]).to eq($NEWS[topic][:episode_title])
 end

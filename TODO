@@ -15,12 +15,12 @@ X   better logging
                 soup = BeautifulSoup(news, 'html.parser')
                 .text
     X   limit spreaker episode title lengths
-        pull out headlines into data structure
-            include expected episode title
-            reference as step argument
-        separate step definition files for dependencies
+    X   pull out headlines into data structure
+        X   include expected episode title
+        X   reference as step argument
+    X   separate step definition files for dependencies
     not re-doing existing episodes
-        edit distance to past episode titles
+        check edit distance to past episode titles
         get past episode list
         compare titles derived from headlines
         pick the oldest unused headline (if any)
