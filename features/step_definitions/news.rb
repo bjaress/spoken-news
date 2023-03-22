@@ -44,7 +44,7 @@ Then(/^news is retrieved from Wikipedia$/) do
   expect(requests).to have_attributes(length: 1)
 end
 
-Then(/^audio is generated from text$/) do
+Then(/^audio is generated about (.*)$/) do |topic|
   #https://cloud.google.com/text-to-speech/docs/basics
   response = HTTParty.post("#{$url[:google]}/__admin/requests/find", {
     :body => {
@@ -59,7 +59,7 @@ Then(/^audio is generated from text$/) do
 
   expect(request["url"]).to include("key=DUMMY_KEY")
   body = JSON.parse(request["body"])
-  expect(body["input"]["text"]).to include("An event occurred.")
+  expect(body["input"]["text"]).to eq($NEWS[topic][:episode_contents])
   expect(body["voice"]).to have_key("languageCode")
   expect(body["voice"]).to have_key("name")
   expect(body["voice"]).to have_key("ssmlGender")
@@ -100,9 +100,6 @@ Then(/^the audio file is uploaded to Spreaker$/) do
   @spreaker_params = parsed.params
 end
 
-Then(/^the episode title is based on the headline$/) do
-  expect(@spreaker_params["title"]).to eq(
-      "An event occurred. For a variety of reasons, it takes " +
-      "Wikipedia many characters to form a headline about it, but " +
-      "this will be truncated f...")
+Then(/^the episode title is about (.*)$/) do |topic|
+  expect(@spreaker_params["title"]).to eq($NEWS[topic][:episode_title])
 end

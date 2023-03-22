@@ -10,29 +10,32 @@ X   better logging
             https://en.wikipedia.org/w/api.php?action=parse&section=0&prop=text&format=json&page=Template:In_the_news
     X   hit the endpoint
     X   mock the endpoint
-        carry over text from wikipedia to tts
+    X   carry over text from wikipedia to tts
             beautiful soup
                 soup = BeautifulSoup(news, 'html.parser')
                 .text
-    better error handling
-    multiple headlines
+    X   limit spreaker episode title lengths
+        pull out headlines into data structure
+            include expected episode title
+            reference as step argument
+        separate step definition files for dependencies
     not re-doing existing episodes
-        track which pages an episode contains in metadata?
+        edit distance to past episode titles
         get past episode list
-        compare to headlines
+        compare titles derived from headlines
+        pick the oldest unused headline (if any)
+            more than half of articles unused in existing episodes
+    reaping old episodes
+        delete oldest when more than 8
+        after upload of new
     article text
         construct full script
         ordering of article contents
         enforce character limit
         strip parenthesized expressions, as in old version
+    better error handling
     choose voice/random voice from list
         tweak speed and pitch
-    async?
-        parallelize?
-        issue HTTP response 202 (or transient error)
-        in background https://fastapi.tiangolo.com/tutorial/background-tasks/
-            script -> mp3
-            upload
     podcast on youtube
         channel
         sprout settings

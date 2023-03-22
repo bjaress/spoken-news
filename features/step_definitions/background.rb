@@ -28,6 +28,9 @@ Given(/^Wikipedia is available$/) do
   poll("wikipedia wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:wikipedia]}/__admin/reset").code
   end
+end
+
+Given(/^there is a headline about (.*)$/) do |topic|
   response = HTTParty.post("#{$url[:wikipedia]}/__admin/mappings", {
     :body => {
       :request => {
@@ -43,11 +46,7 @@ Given(/^Wikipedia is available$/) do
             :title =>  "Template:In the news",
             :pageid =>  482256,
             :text =>  {
-              :* =>  (  "<div><ul><li>An <a href=\"/wiki/Thing\">event</a>" +
-                        " occurred. For a variety of reasons, it takes" +
-                        " Wikipedia many characters to form a headline" +
-                        " about it, but this will be truncated for" +
-                        " Spreaker.</li></ul></div>")
+              :* => "<div><ul><li>#{$NEWS[topic][:headline]}</li></ul></div>"
             }
           }
         }

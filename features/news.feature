@@ -7,10 +7,11 @@ Background:
     Given Wikipedia is available
 
 Scenario: Uploading sound
+    Given there is a headline about frogs
     When the scheduled time arrives
     Then news is retrieved from Wikipedia
-    Then audio is generated from text
+    Then audio is generated about frogs
     Then the audio file is uploaded to Spreaker
-    And the episode title is based on the headline
+    And the episode title is about frogs
 
 
