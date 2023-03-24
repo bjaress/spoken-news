@@ -24,13 +24,18 @@ class Client:
         )
 
     def fresh_headline(self, headlines):
-        self.requests.get(
+        response = self.requests.get(
             f"{self.url}/v2/shows/{self.show_id}/episodes",
             headers={
                 "Authorization": f"Bearer {self.token}",
             },
             params={"filter": "editable"},
         )
+        episodes = {e["title"] for e in response.json()["response"]["items"]}
+
+        for candidate in reversed(headlines):
+            if truncate_episode_title(candidate.text) not in episodes:
+                return candidate
 
 
 def truncate_episode_title(title):

@@ -18,9 +18,8 @@ def generate_news(trigger: models.PubSubTrigger):
     spreaker_client = spreaker.Client(attributes["spreaker"])
 
     headlines = wikipedia_client.headlines()
-    # TODO pick one, not just first
-    spreaker_client.fresh_headline(headlines)
-    message = headlines[0].text
+    logging.warn(headlines)
+    message = spreaker_client.fresh_headline(headlines).text
 
     spreaker_client.upload(
         title=message,

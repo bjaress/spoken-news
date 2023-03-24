@@ -6,6 +6,10 @@ Given(/^Wikipedia is available$/) do
 end
 
 Given(/^there is a headline about (.*)$/) do |topic|
+  # Newest first
+  @headlines = (@headlines || []).unshift(topic)
+  headline_htmls = @headlines.map{|t| $NEWS[t][:headline]}
+
   response = HTTParty.post("#{$url[:wikipedia]}/__admin/mappings", {
     :body => {
       :request => {
@@ -21,7 +25,9 @@ Given(/^there is a headline about (.*)$/) do |topic|
             :title =>  "Template:In the news",
             :pageid =>  482256,
             :text =>  {
-              :* => "<div><ul><li>#{$NEWS[topic][:headline]}</li></ul></div>"
+              :* => "<div><ul><li>#{headline_htmls.join('</li><li>')}</li></ul></div>"
+
+  
             }
           }
         }

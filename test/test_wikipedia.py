@@ -42,3 +42,32 @@ class TestClient(unittest.TestCase):
         ham.assert_that(
             headlines, ham.contains_exactly(ham.has_property("text", "Hello, World!"))
         )
+
+    def test_headlines_multi(self):
+        requests = mock.MagicMock()
+        client = wikipedia.Client(
+            {"url": "THE_URL", "headlines_page": "THE_HEADLINES"}, requests=requests
+        )
+
+        requests.get.return_value.json.return_value = {
+            "parse": {
+                "text": {
+                    "*": """
+                    <ul>
+                        <li>Goodby, World!</li>
+                        <li>Hello, World!</li>
+                    </ul>
+                    """
+                }
+            }
+        }
+
+        headlines = client.headlines()
+
+        ham.assert_that(
+            headlines,
+            ham.contains_exactly(
+                ham.has_property("text", "Goodby, World!"),
+                ham.has_property("text", "Hello, World!"),
+            ),
+        )

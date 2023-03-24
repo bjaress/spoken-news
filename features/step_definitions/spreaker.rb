@@ -20,6 +20,18 @@ Given(/^Spreaker API is available$/) do
   })
   expect(response.code).to eq(201)
 
+  existing_episodes([])
+end
+
+Given(/^there is an episode about (.*)$/) do |topic|
+  # Newest first
+  @episodes = (@episodes || []).unshift(topic)
+  existing_episodes(@episodes)
+end
+
+def existing_episodes(topics)
+  episodes = topics.map{|t| {title: $NEWS[t][:episode_title]}}
+
   # https://developers.spreaker.com/api/episodes/#retrieving-a-shows-episodes
   response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
     :body => {
@@ -30,15 +42,13 @@ Given(/^Spreaker API is available$/) do
       :response => {
         :status => 200,
         :jsonBody => {
-          :response => { :items => [] }
+          :response => { :items => episodes }
         }
       }
     }.to_json
   })
   expect(response.code).to eq(201)
-
 end
-
 
 Then(/^the list of past episodes is retrieved from Spreaker$/) do
   response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {

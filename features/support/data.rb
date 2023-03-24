@@ -19,5 +19,18 @@ $NEWS = {
             "of reasons, it takes Wikipedia many characters to " +
             "form a headline about it, but this will be truncated " +
             "for Spreaker."),
-    }
+    },
+    "the nobel prize" => {
+        headline: (
+            "The Nobel Prize in <a href='/wiki/Cloudoligy'>cloud " +
+            "watching</a> was awarded to Tammy Bigglesworth."),
+
+        episode_title: (
+            "The Nobel Prize in cloud watching was awarded to " +
+            "Tammy Bigglesworth."),
+
+        episode_contents: (
+            "The Nobel Prize in cloud watching was awarded to " +
+            "Tammy Bigglesworth."),
+    },
 }

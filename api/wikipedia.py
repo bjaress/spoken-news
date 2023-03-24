@@ -29,5 +29,5 @@ class Client:
         html = response.json()["parse"]["text"]["*"]
         soup = BeautifulSoup(html, "html.parser")
 
-        headlines = [models.Headline(text=soup.li.text)]
+        headlines = [models.Headline(text=item.text) for item in soup.ul.find_all("li")]
         return headlines

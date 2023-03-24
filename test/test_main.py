@@ -39,7 +39,9 @@ class TestMain(unittest.TestCase):
         tts_Client.assert_called_with(
             {"api_key": "THE_TTS_API_KEY", "server": "THE_TTS_SERVER"}
         )
-        tts_Client.return_value.speak.assert_called_with(headline.text)
+        tts_Client.return_value.speak.assert_called_with(
+            spreaker_Client.return_value.fresh_headline.return_value.text
+        )
 
         spreaker_Client.assert_called_with(
             {
@@ -49,6 +51,6 @@ class TestMain(unittest.TestCase):
             }
         )
         spreaker_Client.return_value.upload.assert_called_with(
-            title=headline.text,
+            title=spreaker_Client.return_value.fresh_headline.return_value.text,
             audio=b"THE_MP3_DATA",
         )

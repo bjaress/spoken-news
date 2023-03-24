@@ -33,14 +33,60 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_fresh_headline(self):
-        self.requests.get.assert_not_called()
-        self.client.fresh_headline([models.Headline(text="THE_TITLE")])
+        fresh = models.Headline(text="THE_TITLE")
+        self.requests.get.return_value.json.return_value = episodes_with_titles([])
+        response = self.client.fresh_headline([fresh])
+
         self.requests.get.assert_called_with(
             "THE_URL/v2/shows/0/episodes",
             headers={
                 "Authorization": "Bearer THE_TOKEN",
             },
             params={"filter": "editable"},
+        )
+        ham.assert_that(
+            response, ham.equal_to(fresh), "The fresh headline should be chosen."
+        )
+
+    def test_fresh_headline_multiple(self):
+        fresh_newer = models.Headline(text="NEWER")
+        fresh_older = models.Headline(text="OLDER")
+        self.requests.get.return_value.json.return_value = episodes_with_titles([])
+
+        response = self.client.fresh_headline([fresh_newer, fresh_older])
+        ham.assert_that(
+            response,
+            ham.equal_to(fresh_older),
+            "The oldest fresh headline should be chosen.",
+        )
+
+    def test_fresh_headline_stale(self):
+        fresh_newer = models.Headline(text="FRESH_NEWER")
+        stale_older = models.Headline(text="STALE_OLDER")
+        self.requests.get.return_value.json.return_value = episodes_with_titles(
+            ["STALE_OLDER"]
+        )
+
+        response = self.client.fresh_headline([fresh_newer, stale_older])
+        ham.assert_that(
+            response,
+            ham.equal_to(fresh_newer),
+            "The oldest fresh headline should be chosen.",
+        )
+
+    def test_fresh_headline_stale_truncated(self):
+        fresh_newer = models.Headline(text="FRESH_NEWER")
+        stale_older = models.Headline(text=("long" * spreaker.TITLE_LIMIT))
+        assert len(stale_older.text) > spreaker.TITLE_LIMIT
+        self.requests.get.return_value.json.return_value = episodes_with_titles(
+            [spreaker.truncate_episode_title(stale_older.text)]
+        )
+
+        response = self.client.fresh_headline([fresh_newer, stale_older])
+        ham.assert_that(
+            response,
+            ham.equal_to(fresh_newer),
+            "The oldest fresh headline should be chosen.",
         )
 
     def test_truncate_title(self):
@@ -76,3 +122,8 @@ class TestSpreaker(unittest.TestCase):
                 ),
             ),
         )
+
+
+# https://developers.spreaker.com/api/episodes/#retrieving-a-shows-episodes
+def episodes_with_titles(titles):
+    return {"response": {"items": [{"title": t} for t in titles]}}

@@ -27,6 +27,9 @@ X   better logging
             check edit distance to past episode titles
         pick the oldest unused headline (if any)
             more than half of articles unused in existing episodes
+    refactor main()
+        dependency injection
+        easier testing
     reaping old episodes
         delete oldest when more than 8
         after upload of new
