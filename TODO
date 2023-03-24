@@ -20,9 +20,11 @@ X   better logging
         X   reference as step argument
     X   separate step definition files for dependencies
     not re-doing existing episodes
-        check edit distance to past episode titles
         get past episode list
+            filter=editable
+        get multiple headlines
         compare titles derived from headlines
+            check edit distance to past episode titles
         pick the oldest unused headline (if any)
             more than half of articles unused in existing episodes
     reaping old episodes
@@ -39,3 +41,6 @@ X   better logging
     podcast on youtube
         channel
         sprout settings
+
+
+curl https://api.spreaker.com/v2/shows/5657024/episodes

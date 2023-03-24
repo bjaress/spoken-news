@@ -3,6 +3,7 @@ import hamcrest as ham
 import hypothesis as hyp
 from unittest.mock import Mock
 
+import api.models as models
 from api import spreaker
 
 from requests.exceptions import HTTPError
@@ -29,6 +30,17 @@ class TestSpreaker(unittest.TestCase):
             # presence of files triggers the correct content-type
             files=[("media_file", ("audio.mp3", b"THE_AUDIO", "audio/mp3"))],
             data={"title": "THE_TITLE"},
+        )
+
+    def test_fresh_headline(self):
+        self.requests.get.assert_not_called()
+        self.client.fresh_headline([models.Headline(text="THE_TITLE")])
+        self.requests.get.assert_called_with(
+            "THE_URL/v2/shows/0/episodes",
+            headers={
+                "Authorization": "Bearer THE_TOKEN",
+            },
+            params={"filter": "editable"},
         )
 
     def test_truncate_title(self):

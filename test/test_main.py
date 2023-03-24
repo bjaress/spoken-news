@@ -31,6 +31,11 @@ class TestMain(unittest.TestCase):
         )
         wikipedia_Client.return_value.headlines.assert_called_once()
 
+        # Use past episode list to pick a fresh headline
+        spreaker_Client.return_value.fresh_headline.assert_called_with(
+            wikipedia_Client.return_value.headlines.return_value
+        )
+
         tts_Client.assert_called_with(
             {"api_key": "THE_TTS_API_KEY", "server": "THE_TTS_SERVER"}
         )

@@ -5,11 +5,13 @@ Given(/^Spreaker API is available$/) do
   poll("spreaker wiremock startup check/reset", 200) do
     HTTParty.post("#{$url[:spreaker]}/__admin/reset").code
   end
-  #https://developers.spreaker.com/api/
+
+  # https://developers.spreaker.com/api/episodes/#uploading-a-recorded-episode
   response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
     :body => {
       :request => {
-        :urlPath => "/v2/shows/#{$showId}/episodes"
+        :urlPath => "/v2/shows/#{$showId}/episodes",
+        :method => "POST"
       },
       :response => {
         :status => 200
@@ -17,6 +19,40 @@ Given(/^Spreaker API is available$/) do
     }.to_json
   })
   expect(response.code).to eq(201)
+
+  # https://developers.spreaker.com/api/episodes/#retrieving-a-shows-episodes
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
+    :body => {
+      :request => {
+        :urlPath => "/v2/shows/#{$showId}/episodes",
+        :method => "GET"
+      },
+      :response => {
+        :status => 200,
+        :jsonBody => {
+          :response => { :items => [] }
+        }
+      }
+    }.to_json
+  })
+  expect(response.code).to eq(201)
+
+end
+
+
+Then(/^the list of past episodes is retrieved from Spreaker$/) do
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
+    :body => {
+      :method => "GET",
+      :urlPath => "/v2/shows/#{$showId}/episodes",
+      :queryParameters => {
+        :filter => {:equalTo => "editable"}
+      }
+    }.to_json
+  })
+  requests = JSON.parse(response.body)["requests"]
+  expect(requests.length).to be(1), "Requests for past espisodes: #{requests}"
+  expect(requests[0]['headers']["Authorization"]).to eq("Bearer DUMMY_TOKEN")
 end
 
 Then(/^the audio file is uploaded to Spreaker$/) do

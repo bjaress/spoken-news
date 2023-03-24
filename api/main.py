@@ -17,7 +17,10 @@ def generate_news(trigger: models.PubSubTrigger):
     tts_client = tts.Client(attributes["tts"])
     spreaker_client = spreaker.Client(attributes["spreaker"])
 
-    message = wikipedia_client.headlines()[0].text
+    headlines = wikipedia_client.headlines()
+    # TODO pick one, not just first
+    spreaker_client.fresh_headline(headlines)
+    message = headlines[0].text
 
     spreaker_client.upload(
         title=message,

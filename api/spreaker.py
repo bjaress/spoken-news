@@ -23,6 +23,15 @@ class Client:
             data={"title": truncate_episode_title(title)},
         )
 
+    def fresh_headline(self, headlines):
+        self.requests.get(
+            f"{self.url}/v2/shows/{self.show_id}/episodes",
+            headers={
+                "Authorization": f"Bearer {self.token}",
+            },
+            params={"filter": "editable"},
+        )
+
 
 def truncate_episode_title(title):
     if len(title) > TITLE_LIMIT:
