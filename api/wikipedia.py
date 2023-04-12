@@ -8,20 +8,19 @@ API_PATH = "/w/api.php"
 
 
 class Client:
-    def __init__(self, options, requests=requests):
+    def __init__(self, config, requests=requests):
         self.requests = requests
-        self.options = options
-        self.endpoint = self.options["url"] + API_PATH
+        self.config = config
 
     def headlines(self):
         response = self.requests.get(
-            self.endpoint,
+            f"{self.config.url}{API_PATH}",
             params={
                 "action": "parse",
                 "section": 0,
                 "prop": "text",
                 "format": "json",
-                "page": self.options["headlines_page"],
+                "page": self.config.headlines_page,
             },
         )
         logging.info(f"Wikipedia Request: {response.status_code}")

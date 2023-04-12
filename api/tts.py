@@ -9,7 +9,7 @@ import logging
 class Client:
     def __init__(self, config, requests=requests):
         self.requests = requests
-        self.url = f"{config['server']}/v1/text:synthesize?key={config['api_key']}"
+        self.url = f"{config.server}/v1/text:synthesize?key={config.api_key}"
 
     def speak(self, words):
         response = self.requests.post(

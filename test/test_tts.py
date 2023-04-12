@@ -1,6 +1,6 @@
 import unittest
 import hamcrest as h
-from unittest.mock import Mock
+from unittest import mock
 
 import base64
 
@@ -9,8 +9,11 @@ from api import tts
 
 class TestTtsClient(unittest.TestCase):
     def test_speak(self):
-        config = {"api_key": "THE_API_KEY", "server": "THE_SERVER"}
-        requests = Mock()
+        config = mock.MagicMock()
+        config.api_key = "THE_API_KEY"
+        config.server = "THE_SERVER"
+
+        requests = mock.Mock()
         client = tts.Client(config, requests=requests)
 
         requests.post.assert_not_called()

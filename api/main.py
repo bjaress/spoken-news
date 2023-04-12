@@ -1,42 +1,50 @@
-from fastapi import FastAPI
+import fastapi as fa
+import typing as tp
+
 from api import tts
 from api import spreaker
 from api import models
 from api import wikipedia
 import logging
 
-app = FastAPI()
+app = fa.FastAPI()
 logging.basicConfig(level=logging.DEBUG)
+
+# Converts models.PubSubTrigger to models.Config
+# Does not assume field names, but does assume a naming convention with
+# two-part names.
+def decompose_attributes(trigger: models.PubSubTrigger):
+    attributes = trigger.message.attributes
+    parts = {}
+    for name, structure in models.Config.__fields__.items():
+        subparts = {}
+        constructor = structure.type_
+        for subname in constructor.__fields__.keys():
+            subparts[subname] = getattr(attributes, f"{name}_{subname}")
+        parts[name] = constructor(**subparts)
+    return models.Config(**parts)
+
+
+class Clients:
+    def __init__(
+        self, config: tp.Annotated[models.Config, fa.Depends(decompose_attributes)]
+    ):
+        self.wikipedia = wikipedia.Client(config.wikipedia)
+        self.tts = tts.Client(config.tts)
+        self.spreaker = spreaker.Client(config.spreaker)
 
 
 @app.post("/")
-def generate_news(trigger: models.PubSubTrigger):
-    attributes = split_attributes(trigger)
+def generate_news(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
 
-    wikipedia_client = wikipedia.Client(attributes["wikipedia"])
-    tts_client = tts.Client(attributes["tts"])
-    spreaker_client = spreaker.Client(attributes["spreaker"])
+    headlines = clients.wikipedia.headlines()
+    fresh_headline = clients.spreaker.fresh_headline(headlines)
 
-    headlines = wikipedia_client.headlines()
-    logging.warn(headlines)
-    message = spreaker_client.fresh_headline(headlines).text
-
-    spreaker_client.upload(
-        title=message,
-        audio=tts_client.speak(message),
+    clients.spreaker.upload(
+        title=fresh_headline.text,
+        audio=clients.tts.speak(fresh_headline.text),
     )
-    return {"message": message}
-
-
-def split_attributes(trigger: models.PubSubTrigger):
-    # { 'foo_bar_baz': 'qux' } => { 'foo': { 'bar_baz': 'qux' } }
-    result = {}
-    for key, value in trigger.message.attributes.dict().items():
-        prefix, suffix = key.split("_", maxsplit=1)
-        if prefix not in result:
-            result[prefix] = {}
-        result[prefix][suffix] = value
-    return result
+    return {"message": fresh_headline.text}
 
 
 @app.get("/health")

@@ -9,15 +9,13 @@ ELLIPSIS = "..."
 class Client:
     def __init__(self, config, requests=requests):
         self.requests = requests
-        self.url = config["url"]
-        self.token = config["token"]
-        self.show_id = config["show_id"]
+        self.config = config
 
     def upload(self, title, audio):
         response = self.requests.post(
-            f"{self.url}/v2/shows/{self.show_id}/episodes",
+            f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
             headers={
-                "Authorization": f"Bearer {self.token}",
+                "Authorization": f"Bearer {self.config.token}",
             },
             files=[("media_file", ("audio.mp3", audio, "audio/mp3"))],
             data={"title": truncate_episode_title(title)},
@@ -25,9 +23,9 @@ class Client:
 
     def fresh_headline(self, headlines):
         response = self.requests.get(
-            f"{self.url}/v2/shows/{self.show_id}/episodes",
+            f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
             headers={
-                "Authorization": f"Bearer {self.token}",
+                "Authorization": f"Bearer {self.config.token}",
             },
             params={"filter": "editable"},
         )

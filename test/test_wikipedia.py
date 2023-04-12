@@ -8,9 +8,9 @@ import api.wikipedia as wikipedia
 class TestClient(unittest.TestCase):
     def test_headlines_happypath(self):
         requests = mock.MagicMock()
-        client = wikipedia.Client(
-            {"url": "THE_URL", "headlines_page": "THE_HEADLINES"}, requests=requests
-        )
+
+        config = mock.MagicMock()
+        client = wikipedia.Client(config, requests=requests)
 
         requests.get.assert_not_called()
 
@@ -29,13 +29,13 @@ class TestClient(unittest.TestCase):
         headlines = client.headlines()
 
         requests.get.assert_called_once_with(
-            "THE_URL/w/api.php",
+            f"{config.url}{wikipedia.API_PATH}",
             params={
                 "action": "parse",
                 "section": 0,
                 "prop": "text",
                 "format": "json",
-                "page": "THE_HEADLINES",
+                "page": config.headlines_page,
             },
         )
 
@@ -45,9 +45,9 @@ class TestClient(unittest.TestCase):
 
     def test_headlines_multi(self):
         requests = mock.MagicMock()
-        client = wikipedia.Client(
-            {"url": "THE_URL", "headlines_page": "THE_HEADLINES"}, requests=requests
-        )
+
+        config = mock.MagicMock()
+        client = wikipedia.Client(config, requests=requests)
 
         requests.get.return_value.json.return_value = {
             "parse": {

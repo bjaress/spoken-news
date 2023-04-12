@@ -25,9 +25,12 @@
     [x] get multiple headlines
         compare titles derived from headlines
     [x] pick the oldest unused headline (if any)
-[ ] refactor main()
-    [ ] dependency injection
-    [ ] cleaner testing
+[x] refactor main()
+    [x] type-aware attribute decomposition
+    [x] type-aware client configs
+    [x] dependency injection
+    [x] cleaner testing
+[ ] title limit as input attribute
 [ ] fuzzy match headlines and episodes
     [ ] edit distance
     [ ] threshold

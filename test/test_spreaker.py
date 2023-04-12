@@ -1,7 +1,7 @@
 import unittest
 import hamcrest as ham
 import hypothesis as hyp
-from unittest.mock import Mock
+from unittest import mock
 
 import api.models as models
 from api import spreaker
@@ -11,12 +11,11 @@ from requests.exceptions import HTTPError
 
 class TestSpreaker(unittest.TestCase):
     def setUp(self):
-        config = {
-            "url": "THE_URL",
-            "token": "THE_TOKEN",
-            "show_id": 0,
-        }
-        self.requests = Mock()
+        config = mock.MagicMock()
+        config.url = "THE_URL"
+        config.token = "THE_TOKEN"
+        config.show_id = 0
+        self.requests = mock.Mock()
         self.client = spreaker.Client(config, requests=self.requests)
 
     def test_upload(self):
