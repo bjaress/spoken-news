@@ -1,49 +1,51 @@
-x   Dockerized FastAPI app
-x   GCP Cloud Run
-x   pub/sub trigger
-X   automatic uploading of files
-X   scheduled pub/sub
-X   text-to-speech
-X   better logging
-    get info from Wikipedia (just headline for now)
-    X   figure out what to mock in testing
+[x] Dockerized FastAPI app
+[x] GCP Cloud Run
+[x] pub/sub trigger
+[x] automatic uploading of files
+[x] scheduled pub/sub
+[x] text-to-speech
+[x] better logging
+[x] get info from Wikipedia (just headline for now)
+    [x] figure out what to mock in testing
             https://en.wikipedia.org/w/api.php?action=parse&section=0&prop=text&format=json&page=Template:In_the_news
-    X   hit the endpoint
-    X   mock the endpoint
-    X   carry over text from wikipedia to tts
+    [x] hit the endpoint
+    [x] mock the endpoint
+    [x] carry over text from wikipedia to tts
             beautiful soup
                 soup = BeautifulSoup(news, 'html.parser')
                 .text
-    X   limit spreaker episode title lengths
-    X   pull out headlines into data structure
-        X   include expected episode title
-        X   reference as step argument
-    X   separate step definition files for dependencies
-    not re-doing existing episodes
-        get past episode list
+    [x] limit spreaker episode title lengths
+    [x] pull out headlines into data structure
+        [x] include expected episode title
+        [x] reference as step argument
+[x] separate step definition files for dependencies
+[x] not re-doing existing episodes
+    [x] get past episode list
             filter=editable
-        get multiple headlines
+    [x] get multiple headlines
         compare titles derived from headlines
-            check edit distance to past episode titles
-        pick the oldest unused headline (if any)
-            more than half of articles unused in existing episodes
-    refactor main()
-        dependency injection
-        easier testing
-    reaping old episodes
-        delete oldest when more than 8
-        after upload of new
-    article text
-        construct full script
-        ordering of article contents
-        enforce character limit
-        strip parenthesized expressions, as in old version
-    better error handling
-    choose voice/random voice from list
-        tweak speed and pitch
-    podcast on youtube
-        channel
-        sprout settings
+    [x] pick the oldest unused headline (if any)
+[ ] refactor main()
+    [ ] dependency injection
+    [ ] cleaner testing
+[ ] fuzzy match headlines and episodes
+    [ ] edit distance
+    [ ] threshold
+        [ ] half length of longest?
+[ ] reaping old episodes
+    [ ] delete oldest when more than 8
+    [ ] after upload of new
+[ ] article text
+    [ ] construct full script
+    [ ] ordering of article contents
+    [ ] enforce character limit
+    [ ] strip parenthesized expressions, as in old version
+[ ] better error handling
+[ ] choose voice/random voice from list
+    [ ] tweak speed and pitch
+[ ] podcast on youtube
+    [ ] channel
+    [ ] sprout settings
 
 
 curl https://api.spreaker.com/v2/shows/5657024/episodes
