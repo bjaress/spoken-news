@@ -40,11 +40,13 @@ def generate_news(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
     headlines = clients.wikipedia.headlines()
     fresh_headline = clients.spreaker.fresh_headline(headlines)
 
-    clients.spreaker.upload(
-        title=fresh_headline.text,
-        audio=clients.tts.speak(fresh_headline.text),
-    )
-    return {"message": fresh_headline.text}
+    if fresh_headline is not None:
+        clients.spreaker.upload(
+            title=fresh_headline.text,
+            audio=clients.tts.speak(fresh_headline.text),
+        )
+
+    return {}
 
 
 @app.get("/health")

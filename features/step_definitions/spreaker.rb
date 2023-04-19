@@ -99,6 +99,19 @@ Then(/^the audio file is uploaded to Spreaker$/) do
   @spreaker_params = parsed.params
 end
 
+
+Then(/^no audio file is uploaded to Spreaker$/) do
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
+    :body => {
+      :method => "POST",
+      :urlPath => "/v2/shows/#{$showId}/episodes"
+    }.to_json
+  })
+  expect(JSON.parse(response.body)["requests"]).to eq([])
+end
+
+
 Then(/^the episode title is about (.*)$/) do |topic|
   expect(@spreaker_params["title"]).to eq($NEWS[topic][:episode_title])
 end
+

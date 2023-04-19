@@ -30,7 +30,7 @@
     [x] type-aware client configs
     [x] dependency injection
     [x] cleaner testing
-[ ] handle case of no new headlines
+[x] handle case of no new headlines
 [ ] title limit as input attribute
 [ ] fuzzy match headlines and episodes
     [ ] edit distance

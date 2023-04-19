@@ -33,3 +33,12 @@ Scenario: Two headlines, oldest has an episode
     Then the list of past episodes is retrieved from Spreaker
     Then the audio file is uploaded to Spreaker
     And the episode title is about the nobel prize
+
+Scenario: Two headlines, both have episodes
+    Given there is a headline about frogs
+    And there is a headline about the nobel prize
+    Given there is an episode about frogs
+    And there is an episode about the nobel prize
+    When the scheduled time arrives
+    Then the list of past episodes is retrieved from Spreaker
+    Then no audio file is uploaded to Spreaker

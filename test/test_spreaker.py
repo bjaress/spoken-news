@@ -88,6 +88,19 @@ class TestSpreaker(unittest.TestCase):
             "The oldest fresh headline should be chosen.",
         )
 
+    def test_fresh_headline_all_stale(self):
+        stale = models.Headline(text="STALE")
+        self.requests.get.return_value.json.return_value = episodes_with_titles(
+            ["STALE"]
+        )
+
+        response = self.client.fresh_headline([stale])
+        ham.assert_that(
+            response,
+            ham.none(),
+            "If there are no fresh headlines, don't find any.",
+        )
+
     def test_truncate_title(self):
         self.client.upload(title=("a" * 141), audio=b"THE_AUDIO")
         ham.assert_that(

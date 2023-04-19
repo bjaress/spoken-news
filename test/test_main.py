@@ -23,6 +23,14 @@ class TestMain(unittest.TestCase):
             title=headline.text, audio=clients.tts.speak.return_value
         )
 
+    def test_news_no_fresh(self):
+        clients = Mock()
+        clients.spreaker.fresh_headline.return_value = None
+        main.generate_news(clients)
+
+        clients.tts.speak.assert_not_called()
+        clients.spreaker.upload.assert_not_called()
+
 
 DUMMY_ATTRIBUTES = {
     "tts_api_key": "THE_TTS_API_KEY",
