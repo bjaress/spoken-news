@@ -30,6 +30,7 @@
     [x] type-aware client configs
     [x] dependency injection
     [x] cleaner testing
+[ ] handle case of no new headlines
 [ ] title limit as input attribute
 [ ] fuzzy match headlines and episodes
     [ ] edit distance
@@ -38,6 +39,7 @@
 [ ] reaping old episodes
     [ ] delete oldest when more than 8
     [ ] after upload of new
+[ ] strip parenthesized text
 [ ] article text
     [ ] construct full script
     [ ] ordering of article contents
