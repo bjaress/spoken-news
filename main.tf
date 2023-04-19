@@ -135,6 +135,7 @@ resource "google_cloud_scheduler_job" "scheduled-job" {
       spreaker_url = "https://api.spreaker.com"
       spreaker_show_id = 5657024
       spreaker_token = local.spreaker_access.access_token
+      spreaker_title_limit = 140
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
       wikipedia_url = "https://en.wikipedia.org"

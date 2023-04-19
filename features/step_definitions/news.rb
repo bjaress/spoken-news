@@ -18,6 +18,7 @@ When(/^the scheduled time arrives$/) do
           :spreaker_url => $url[:spreaker],
           :spreaker_token => "DUMMY_TOKEN",
           :spreaker_show_id => $showId,
+          :spreaker_title_limit => ENV["spreaker.title_limit"],
           :tts_api_key => "DUMMY_KEY",
           :tts_server => $url[:google],
           :wikipedia_url => $url[:wikipedia],

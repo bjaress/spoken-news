@@ -8,6 +8,7 @@ class SpreakerConfig(BaseModel):
     url: str
     token: str
     show_id: int
+    title_limit: int
 
 
 class TtsConfig(BaseModel):
@@ -37,6 +38,7 @@ class Attributes(BaseModel):
     spreaker_url: str
     spreaker_token: str
     spreaker_show_id: int
+    spreaker_title_limit: int
     tts_api_key: str
     tts_server: str
     wikipedia_url: str

@@ -38,6 +38,7 @@ DUMMY_ATTRIBUTES = {
     "spreaker_url": "THE_SPREAKER_URL",
     "spreaker_token": "THE_SPREAKER_TOKEN",
     "spreaker_show_id": 1234,
+    "spreaker_title_limit": 1234,
     "wikipedia_url": "THE_WIKIPEDIA_URL",
     "wikipedia_headlines_page": "THE_WIKIPEDIA_HEADLINES",
 }

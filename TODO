@@ -31,7 +31,7 @@
     [x] dependency injection
     [x] cleaner testing
 [x] handle case of no new headlines
-[ ] title limit as input attribute
+[x] title limit as input attribute
 [ ] fuzzy match headlines and episodes
     [ ] edit distance
     [ ] threshold

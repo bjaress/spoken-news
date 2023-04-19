@@ -7,6 +7,7 @@ services:
     environment:
       app.url: http://app:8000
       spreaker.url: http://spreaker:8080
+      spreaker.title_limit: 140
       google.url: http://google:8080
       wikipedia.url: http://en.wikipedia.org:8080
 

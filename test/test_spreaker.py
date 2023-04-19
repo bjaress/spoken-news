@@ -15,6 +15,8 @@ class TestSpreaker(unittest.TestCase):
         config.url = "THE_URL"
         config.token = "THE_TOKEN"
         config.show_id = 0
+        config.title_limit = 50
+        self.config = config
         self.requests = mock.Mock()
         self.client = spreaker.Client(config, requests=self.requests)
 
@@ -75,10 +77,10 @@ class TestSpreaker(unittest.TestCase):
 
     def test_fresh_headline_stale_truncated(self):
         fresh_newer = models.Headline(text="FRESH_NEWER")
-        stale_older = models.Headline(text=("long" * spreaker.TITLE_LIMIT))
-        assert len(stale_older.text) > spreaker.TITLE_LIMIT
+        stale_older = models.Headline(text=("long" * self.config.title_limit))
+        assert len(stale_older.text) > self.config.title_limit
         self.requests.get.return_value.json.return_value = episodes_with_titles(
-            [spreaker.truncate_episode_title(stale_older.text)]
+            [self.client.truncate_episode_title(stale_older.text)]
         )
 
         response = self.client.fresh_headline([fresh_newer, stale_older])
@@ -102,24 +104,18 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_truncate_title(self):
-        self.client.upload(title=("a" * 141), audio=b"THE_AUDIO")
+        limit = self.config.title_limit
+        too_long = "a" * (limit + 1)
+        truncated = "a" * (limit - len(spreaker.ELLIPSIS)) + spreaker.ELLIPSIS
+
+        self.client.upload(title=too_long, audio=b"THE_AUDIO")
         ham.assert_that(
             self.requests.post.call_args.kwargs,
-            ham.has_entry("data", ham.has_entry("title", "a" * 137 + "...")),
+            ham.has_entry("data", ham.has_entry("title", truncated)),
         )
 
-    @hyp.given(hyp.strategies.text(max_size=spreaker.TITLE_LIMIT))
-    def test_truncate_title_short(self, title):
-        self.client.upload(title=title, audio=b"THE_AUDIO")
-        ham.assert_that(
-            self.requests.post.call_args.kwargs,
-            ham.has_entry("data", ham.has_entry("title", title)),
-        )
-
-    @hyp.given(hyp.strategies.text(min_size=2))
-    def test_truncate_title_short(self, title):
-        # It's slow to produce very long text in Hypothesis
-        title = ("a" * (spreaker.TITLE_LIMIT - 1)) + title
+    @hyp.given(hyp.strategies.text())
+    def test_truncate_title_property(self, title):
         self.client.upload(title=title, audio=b"THE_AUDIO")
         ham.assert_that(
             self.requests.post.call_args.kwargs,
@@ -127,10 +123,7 @@ class TestSpreaker(unittest.TestCase):
                 "data",
                 ham.has_entry(
                     "title",
-                    ham.all_of(
-                        ham.has_length(spreaker.TITLE_LIMIT),
-                        ham.ends_with(spreaker.ELLIPSIS),
-                    ),
+                    ham.has_length(ham.less_than_or_equal_to(self.config.title_limit)),
                 ),
             ),
         )
