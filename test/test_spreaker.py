@@ -18,7 +18,11 @@ class TestSpreaker(unittest.TestCase):
         config.title_limit = 50
         self.config = config
         self.requests = mock.Mock()
-        self.client = spreaker.Client(config, requests=self.requests)
+        self.requests.get.return_value.json.return_value = episodes_with_titles([])
+        self.first_unknown = mock.Mock()
+        self.client = spreaker.Client(
+            config, requests=self.requests, first_unknown=self.first_unknown
+        )
 
     def test_upload(self):
         self.requests.post.assert_not_called()
@@ -35,7 +39,8 @@ class TestSpreaker(unittest.TestCase):
 
     def test_fresh_headline(self):
         fresh = models.Headline(text="THE_TITLE")
-        self.requests.get.return_value.json.return_value = episodes_with_titles([])
+        self.first_unknown.return_value = fresh.text
+
         response = self.client.fresh_headline([fresh])
 
         self.requests.get.assert_called_with(
@@ -45,56 +50,48 @@ class TestSpreaker(unittest.TestCase):
             },
             params={"filter": "editable"},
         )
+        self.first_unknown.assert_called_with([fresh.text], [])
         ham.assert_that(
             response, ham.equal_to(fresh), "The fresh headline should be chosen."
         )
 
     def test_fresh_headline_multiple(self):
-        fresh_newer = models.Headline(text="NEWER")
-        fresh_older = models.Headline(text="OLDER")
-        self.requests.get.return_value.json.return_value = episodes_with_titles([])
-
-        response = self.client.fresh_headline([fresh_newer, fresh_older])
-        ham.assert_that(
-            response,
-            ham.equal_to(fresh_older),
-            "The oldest fresh headline should be chosen.",
-        )
-
-    def test_fresh_headline_stale(self):
-        fresh_newer = models.Headline(text="FRESH_NEWER")
-        stale_older = models.Headline(text="STALE_OLDER")
+        headline_a = models.Headline(text="HEADLINE_A")
+        headline_b = models.Headline(text="HEADLINE_B")
         self.requests.get.return_value.json.return_value = episodes_with_titles(
-            ["STALE_OLDER"]
+            ["EPISODE_C", "EPISODE_D"]
         )
+        self.first_unknown.return_value = headline_b.text
 
-        response = self.client.fresh_headline([fresh_newer, stale_older])
+        response = self.client.fresh_headline([headline_a, headline_b])
+
+        # lists should be reversed
+        self.first_unknown.assert_called_with(
+            [headline_b.text, headline_a.text], ["EPISODE_D", "EPISODE_C"]
+        )
         ham.assert_that(
             response,
-            ham.equal_to(fresh_newer),
-            "The oldest fresh headline should be chosen.",
+            ham.equal_to(headline_b),
+            "The oldest unknown headline should be chosen.",
         )
 
-    def test_fresh_headline_stale_truncated(self):
-        fresh_newer = models.Headline(text="FRESH_NEWER")
-        stale_older = models.Headline(text=("long" * self.config.title_limit))
-        assert len(stale_older.text) > self.config.title_limit
-        self.requests.get.return_value.json.return_value = episodes_with_titles(
-            [self.client.truncate_episode_title(stale_older.text)]
-        )
+    def test_fresh_headline_truncated(self):
+        headline = models.Headline(text=("long" * self.config.title_limit))
+        assert len(headline.text) > self.config.title_limit
+        truncated = self.client.truncate_episode_title(headline.text)
+        self.first_unknown.return_value = truncated
 
-        response = self.client.fresh_headline([fresh_newer, stale_older])
+        response = self.client.fresh_headline([headline])
+        self.first_unknown.assert_called_with([truncated], [])
         ham.assert_that(
             response,
-            ham.equal_to(fresh_newer),
-            "The oldest fresh headline should be chosen.",
+            ham.equal_to(headline),
+            "The oldest unknown headline should be chosen.",
         )
 
     def test_fresh_headline_all_stale(self):
         stale = models.Headline(text="STALE")
-        self.requests.get.return_value.json.return_value = episodes_with_titles(
-            ["STALE"]
-        )
+        self.first_unknown.return_value = None
 
         response = self.client.fresh_headline([stale])
         ham.assert_that(

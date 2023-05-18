@@ -10,6 +10,11 @@ services:
       spreaker.title_limit: 140
       google.url: http://google:8080
       wikipedia.url: http://en.wikipedia.org:8080
+    depends_on:
+    - app
+    - spreaker
+    - google
+    - en.wikipedia.org
 
   app:
     build:

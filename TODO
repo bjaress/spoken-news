@@ -1,56 +1,21 @@
-[x] Dockerized FastAPI app
-[x] GCP Cloud Run
-[x] pub/sub trigger
-[x] automatic uploading of files
-[x] scheduled pub/sub
-[x] text-to-speech
-[x] better logging
-[x] get info from Wikipedia (just headline for now)
-    [x] figure out what to mock in testing
-            https://en.wikipedia.org/w/api.php?action=parse&section=0&prop=text&format=json&page=Template:In_the_news
-    [x] hit the endpoint
-    [x] mock the endpoint
-    [x] carry over text from wikipedia to tts
-            beautiful soup
-                soup = BeautifulSoup(news, 'html.parser')
-                .text
-    [x] limit spreaker episode title lengths
-    [x] pull out headlines into data structure
-        [x] include expected episode title
-        [x] reference as step argument
-[x] separate step definition files for dependencies
-[x] not re-doing existing episodes
-    [x] get past episode list
-            filter=editable
-    [x] get multiple headlines
-        compare titles derived from headlines
-    [x] pick the oldest unused headline (if any)
-[x] refactor main()
-    [x] type-aware attribute decomposition
-    [x] type-aware client configs
-    [x] dependency injection
-    [x] cleaner testing
-[x] handle case of no new headlines
-[x] title limit as input attribute
-[ ] fuzzy match headlines and episodes
-    [ ] edit distance
-    [ ] threshold
-        [ ] half length of longest?
+[x] fuzzy match headlines and episodes
+    [x] Levenshtein library
+    [x] normalized similarity > 0.6
+    [x] first unknown
+    [x] use in fresh_headline (reversing age)
+    [x] optimize with cutoff
 [ ] reaping old episodes
     [ ] delete oldest when more than 8
     [ ] after upload of new
-[ ] strip parenthesized text
 [ ] article text
     [ ] construct full script
-    [ ] ordering of article contents
     [ ] enforce character limit
-    [ ] strip parenthesized expressions, as in old version
-[ ] better error handling
+[ ] strip parenthesized expressions, as in old version
+[ ] ordering of article contents
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
+[ ] better error handling
 [ ] podcast on youtube
     [ ] channel
     [ ] sprout settings
 
-
-curl https://api.spreaker.com/v2/shows/5657024/episodes

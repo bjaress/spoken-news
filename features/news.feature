@@ -42,3 +42,10 @@ Scenario: Two headlines, both have episodes
     When the scheduled time arrives
     Then the list of past episodes is retrieved from Spreaker
     Then no audio file is uploaded to Spreaker
+
+Scenario: Slightly altered headline
+    Given there is a headline about frogs
+    And there is an episode about toads
+    When the scheduled time arrives
+    Then the list of past episodes is retrieved from Spreaker
+    Then no audio file is uploaded to Spreaker
