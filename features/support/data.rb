@@ -19,6 +19,8 @@ $NEWS = {
             "of reasons, it takes Wikipedia many characters to " +
             "form a headline about it, but this will be truncated " +
             "for Spreaker."),
+
+        episode_id: 111111,
     },
     "toads" => {
         headline: (
@@ -39,6 +41,8 @@ $NEWS = {
             "of reasons, it takes Wikipedia many characters to " +
             "form a headline about it, but this will be truncated " +
             "for Spreaker."),
+
+        episode_id: 222222,
     },
     "the nobel prize" => {
         headline: (
@@ -52,5 +56,7 @@ $NEWS = {
         episode_contents: (
             "The Nobel Prize in cloud watching was awarded to " +
             "Tammy Bigglesworth."),
+
+        episode_id: 333333,
     },
 }

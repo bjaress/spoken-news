@@ -1,6 +1,10 @@
 require 'httparty'
+require 'date'
 
 $showId = 1234
+
+# Use start of given day as a reference point for mocks and test assertions.
+$today = Date.parse(ENV['TODAY'])
 
 class UrlLookup
   def [](key)

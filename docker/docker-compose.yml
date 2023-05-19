@@ -10,6 +10,7 @@ services:
       spreaker.title_limit: 140
       google.url: http://google:8080
       wikipedia.url: http://en.wikipedia.org:8080
+      TODAY: "2017-01-05"
     depends_on:
     - app
     - spreaker
@@ -22,6 +23,7 @@ services:
       dockerfile: ./docker/Dockerfile
     environment:
       PORT: 8000
+      TODAY: "2017-01-05"
 
   spreaker:
     image: wiremock/wiremock

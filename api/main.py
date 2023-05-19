@@ -1,5 +1,7 @@
 import fastapi as fa
 import typing as tp
+import datetime as dt
+import os
 
 from api import tts
 from api import spreaker
@@ -10,10 +12,10 @@ import logging
 app = fa.FastAPI()
 logging.basicConfig(level=logging.DEBUG)
 
-# Converts models.PubSubTrigger to models.Config
+# Converts models.NewsTrigger to models.Config
 # Does not assume field names, but does assume a naming convention with
 # two-part names.
-def decompose_attributes(trigger: models.PubSubTrigger):
+def decompose_attributes(trigger: models.NewsTrigger):
     attributes = trigger.message.attributes
     parts = {}
     for name, structure in models.Config.__fields__.items():
@@ -47,6 +49,22 @@ def generate_news(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
         )
 
     return {}
+
+
+def cleanup_client(trigger: models.CleanupTrigger):
+    return spreaker.Client(trigger.message.attributes)
+
+
+@app.post("/cleanup")
+def cleanup(spreaker: tp.Annotated[spreaker.Client, fa.Depends(cleanup_client)]):
+    return spreaker.cleanup(today())
+
+
+def today():
+    if "TODAY" in os.environ:
+        return dt.datetime.fromisoformat(os.environ["TODAY"])
+    else:
+        return dt.datetime.now()
 
 
 @app.get("/health")

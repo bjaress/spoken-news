@@ -20,17 +20,29 @@ Given(/^Spreaker API is available$/) do
   })
   expect(response.code).to eq(201)
 
-  existing_episodes([])
+  existing_episodes([], {})
 end
 
 Given(/^there is an episode about (.*)$/) do |topic|
-  # Newest first
-  @episodes = (@episodes || []).unshift(topic)
-  existing_episodes(@episodes)
+  @episode_topics = (@episode_topics || []).append(topic)
+  @episode_dates = @episode_dates || {}
+  @episode_dates[topic] = $today
+  existing_episodes(@episode_topics, @episode_dates)
 end
 
-def existing_episodes(topics)
-  episodes = topics.map{|t| {title: $NEWS[t][:episode_title]}}
+Given(/^there is a (\d+) day old episode about (.*)$/) do |days, topic|
+  @episode_topics = (@episode_topics || []).append(topic)
+  @episode_dates = @episode_dates || {}
+  @episode_dates[topic] = $today - days.to_i
+  existing_episodes(@episode_topics, @episode_dates)
+end
+
+def existing_episodes(topics, dates)
+  episodes = topics.map{|t| {
+    title: $NEWS[t][:episode_title],
+    published_at: "#{dates[t]} 00:00:00",
+    episode_id: $NEWS[t][:episode_id],
+  }}
 
   # https://developers.spreaker.com/api/episodes/#retrieving-a-shows-episodes
   response = HTTParty.post("#{$url[:spreaker]}/__admin/mappings", {
@@ -56,7 +68,8 @@ Then(/^the list of past episodes is retrieved from Spreaker$/) do
       :method => "GET",
       :urlPath => "/v2/shows/#{$showId}/episodes",
       :queryParameters => {
-        :filter => {:equalTo => "editable"}
+        :filter => {:equalTo => "editable"},
+        :sorting => {:equalTo => "oldest"}
       }
     }.to_json
   })
@@ -115,3 +128,26 @@ Then(/^the episode title is about (.*)$/) do |topic|
   expect(@spreaker_params["title"]).to eq($NEWS[topic][:episode_title])
 end
 
+# https://developers.spreaker.com/api/episodes/#deleting-an-episode
+Then(/^the episode about (.*) is deleted$/) do |topic|
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
+    :body => {
+      :method => "DELETE",
+      :urlPath => "/v2/episodes/#{$NEWS[topic][:episode_id]}",
+    }.to_json
+  })
+  requests = JSON.parse(response.body)["requests"]
+  expect(requests.length).to be(1), "Deletes for espisode: #{requests}"
+  expect(requests[0]['headers']["Authorization"]).to eq("Bearer DUMMY_TOKEN")
+end
+
+Then(/^the episode about (.*) is kept$/) do |topic|
+  response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
+    :body => {
+      :method => "DELETE",
+      :urlPath => "/v2/episodes/#{$NEWS[topic][:episode_id]}",
+    }.to_json
+  })
+  requests = JSON.parse(response.body)["requests"]
+  expect(requests.length).to be(0), "Deletes for espisode: #{requests}"
+end

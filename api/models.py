@@ -9,6 +9,7 @@ class SpreakerConfig(BaseModel):
     token: str
     show_id: int
     title_limit: int
+    age_limit: int
 
 
 class TtsConfig(BaseModel):
@@ -39,15 +40,24 @@ class Attributes(BaseModel):
     spreaker_token: str
     spreaker_show_id: int
     spreaker_title_limit: int
+    spreaker_age_limit: int
     tts_api_key: str
     tts_server: str
     wikipedia_url: str
     wikipedia_headlines_page: str
 
 
-class Message(BaseModel):
+class NewsMessage(BaseModel):
     attributes: Attributes
 
 
-class PubSubTrigger(BaseModel):
-    message: Message
+class NewsTrigger(BaseModel):
+    message: NewsMessage
+
+
+class CleanupMessage(BaseModel):
+    attributes: SpreakerConfig
+
+
+class CleanupTrigger(BaseModel):
+    message: CleanupMessage

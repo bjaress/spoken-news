@@ -16,7 +16,7 @@ deploy=./built/terraform.backup
 test : $(test_log)
 
 clean :
-	rm -r built/*
+	rm -rf built/*
 
 $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 		$(features) $(docker_hash)

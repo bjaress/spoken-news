@@ -8,7 +8,7 @@ Given(/^the service is healthy$/) do
   end
 end
 
-When(/^the scheduled time arrives$/) do
+When(/^it is time to generate news$/) do
   # https://cloud.google.com/pubsub/docs/push#receive_push
   response = HTTParty.post($url[:app], {
     :headers => {'content-type': 'application/json'},
@@ -19,6 +19,7 @@ When(/^the scheduled time arrives$/) do
           :spreaker_token => "DUMMY_TOKEN",
           :spreaker_show_id => $showId,
           :spreaker_title_limit => ENV["spreaker.title_limit"],
+          :spreaker_age_limit => 30,
           :tts_api_key => "DUMMY_KEY",
           :tts_server => $url[:google],
           :wikipedia_url => $url[:wikipedia],
@@ -30,4 +31,29 @@ When(/^the scheduled time arrives$/) do
     }.to_json
   })
   expect(response.code).to eq(200)
+end
+
+When(/^it is time to clean up episodes older than (\d+) days$/) do |days|
+  # https://cloud.google.com/pubsub/docs/push#receive_push
+  response = HTTParty.post($url[:app] + "/cleanup", {
+    :headers => {'content-type': 'application/json'},
+    :body => {
+      :message => {
+        # spreaker only
+        :attributes => {
+          :url => $url[:spreaker],
+          :token => "DUMMY_TOKEN",
+          :show_id => $showId,
+          :title_limit => ENV["spreaker.title_limit"],
+          :age_limit => days.to_i,
+        },
+        :messageId => "blahblah"
+      },
+      :subscription => "blah/blah/blah"
+    }.to_json
+  })
+  expect(response.code).to eq(200), response
+end
+
+def trigger(action="news", spreaker_age_limit=nil)
 end

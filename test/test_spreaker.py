@@ -2,6 +2,7 @@ import unittest
 import hamcrest as ham
 import hypothesis as hyp
 from unittest import mock
+import datetime
 
 import api.models as models
 from api import spreaker
@@ -48,7 +49,7 @@ class TestSpreaker(unittest.TestCase):
             headers={
                 "Authorization": "Bearer THE_TOKEN",
             },
-            params={"filter": "editable"},
+            params={"filter": "editable", "sorting": "oldest"},
         )
         self.first_unknown.assert_called_with([fresh.text], [])
         ham.assert_that(
@@ -65,9 +66,8 @@ class TestSpreaker(unittest.TestCase):
 
         response = self.client.fresh_headline([headline_a, headline_b])
 
-        # lists should be reversed
         self.first_unknown.assert_called_with(
-            [headline_b.text, headline_a.text], ["EPISODE_D", "EPISODE_C"]
+            [headline_b.text, headline_a.text], ["EPISODE_C", "EPISODE_D"]
         )
         ham.assert_that(
             response,
@@ -100,6 +100,31 @@ class TestSpreaker(unittest.TestCase):
             "If there are no fresh headlines, don't find any.",
         )
 
+    def test_cleanup(self):
+        now = datetime.datetime.now()
+        self.config.age_limit = 3
+        self.requests.get.return_value.json.return_value = episodes_with_dates(
+            {
+                1: now - datetime.timedelta(days=7),
+                2: now - datetime.timedelta(days=2),
+            }
+        )
+        self.client.cleanup(now)
+        self.requests.get.assert_called_with(
+            "THE_URL/v2/shows/0/episodes",
+            headers={
+                "Authorization": "Bearer THE_TOKEN",
+            },
+            params={"filter": "editable", "sorting": "oldest"},
+        )
+
+        self.requests.delete.assert_called_once_with(
+            "THE_URL/v2/episodes/1",
+            headers={
+                "Authorization": "Bearer THE_TOKEN",
+            },
+        )
+
     def test_truncate_title(self):
         limit = self.config.title_limit
         too_long = "a" * (limit + 1)
@@ -129,3 +154,14 @@ class TestSpreaker(unittest.TestCase):
 # https://developers.spreaker.com/api/episodes/#retrieving-a-shows-episodes
 def episodes_with_titles(titles):
     return {"response": {"items": [{"title": t} for t in titles]}}
+
+
+def episodes_with_dates(id_date):
+    return {
+        "response": {
+            "items": [
+                {"episode_id": id, "published_at": date.strftime("%Y-%m-%d %H:%M:%S")}
+                for id, date in id_date.items()
+            ]
+        }
+    }

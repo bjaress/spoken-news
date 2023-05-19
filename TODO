@@ -4,9 +4,21 @@
     [x] first unknown
     [x] use in fresh_headline (reversing age)
     [x] optimize with cutoff
-[ ] reaping old episodes
-    [ ] delete oldest when more than 8
-    [ ] after upload of new
+[x] reaping old episodes
+    [x] separate endpoint with own schedule
+    [x] delete everything over n days old
+        - TODAY env variable for testing
+          - ruby
+            - require 'date'
+            - Date.parse("2001-01-05")
+            - Date.parse("2016-02-25 20:01:34")
+            - date - 7 # seven days before
+          - python
+            - datetime.datetime.now(datetime.timezone.utc).date()
+            - datetime.datetime.fromisoformat("2001-01-05")
+            - datetime.datetime.strptime("2016-02-25 20:01:34", "%Y-%m-%d %H:%M:%S")
+            - date - datetime.timedelta(days=7)
+    [x] schedule for weekends
 [ ] article text
     [ ] construct full script
     [ ] enforce character limit

@@ -1,12 +1,13 @@
 import unittest
 import hamcrest as h
 from unittest.mock import Mock, MagicMock
+import datetime as dt
 
 from api import models
 from api import main
 
 
-class TestMain(unittest.TestCase):
+class TestNews(unittest.TestCase):
     def test_news(self):
         clients = Mock()
 
@@ -32,6 +33,15 @@ class TestMain(unittest.TestCase):
         clients.spreaker.upload.assert_not_called()
 
 
+class TestCleanup(unittest.TestCase):
+    def test_cleanup(self):
+        spreaker = Mock()
+        main.cleanup(spreaker)
+        spreaker.cleanup.assert_called()
+        (cutoff,) = spreaker.cleanup.call_args.args
+        assert isinstance(cutoff, dt.datetime)
+
+
 DUMMY_ATTRIBUTES = {
     "tts_api_key": "THE_TTS_API_KEY",
     "tts_server": "THE_TTS_SERVER",
@@ -39,6 +49,7 @@ DUMMY_ATTRIBUTES = {
     "spreaker_token": "THE_SPREAKER_TOKEN",
     "spreaker_show_id": 1234,
     "spreaker_title_limit": 1234,
+    "spreaker_age_limit": 30,
     "wikipedia_url": "THE_WIKIPEDIA_URL",
     "wikipedia_headlines_page": "THE_WIKIPEDIA_HEADLINES",
 }
@@ -48,7 +59,7 @@ class TestClientConfigs(unittest.TestCase):
     def test_decompose_attributes(self):
         attributes = models.Attributes(**DUMMY_ATTRIBUTES)
         result = main.decompose_attributes(
-            models.PubSubTrigger(message=models.Message(attributes=attributes))
+            models.NewsTrigger(message=models.NewsMessage(attributes=attributes))
         )
 
         h.assert_that(
@@ -60,6 +71,7 @@ class TestClientConfigs(unittest.TestCase):
                             "url": attributes.spreaker_url,
                             "token": attributes.spreaker_token,
                             "show_id": attributes.spreaker_show_id,
+                            "age_limit": 30,
                         }
                     ),
                     "wikipedia": h.has_properties(
