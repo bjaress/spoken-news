@@ -54,6 +54,3 @@ When(/^it is time to clean up episodes older than (\d+) days$/) do |days|
   })
   expect(response.code).to eq(200), response
 end
-
-def trigger(action="news", spreaker_age_limit=nil)
-end

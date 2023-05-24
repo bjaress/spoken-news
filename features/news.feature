@@ -8,6 +8,7 @@ Background:
 
 Scenario: Single headline becomes episode
     Given there is a headline about frogs
+    And there are articles about frogs
     When it is time to generate news
     Then news is retrieved from Wikipedia
     Then the list of past episodes is retrieved from Spreaker
@@ -19,6 +20,7 @@ Scenario: Single headline becomes episode
 
 Scenario: Two headlines, oldest has no episode
     Given there is a headline about frogs
+    And there are articles about frogs
     And there is a headline about the nobel prize
     When it is time to generate news
     Then the list of past episodes is retrieved from Spreaker
@@ -28,6 +30,7 @@ Scenario: Two headlines, oldest has no episode
 Scenario: Two headlines, oldest has an episode
     Given there is a headline about frogs
     And there is a headline about the nobel prize
+    And there are articles about the nobel prize
     Given there is an episode about frogs
     When it is time to generate news
     Then the list of past episodes is retrieved from Spreaker

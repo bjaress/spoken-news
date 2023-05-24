@@ -30,6 +30,7 @@ class Config(BaseModel):
 
 class Headline(BaseModel):
     text: str
+    articles: typing.List[str]
 
 
 # external representations

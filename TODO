@@ -1,33 +1,42 @@
-[x] fuzzy match headlines and episodes
-    [x] Levenshtein library
-    [x] normalized similarity > 0.6
-    [x] first unknown
-    [x] use in fresh_headline (reversing age)
-    [x] optimize with cutoff
-[x] reaping old episodes
-    [x] separate endpoint with own schedule
-    [x] delete everything over n days old
-        - TODAY env variable for testing
-          - ruby
-            - require 'date'
-            - Date.parse("2001-01-05")
-            - Date.parse("2016-02-25 20:01:34")
-            - date - 7 # seven days before
-          - python
-            - datetime.datetime.now(datetime.timezone.utc).date()
-            - datetime.datetime.fromisoformat("2001-01-05")
-            - datetime.datetime.strptime("2016-02-25 20:01:34", "%Y-%m-%d %H:%M:%S")
-            - date - datetime.timedelta(days=7)
-    [x] schedule for weekends
-[ ] article text
-    [ ] construct full script
-    [ ] enforce character limit
+[i] article text
+    [x] extract links
+    [x] wikipedia_client.summary(title)
+        [x] fetch
+            - https://en.wikipedia.org/w/rest.php/v1/page/Frog
+        [x] parse
+            with open('/tmp/wiki.text') as file:
+                markup = file.read()
+
+            import wikitextparser as wtp
+            parsed = wtp.parse(markup)
+            intro = parsed.get_sections()[0]
+            intro.plain_text().strip()
+    [x] editing.extract_plan(wikipedia_client, headline) -> plan object
+    [x] plan.text() -> text
+        [ ] order articles
+            - count of non-word chars in title, desc
+            - lexicographic of title, desc
+    [x] use plan.text as tts script
+[ ] intro & outro
+    [ ] config structure
+    [ ] scheduled job attributes
+[ ] length limit
+    [ ] pass in tts config
+    [ ] plan.text(char_limit)
+        [ ] omit final paragraphs of articles
 [ ] strip parenthesized expressions, as in old version
-[ ] ordering of article contents
+    [ ] headlines
+    [ ] articles
+[ ] fall back on first paragraph if possible
+[ ] description
+    [ ] article links
+    [ ] licensing
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
-[ ] better error handling
 [ ] podcast on youtube
     [ ] channel
     [ ] sprout settings
+[ ] podcast on spotify
+[ ] better error handling
+[ ] exclude "list of" articles
 

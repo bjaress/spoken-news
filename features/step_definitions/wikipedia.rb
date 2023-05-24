@@ -55,3 +55,19 @@ Then(/^news is retrieved from Wikipedia$/) do
   expect(requests).to have_attributes(length: 1)
 end
 
+Given(/^there are articles about (.*)$/) do |topic|
+  $NEWS[topic][:articles].each do |title, body|
+    response = HTTParty.post("#{$url[:wikipedia]}/__admin/mappings", {
+      :body => {
+        :request => {
+          :urlPath => "/w/rest.php/v1/page/#{title}",
+        },
+        :response => {
+          :status => 200,
+          :jsonBody => body
+        }
+      }.to_json
+    })
+    expect(response.code).to eq(201)
+  end
+end

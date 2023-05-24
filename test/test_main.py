@@ -10,8 +10,8 @@ from api import main
 class TestNews(unittest.TestCase):
     def test_news(self):
         clients = Mock()
-
-        main.generate_news(clients)
+        editing = Mock()
+        main.generate_news(clients, editing=editing)
 
         clients.spreaker.fresh_headline.assert_called_with(
             clients.wikipedia.headlines.return_value
@@ -19,15 +19,19 @@ class TestNews(unittest.TestCase):
 
         headline = clients.spreaker.fresh_headline.return_value
 
-        clients.tts.speak.assert_called_with(headline.text)
+        editing.extract_plan.assert_called_with(clients.wikipedia, headline)
+        clients.tts.speak.assert_called_with(
+            editing.extract_plan.return_value.text.return_value
+        )
         clients.spreaker.upload.assert_called_with(
             title=headline.text, audio=clients.tts.speak.return_value
         )
 
     def test_news_no_fresh(self):
         clients = Mock()
+        editing = Mock()
         clients.spreaker.fresh_headline.return_value = None
-        main.generate_news(clients)
+        main.generate_news(clients, editing)
 
         clients.tts.speak.assert_not_called()
         clients.spreaker.upload.assert_not_called()

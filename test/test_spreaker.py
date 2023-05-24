@@ -39,7 +39,7 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_fresh_headline(self):
-        fresh = models.Headline(text="THE_TITLE")
+        fresh = models.Headline(text="THE_TITLE", articles=[])
         self.first_unknown.return_value = fresh.text
 
         response = self.client.fresh_headline([fresh])
@@ -57,8 +57,8 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_fresh_headline_multiple(self):
-        headline_a = models.Headline(text="HEADLINE_A")
-        headline_b = models.Headline(text="HEADLINE_B")
+        headline_a = models.Headline(text="HEADLINE_A", articles=[])
+        headline_b = models.Headline(text="HEADLINE_B", articles=[])
         self.requests.get.return_value.json.return_value = episodes_with_titles(
             ["EPISODE_C", "EPISODE_D"]
         )
@@ -76,7 +76,7 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_fresh_headline_truncated(self):
-        headline = models.Headline(text=("long" * self.config.title_limit))
+        headline = models.Headline(text=("long" * self.config.title_limit), articles=[])
         assert len(headline.text) > self.config.title_limit
         truncated = self.client.truncate_episode_title(headline.text)
         self.first_unknown.return_value = truncated
@@ -90,7 +90,7 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_fresh_headline_all_stale(self):
-        stale = models.Headline(text="STALE")
+        stale = models.Headline(text="STALE", articles=[])
         self.first_unknown.return_value = None
 
         response = self.client.fresh_headline([stale])
