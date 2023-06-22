@@ -74,7 +74,9 @@ class TestTruncate(unittest.TestCase):
         paragraphs_after, budget_after = editing.include_if_room(
             paragraphs_before, budget_before, additional_paragraphs
         )
+
         assert 0 <= budget_after <= budget_before, inputs
-        assert len(editing.SEPARATOR.join(paragraphs_after)) == len(
-            editing.SEPARATOR.join(paragraphs_before)
-        ) + (budget_before - budget_after), inputs
+
+        len_before = len(editing.SEPARATOR.join(paragraphs_before).encode())
+        len_after = len(editing.SEPARATOR.join(paragraphs_after).encode())
+        assert len_after == len_before + (budget_before - budget_after), inputs

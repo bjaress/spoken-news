@@ -26,7 +26,7 @@ def include_if_room(paragraphs, budget, additional_paragraphs, len_sep=len(SEPAR
     separators = len(additional_paragraphs)
     if paragraphs == [] and additional_paragraphs != []:
         separators -= 1
-    cost = separators * len_sep + sum(len(p) for p in additional_paragraphs)
+    cost = separators * len_sep + sum(len(p.encode()) for p in additional_paragraphs)
     if cost > budget:
         return paragraphs, budget
     return paragraphs + additional_paragraphs, budget - cost
