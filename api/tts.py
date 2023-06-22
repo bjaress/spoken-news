@@ -5,6 +5,8 @@ import base64
 
 import logging
 
+import api.error
+
 
 class Client:
     def __init__(self, config, requests=requests):
@@ -25,5 +27,5 @@ class Client:
                 "audioConfig": {"audioEncoding": "MP3"},
             },
         )
-        logging.info(f"TTS Request: {response.status_code}")
+        api.error.check_response(response)
         return base64.b64decode(response.json()["audioContent"])
