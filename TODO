@@ -20,16 +20,16 @@
 [i] length limit
     [x] pass in tts config
     [i] plan.text(char_limit)
-        [ ] omit final paragraphs of articles
+        [x] omit final paragraphs of articles
 [ ] intro & outro
     [ ] config structure
     [ ] scheduled job attributes
-[ ] strip parenthesized expressions, as in old version
-    [ ] headlines
-    [ ] articles
 [ ] description
     [ ] article links
     [ ] licensing
+[ ] strip parenthesized expressions, as in old version
+    [ ] headlines
+    [ ] articles
 [ ] adjust order
     - count of non-word characters, desc
     - length of longest word, desc

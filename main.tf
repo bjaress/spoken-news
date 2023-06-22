@@ -156,7 +156,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
   name        = "news-job"
   description = "trigger the news process"
 
-  schedule = "00 00 * * TUE,THU"
+  schedule = "00 00 * * MON,TUE,WED,THU,FRI"
   time_zone = "America/Los_Angeles"
 
   pubsub_target {
@@ -194,7 +194,7 @@ resource "google_cloud_scheduler_job" "cleanup-job-scheduled" {
       show_id = 5657024
       token = local.spreaker_access.access_token
       title_limit = 140
-      age_limit = 30
+      age_limit = 14
     }
   }
 }

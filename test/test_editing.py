@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 import hamcrest as ham
+import hypothesis as hyp
+from hypothesis import strategies as st
 
 from api import editing
 from api import models
@@ -66,4 +68,13 @@ class TestTruncate(unittest.TestCase):
         assert paragraphs == [], paragraphs
         assert budget == 1, budget
 
-    # TODO property test
+    @hyp.given(st.lists(st.text()), st.integers(min_value=0), st.lists(st.text()))
+    def test_consistency(self, paragraphs_before, budget_before, additional_paragraphs):
+        inputs = (paragraphs_before, budget_before, additional_paragraphs)
+        paragraphs_after, budget_after = editing.include_if_room(
+            paragraphs_before, budget_before, additional_paragraphs
+        )
+        assert 0 <= budget_after <= budget_before, inputs
+        assert len(editing.SEPARATOR.join(paragraphs_after)) == len(
+            editing.SEPARATOR.join(paragraphs_before)
+        ) + (budget_before - budget_after), inputs
