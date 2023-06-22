@@ -71,4 +71,39 @@ $NEWS = {
           "Cloudoligy" => { source: "Cloudoligy is a [[made-up]] word." },
         },
     },
+    "sports" => {
+        headline: (
+         "Wikipedia editors are obsessed with " +
+         "<a href='/wiki/Sports'>sports</a> " +
+         "<a href='/wiki/Championship'>championships</a>."),
+
+        episode_title: (
+          "Wikipedia editors are obsessed with sports championships."
+        ),
+
+        episode_id: 444444,
+
+        articles: {
+          "Sports" => {
+            source: (
+              "Blah blah blah blah." +
+              "\n\n" +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy."
+              )
+            },
+          "Championship" => {
+            source: (
+              "Yada yada yada yada." +
+              "\n\n" +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah."
+              )
+            },
+        },
+
+        episode_contents: (
+              "Yada yada yada yada." +
+              "\n\n" +
+              "Blah blah blah blah."
+        ),
+    },
 }

@@ -20,9 +20,7 @@ class TestNews(unittest.TestCase):
         headline = clients.spreaker.fresh_headline.return_value
 
         editing.extract_plan.assert_called_with(clients.wikipedia, headline)
-        clients.tts.speak.assert_called_with(
-            editing.extract_plan.return_value.text.return_value
-        )
+        clients.tts.speak.assert_called_with(editing.extract_plan.return_value)
         clients.spreaker.upload.assert_called_with(
             title=headline.text, audio=clients.tts.speak.return_value
         )
@@ -49,6 +47,7 @@ class TestCleanup(unittest.TestCase):
 DUMMY_ATTRIBUTES = {
     "tts_api_key": "THE_TTS_API_KEY",
     "tts_server": "THE_TTS_SERVER",
+    "tts_length_limit": 50,
     "spreaker_url": "THE_SPREAKER_URL",
     "spreaker_token": "THE_SPREAKER_TOKEN",
     "spreaker_show_id": 1234,

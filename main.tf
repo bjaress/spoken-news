@@ -171,6 +171,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       spreaker_age_limit = 140
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
+      tts_length_limit = 5000
       wikipedia_url = "https://en.wikipedia.org"
       wikipedia_headlines_page = "Template:In_the_news"
     }

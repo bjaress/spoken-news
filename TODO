@@ -14,23 +14,26 @@
     [x] editing.extract_plan(wikipedia_client, headline) -> plan object
     [x] plan.text() -> text
         [ ] order articles
-            - count of non-word chars in title, desc
+            - count words, desc
             - lexicographic of title, desc
     [x] use plan.text as tts script
+[i] length limit
+    [x] pass in tts config
+    [i] plan.text(char_limit)
+        [ ] omit final paragraphs of articles
 [ ] intro & outro
     [ ] config structure
     [ ] scheduled job attributes
-[ ] length limit
-    [ ] pass in tts config
-    [ ] plan.text(char_limit)
-        [ ] omit final paragraphs of articles
 [ ] strip parenthesized expressions, as in old version
     [ ] headlines
     [ ] articles
-[ ] fall back on first paragraph if possible
 [ ] description
     [ ] article links
     [ ] licensing
+[ ] adjust order
+    - count of non-word characters, desc
+    - length of longest word, desc
+    - lexicographic of title, desc
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
 [ ] podcast on youtube

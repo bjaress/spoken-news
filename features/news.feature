@@ -52,3 +52,12 @@ Scenario: Slightly altered headline
     When it is time to generate news
     Then the list of past episodes is retrieved from Spreaker
     Then no audio file is uploaded to Spreaker
+
+# Rule: Truncate long episodes to satisfy Google TTS
+
+Scenario: Long episode
+    Given there is a headline about sports
+    And there are articles about sports
+    When it is time to generate news
+    Then audio is generated about sports
+    Then the audio file is uploaded to Spreaker

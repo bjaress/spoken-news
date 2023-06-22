@@ -22,6 +22,7 @@ When(/^it is time to generate news$/) do
           :spreaker_age_limit => 30,
           :tts_api_key => "DUMMY_KEY",
           :tts_server => $url[:google],
+          :tts_length_limit => 50,
           :wikipedia_url => $url[:wikipedia],
           :wikipedia_headlines_page => "Template:In_the_news"
         },

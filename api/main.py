@@ -52,7 +52,7 @@ def generate_news(clients, editing):
     plan = editing.extract_plan(clients.wikipedia, fresh_headline)
     clients.spreaker.upload(
         title=fresh_headline.text,
-        audio=clients.tts.speak(plan.text()),
+        audio=clients.tts.speak(plan),
     )
 
     return {}

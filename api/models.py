@@ -15,6 +15,7 @@ class SpreakerConfig(BaseModel):
 class TtsConfig(BaseModel):
     api_key: str
     server: str
+    length_limit: int
 
 
 class WikipediaConfig(BaseModel):
@@ -44,6 +45,7 @@ class Attributes(BaseModel):
     spreaker_age_limit: int
     tts_api_key: str
     tts_server: str
+    tts_length_limit: int
     wikipedia_url: str
     wikipedia_headlines_page: str
 
