@@ -11,14 +11,14 @@ import api.error
 class Client:
     def __init__(self, config, requests=requests):
         self.requests = requests
-        self.length_limit = config.length_limit
         self.url = f"{config.server}/v1/text:synthesize?key={config.api_key}"
+        self.config = config
 
-    def speak(self, plan):
+    def speak(self, story):
         response = self.requests.post(
             url=self.url,
             json={
-                "input": {"text": plan.text(self.length_limit)},
+                "input": {"text": story.text(self.config)},
                 "voice": {
                     "languageCode": "en-gb",
                     "name": "en-GB-Standard-A",

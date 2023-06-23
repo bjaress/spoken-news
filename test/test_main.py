@@ -48,6 +48,8 @@ DUMMY_ATTRIBUTES = {
     "tts_api_key": "THE_TTS_API_KEY",
     "tts_server": "THE_TTS_SERVER",
     "tts_length_limit": 50,
+    "tts_intro": "INTRO",
+    "tts_outro": "OUTRO",
     "spreaker_url": "THE_SPREAKER_URL",
     "spreaker_token": "THE_SPREAKER_TOKEN",
     "spreaker_show_id": 1234,

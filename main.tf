@@ -172,6 +172,8 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
       tts_length_limit = 5000
+      tts_intro = "Welcome to Spoken News, I'm a computer.  The following information is from Wikipedia:"
+      tts_outro = "Thanks for listening!  See the episode notes for details, including content licensing."
       wikipedia_url = "https://en.wikipedia.org"
       wikipedia_headlines_page = "Template:In_the_news"
     }

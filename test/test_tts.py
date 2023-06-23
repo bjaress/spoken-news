@@ -19,10 +19,10 @@ class TestTtsClient(unittest.TestCase):
         requests.post.assert_not_called()
         requests.post.return_value.json.return_value = {"audioContent": "000MP3BASE64"}
 
-        plan = mock.MagicMock()
-        plan.text.return_value = "THE_WORDS"
-        result = client.speak(plan)
-        plan.text.assert_called_with(config.length_limit)
+        story = mock.MagicMock()
+        story.text.return_value = "THE_WORDS"
+        result = client.speak(story)
+        story.text.assert_called_with(config)
         requests.post.assert_called_with(
             url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY",
             json={

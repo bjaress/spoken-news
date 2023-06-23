@@ -15,9 +15,13 @@ $NEWS = {
             "form a headline about it, but this ..."),
 
         episode_contents: (
+          "INTRO" +
+          "\n\n" +
           "A frog thing happened." +
           "\n\n" +
-          "Frogs are cool."
+          "Frogs are cool." +
+          "\n\n" +
+          "OUTRO"
         ),
 
         episode_id: 111111,
@@ -42,9 +46,13 @@ $NEWS = {
             "form a headline about it, but this ..."),
 
         episode_contents: (
+          "INTRO" +
+          "\n\n" +
           "A toad thing happened." +
           "\n\n" +
-          "Toads are cool."
+          "Toads are cool." +
+          "\n\n" +
+          "OUTRO"
         ),
 
         episode_id: 222222,
@@ -63,7 +71,13 @@ $NEWS = {
             "The Nobel Prize in cloud watching was awarded to " +
             "Tammy Bigglesworth."),
 
-        episode_contents: "Cloudoligy is a made-up word.",
+        episode_contents: (
+          "INTRO" +
+          "\n\n" +
+          "Cloudoligy is a made-up word." +
+          "\n\n" +
+          "OUTRO"
+            ),
 
         episode_id: 333333,
 
@@ -101,9 +115,13 @@ $NEWS = {
         },
 
         episode_contents: (
+          "INTRO" +
+              "\n\n" +
               "Yada yada yada yada." +
               "\n\n" +
-              "Blah blah blah blah."
+              "Blah blah blah blah." +
+              "\n\n" +
+          "OUTRO"
         ),
     },
 }

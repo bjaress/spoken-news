@@ -1,8 +1,8 @@
 [i] intro & outro
     [x] refactor: editing/Plan -> story/Story
-    [ ] refactor: pass whole tts config to plan.text
-    [ ] scheduled job attributes
-    [ ] intro and outro in config structure
+    [x] refactor: pass whole tts config to story.text
+    [x] scheduled job attributes
+    [x] intro and outro in config structure
     [ ] include intro at beginning
     [ ] include title after intro
     [ ] always put outro at end, deduct from initial budget

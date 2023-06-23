@@ -16,6 +16,8 @@ class TtsConfig(BaseModel):
     api_key: str
     server: str
     length_limit: int
+    intro: str
+    outro: str
 
 
 class WikipediaConfig(BaseModel):
@@ -46,6 +48,8 @@ class Attributes(BaseModel):
     tts_api_key: str
     tts_server: str
     tts_length_limit: int
+    tts_intro: str
+    tts_outro: str
     wikipedia_url: str
     wikipedia_headlines_page: str
 
