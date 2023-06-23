@@ -17,6 +17,8 @@ $NEWS = {
         episode_contents: (<<~HEREDOC.strip
           INTRO
           
+          An incident involving frogs occurred. For a variety of reasons, it takes Wikipedia many characters to form a headline about it, but this will be truncated for Spreaker.
+          
           A frog thing happened.
           
           Frogs are cool.
@@ -49,6 +51,8 @@ $NEWS = {
         episode_contents: (<<~HEREDOC.strip
           INTRO
           
+          An incident involving toads occurred. For a variety of reasons, it takes Wikipedia many characters to form a headline about it, but this will be truncated for Spreaker.
+          
           A toad thing happened.
           
           Toads are cool.
@@ -75,6 +79,8 @@ $NEWS = {
 
         episode_contents: (<<~HEREDOC.strip
           INTRO
+          
+          The Nobel Prise in cloud watching was awarded to Tammy Bigglesworth.
           
           Cloudoligy is a made-up word.
           
@@ -105,6 +111,16 @@ $NEWS = {
             source: (
               "Blah blah blah blah." +
               "\n\n" +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
+              "Blahdy blahdy blahdy blahdy blahdy blahdy." +
               "Blahdy blahdy blahdy blahdy blahdy blahdy."
               )
             },
@@ -112,6 +128,16 @@ $NEWS = {
             source: (
               "Yada yada yada yada." +
               "\n\n" +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
+              "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah." +
               "Dee-dah dee-dah dee-dah dee-dah dee-dah dee-dah."
               )
             },
@@ -119,6 +145,8 @@ $NEWS = {
 
         episode_contents: (<<~HEREDOC.strip
           INTRO
+          
+          Wikipedia editors are obsessed with sports championships.
           
           Yada yada yada yada.
          

@@ -16,7 +16,7 @@ class TestSimple(unittest.TestCase):
         client = mock.MagicMock()
         client.summary.return_value = "Summary text\n\nmore"
         headline = models.Headline(
-            text="",
+            text="HEADLINE_TEXT",
             articles=["Foo"],
         )
 
@@ -25,30 +25,38 @@ class TestSimple(unittest.TestCase):
         client.summary.assert_called_with("Foo")
 
         ham.assert_that(
-            story.summaries, ham.has_entries({"Foo": ["Summary text", "more"]})
+            story,
+            ham.has_properties(
+                {
+                    "summaries": ham.has_entries({"Foo": ["Summary text", "more"]}),
+                    "headline": "HEADLINE_TEXT",
+                }
+            ),
         )
 
     def test_text(self):
-        story = stories.Story({"Foo": ["Summary text", "more"]})
+        story = stories.Story("HEADLINE", {"Foo": ["Summary text", "more"]})
         text = story.text(self.tts_config)
-        assert text == "INTRO\n\nSummary text\n\nmore\n\nOUTRO", text
+        assert text == "INTRO\n\nHEADLINE\n\nSummary text\n\nmore\n\nOUTRO", text
 
     def test_article_order(self):
         story = stories.Story(
+            "HEADLINE",
             {
                 "FooBarBaz": ["text"],
                 "Foo": ["more"],
                 # word count dominates length count
                 "F B B": ["Summary"],
-            }
+            },
         )
         text = story.text(self.tts_config)
-        assert text == "INTRO\n\nSummary\n\ntext\n\nmore\n\nOUTRO", text
+        assert text == "INTRO\n\nHEADLINE\n\nSummary\n\ntext\n\nmore\n\nOUTRO", text
 
 
 class TestTruncateStory(unittest.TestCase):
     def test_simple(self):
         story = stories.Story(
+            "H",
             {
                 "first article in collection": [
                     "a",
@@ -56,19 +64,20 @@ class TestTruncateStory(unittest.TestCase):
                 ],
                 "second article": ["b", "c"],
                 "third": ["this entire article will be skipped"],
-            }
+            },
         )
         text = story.text(mock.Mock(length_limit=30, intro="INTRO", outro="OUTRO"))
-        assert text == "INTRO\n\na\n\nb\n\nc\n\nOUTRO", text
+        assert text == "INTRO\n\nH\n\na\n\nb\n\nc\n\nOUTRO", text
 
     def test_outro_budgeted(self):
         intro = "intro"
+        headline = "HEADLINE"
         text_a = "a"
         text_b = "b"
         outro = "outro"
-        a_only = f"{intro}\n\n{text_a}\n\n{outro}"
-        both = f"{intro}\n\n{text_a}\n\n{text_b}\n\n{outro}"
-        story = stories.Story({"": [text_a, text_b]})
+        story = stories.Story(headline, {"": [text_a, text_b]})
+        a_only = f"{intro}\n\n{headline}\n\n{text_a}\n\n{outro}"
+        both = f"{intro}\n\n{headline}\n\n{text_a}\n\n{text_b}\n\n{outro}"
 
         text = story.text(mock.Mock(length_limit=len(both), intro=intro, outro=outro))
         assert text == both, text

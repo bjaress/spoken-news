@@ -5,17 +5,19 @@ def extract_story(wikipedia_client, headline):
     summaries = {}
     for title in set(headline.articles):
         summaries[title] = wikipedia_client.summary(title).split("\n\n")
-    return Story(summaries)
+    return Story(headline.text, summaries)
 
 
 class Story:
-    def __init__(self, summaries):
+    def __init__(self, headline, summaries):
         self.summaries = summaries
+        self.headline = headline
 
     def text(self, tts_config):
         reserve = bytecount(SEPARATOR) + bytecount(tts_config.outro)
         budget = tts_config.length_limit - reserve
         paragraphs, budget = include_if_room([], budget, [tts_config.intro])
+        paragraphs, budget = include_if_room(paragraphs, budget, [self.headline])
 
         for title in sorted(self.summaries.keys(), key=sort_key, reverse=True):
             head, *tail = self.summaries[title]

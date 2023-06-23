@@ -5,7 +5,7 @@
     [x] intro and outro in config structure
     [x] include intro at beginning
     [x] always put outro at end, deduct from initial budget
-    [ ] include title after intro
+    [x] include title after intro
 [ ] strip parenthesized expressions, as in old version
     [ ] headlines
     [ ] articles
