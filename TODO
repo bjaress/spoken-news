@@ -3,9 +3,9 @@
     [x] refactor: pass whole tts config to story.text
     [x] scheduled job attributes
     [x] intro and outro in config structure
-    [ ] include intro at beginning
+    [x] include intro at beginning
+    [x] always put outro at end, deduct from initial budget
     [ ] include title after intro
-    [ ] always put outro at end, deduct from initial budget
 [ ] strip parenthesized expressions, as in old version
     [ ] headlines
     [ ] articles
