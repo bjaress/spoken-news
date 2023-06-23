@@ -7,7 +7,7 @@ from api import tts
 from api import spreaker
 from api import models
 from api import wikipedia
-import api.editing
+import api.stories
 import logging
 
 app = fa.FastAPI()
@@ -39,20 +39,20 @@ class Clients:
 
 @app.post("/")
 def generate_news_external(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
-    generate_news(clients, api.editing)
+    generate_news(clients, api.stories)
 
 
-def generate_news(clients, editing):
+def generate_news(clients, stories):
     headlines = clients.wikipedia.headlines()
     fresh_headline = clients.spreaker.fresh_headline(headlines)
 
     if fresh_headline is None:
         return {}
 
-    plan = editing.extract_plan(clients.wikipedia, fresh_headline)
+    story = stories.extract_story(clients.wikipedia, fresh_headline)
     clients.spreaker.upload(
         title=fresh_headline.text,
-        audio=clients.tts.speak(plan),
+        audio=clients.tts.speak(story),
     )
 
     return {}

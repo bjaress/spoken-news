@@ -1,41 +1,20 @@
-[i] article text
-    [x] extract links
-    [x] wikipedia_client.summary(title)
-        [x] fetch
-            - https://en.wikipedia.org/w/rest.php/v1/page/Frog
-        [x] parse
-            with open('/tmp/wiki.text') as file:
-                markup = file.read()
-
-            import wikitextparser as wtp
-            parsed = wtp.parse(markup)
-            intro = parsed.get_sections()[0]
-            intro.plain_text().strip()
-    [x] editing.extract_plan(wikipedia_client, headline) -> plan object
-    [x] plan.text() -> text
-        [ ] order articles
-            - count words, desc
-            - lexicographic of title, desc
-    [x] use plan.text as tts script
-[i] length limit
-    [x] pass in tts config
-    [i] plan.text(char_limit)
-        [x] omit final paragraphs of articles
-[ ] intro & outro
-    [ ] config structure
+[i] intro & outro
+    [x] refactor: editing/Plan -> story/Story
+    [ ] refactor: pass whole tts config to plan.text
     [ ] scheduled job attributes
-[ ] description
-    [ ] article links
-    [ ] licensing
+    [ ] intro and outro in config structure
+    [ ] include intro at beginning
+    [ ] include title after intro
+    [ ] always put outro at end, deduct from initial budget
 [ ] strip parenthesized expressions, as in old version
     [ ] headlines
     [ ] articles
-[ ] adjust order
-    - count of non-word characters, desc
-    - length of longest word, desc
-    - lexicographic of title, desc
+[ ] description
+    [ ] article links
+    [ ] licensing
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
+[ ] adjust order?
 [ ] podcast on youtube
     [ ] channel
     [ ] sprout settings

@@ -1,14 +1,14 @@
 SEPARATOR = "\n\n"
 
 
-def extract_plan(wikipedia_client, headline):
+def extract_story(wikipedia_client, headline):
     summaries = {}
     for title in set(headline.articles):
         summaries[title] = wikipedia_client.summary(title).split("\n\n")
-    return Plan(summaries)
+    return Story(summaries)
 
 
-class Plan:
+class Story:
     def __init__(self, summaries):
         self.summaries = summaries
 
