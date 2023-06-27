@@ -39,14 +39,45 @@ class Client:
         markup = response.json()["source"]
         parsed = wtp.parse(markup)
         intro = parsed.get_sections()[0]
-        return intro.plain_text().strip()
+        return remove_parenthesized(intro.plain_text().strip())
 
 
 def extract_headline(li_element):
     return models.Headline(
-        text=collapse(li_element.text),
+        text=remove_parenthesized(collapse(li_element.text)),
         articles=[path_final(link["href"]) for link in li_element.select("a[href]")],
     )
+
+
+def remove_parenthesized(text):
+    return "".join(_remove_parenthesized(text))
+
+
+def _remove_parenthesized(text):
+    paren_depth = 0
+    for curr, next in _pairs(text):
+        if curr == "(":
+            paren_depth += 1
+        elif curr == ")" and paren_depth > 0:
+            paren_depth -= 1
+        elif curr == " " and next == "(":
+            pass
+        elif curr == "\n" and next == "\n":
+            paren_depth = 0
+            yield curr
+        elif paren_depth > 0:
+            pass
+        else:
+            yield curr
+
+
+def _pairs(text):
+    for idx in range(len(text)):
+        first = text[idx]
+        if idx + 1 < len(text):
+            yield (first, text[idx + 1])
+        else:
+            yield (first, None)
 
 
 def path_final(url):

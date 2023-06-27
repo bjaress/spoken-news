@@ -71,7 +71,7 @@ $NEWS = {
     "the nobel prize" => {
         headline: (
             "The Nobel Prize in <a href='/wiki/Cloudoligy'>cloud " +
-            "watching</a> was awarded to Tammy Bigglesworth."),
+            "watching</a> was awarded to Tammy Bigglesworth (pictured)."),
 
         episode_title: (
             "The Nobel Prize in cloud watching was awarded to " +
@@ -80,7 +80,7 @@ $NEWS = {
         episode_contents: (<<~HEREDOC.strip
           INTRO
           
-          The Nobel Prise in cloud watching was awarded to Tammy Bigglesworth.
+          The Nobel Prize in cloud watching was awarded to Tammy Bigglesworth.
           
           Cloudoligy is a made-up word.
           
@@ -91,7 +91,11 @@ $NEWS = {
         episode_id: 333333,
 
         articles: {
-          "Cloudoligy" => { source: "Cloudoligy is a [[made-up]] word." },
+          "Cloudoligy" => { source: <<~HEREDOC.strip
+            Cloudoligy (unlike
+            meteorology (/ˌmiːti.əˈɹɑləd͡ʒi/)) is a [[made-up]] word.
+            HEREDOC
+            },
         },
     },
     "sports" => {

@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 import hamcrest as ham
+import hypothesis as hyp
+import hypothesis.strategies as st
 
 import api.wikipedia as wikipedia
 
@@ -21,7 +23,7 @@ class TestClient(unittest.TestCase):
                     "*": """
                     <ul>
                         <li><a href="/wiki/Greeting">Hello</a>,
-                        <a href="/wiki/Earth">World</a>!</li>
+                        <a href="/wiki/Earth">World</a>! (ignore this)</li>
                     </ul>
                     """
                 }
@@ -80,7 +82,7 @@ class TestClient(unittest.TestCase):
 
     def test_summary(self):
         self.requests.get.return_value.json.return_value = {
-            "source": "Hello, '''bold''' [[link]]."
+            "source": "Hello, '''bold''' [[link]] (ignore)."
         }
         summary = self.client.summary("The_Title")
 
@@ -89,3 +91,38 @@ class TestClient(unittest.TestCase):
         )
 
         assert summary == "Hello, bold link.", f"summary is {summary}"
+
+
+class TestParentheses(unittest.TestCase):
+    def test_with_comma(self):
+        result = wikipedia.remove_parenthesized("a (b), c")
+        assert result == "a, c", result
+
+    def test_nested(self):
+        result = wikipedia.remove_parenthesized("a (b (c) d) e")
+        assert result == "a e", result
+
+    def test_linebreak(self):
+        result = wikipedia.remove_parenthesized("a (b (c) \nd) e")
+        assert result == "a e", result
+
+    def test_paragraph(self):
+        # This would only come from badly-edited text on Wikipedia.
+        result = wikipedia.remove_parenthesized("a (b (c) \n\nd e")
+        assert result == "a\n\nd e", result
+
+    @hyp.given(st.text())
+    def test_subsequence(self, input):
+        result = wikipedia.remove_parenthesized(input)
+        assert is_subseq(result, input), (result, input)
+
+
+# Inspired by clever folks on the Internet.
+#
+# Uses an iterator to always scan only forward in seq_a looking for the
+# very next item in seq_b.  Each new item from seq_a consumes as much as
+# it has to from the iterator, so the next item starts consuming from
+# that point in the iterator.
+def is_subseq(seq_a, seq_b):
+    forward_only = iter(seq_b)
+    return all(item in forward_only for item in seq_a)

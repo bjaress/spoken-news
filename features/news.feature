@@ -34,6 +34,7 @@ Scenario: Two headlines, oldest has an episode
     Given there is an episode about frogs
     When it is time to generate news
     Then the list of past episodes is retrieved from Spreaker
+    Then audio is generated about the nobel prize
     Then the audio file is uploaded to Spreaker
     And the episode title is about the nobel prize
 

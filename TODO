@@ -1,20 +1,19 @@
-[i] intro & outro
-    [x] refactor: editing/Plan -> story/Story
-    [x] refactor: pass whole tts config to story.text
-    [x] scheduled job attributes
-    [x] intro and outro in config structure
-    [x] include intro at beginning
-    [x] always put outro at end, deduct from initial budget
-    [x] include title after intro
-[ ] strip parenthesized expressions, as in old version
-    [ ] headlines
-    [ ] articles
+[i] strip parenthesized expressions, as in old version
+    [i] articles
+        [x] helper method used
+        [x] specific cases
+            [x] comma
+            [x] nested
+            [x] linebreak
+            [x] paragraph
+        [x] properties
+    [x] headlines
+        [x] helper method used
 [ ] description
     [ ] article links
     [ ] licensing
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
-[ ] adjust order?
 [ ] podcast on youtube
     [ ] channel
     [ ] sprout settings
