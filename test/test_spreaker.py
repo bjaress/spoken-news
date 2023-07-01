@@ -28,14 +28,30 @@ class TestSpreaker(unittest.TestCase):
     def test_upload(self):
         self.requests.post.assert_not_called()
         self.client.upload(title="THE_TITLE", audio=b"THE_AUDIO")
-        self.requests.post.assert_called_with(
-            "THE_URL/v2/shows/0/episodes",
-            headers={
-                "Authorization": "Bearer THE_TOKEN",
-            },
-            # presence of files triggers the correct content-type
-            files=[("media_file", ("audio.mp3", b"THE_AUDIO", "audio/mp3"))],
-            data={"title": "THE_TITLE"},
+
+        ham.assert_that(
+            self.requests.post.call_args.args,
+            ham.contains_exactly("THE_URL/v2/shows/0/episodes"),
+        )
+        ham.assert_that(
+            self.requests.post.call_args.kwargs,
+            ham.has_entries(
+                {
+                    "headers": {
+                        "Authorization": "Bearer THE_TOKEN",
+                    },
+                    # presence of files triggers the correct content-type
+                    "files": [("media_file", ("audio.mp3", b"THE_AUDIO", "audio/mp3"))],
+                    "data": ham.has_entries(
+                        {
+                            "title": "THE_TITLE",
+                            "description": ham.contains_string(
+                                "https://creativecommons.org/licenses/by-sa/3.0/"
+                            ),
+                        }
+                    ),
+                }
+            ),
         )
 
     def test_fresh_headline(self):

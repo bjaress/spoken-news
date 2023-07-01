@@ -9,9 +9,19 @@
         [x] properties
     [x] headlines
         [x] helper method used
-[ ] description
+[i] description
+    - wikipedia requirements
+      - indicate in a reasonable fashion that the original work has been
+        modified
+      - licensing notice stating that the work is released under CC
+        BY-SA
+      - url or link to https://creativecommons.org/licenses/by-sa/3.0/
+      - url or link to articles on Wikipedia
+    [x] licensing
+        - static text with license link
     [ ] article links
-    [ ] licensing
+        [ ] capture article version
+        [ ] https://en.wikipedia.org/w/index.php?title=Kitten&oldid=4526501
 [ ] choose voice/random voice from list
     [ ] tweak speed and pitch
 [ ] podcast on youtube

@@ -128,6 +128,11 @@ Then(/^the episode title is about (.*)$/) do |topic|
   expect(@spreaker_params["title"]).to eq($NEWS[topic][:episode_title])
 end
 
+Then(/^the episode description complies with Wikipedia's license$/) do
+  expect(@spreaker_params["description"]).to include(
+    "https://creativecommons.org/licenses/by-sa/3.0/")
+end
+
 # https://developers.spreaker.com/api/episodes/#deleting-an-episode
 Then(/^the episode about (.*) is deleted$/) do |topic|
   response = HTTParty.post("#{$url[:spreaker]}/__admin/requests/find", {
