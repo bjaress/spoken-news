@@ -53,6 +53,7 @@ def generate_news(clients, stories):
     clients.spreaker.upload(
         title=fresh_headline.text,
         audio=clients.tts.speak(story),
+        description=clients.wikipedia.describe(story),
     )
 
     return {}

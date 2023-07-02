@@ -2,15 +2,15 @@ SEPARATOR = "\n\n"
 
 
 def extract_story(wikipedia_client, headline):
-    summaries = {}
+    articles = {}
     for title in set(headline.articles):
-        summaries[title] = wikipedia_client.summary(title).split("\n\n")
-    return Story(headline.text, summaries)
+        articles[title] = wikipedia_client.fetch_article(title)
+    return Story(headline.text, articles)
 
 
 class Story:
-    def __init__(self, headline, summaries):
-        self.summaries = summaries
+    def __init__(self, headline, articles):
+        self.articles = articles
         self.headline = headline
 
     def text(self, tts_config):
@@ -19,8 +19,8 @@ class Story:
         paragraphs, budget = include_if_room([], budget, [tts_config.intro])
         paragraphs, budget = include_if_room(paragraphs, budget, [self.headline])
 
-        for title in sorted(self.summaries.keys(), key=sort_key, reverse=True):
-            head, *tail = self.summaries[title]
+        for title in sorted(self.articles.keys(), key=sort_key, reverse=True):
+            head, *tail = self.articles[title].summary.split("\n\n")
             paragraphs, budget = include_if_room(paragraphs, budget, [head])
             paragraphs, budget = include_if_room(paragraphs, budget, tail)
 
@@ -28,6 +28,9 @@ class Story:
             paragraphs, budget + reserve, [tts_config.outro]
         )
         return SEPARATOR.join(paragraphs)
+
+    def permalink_ids(self):
+        return {title: article.permalink_id for title, article in self.articles.items()}
 
 
 def bytecount(text):

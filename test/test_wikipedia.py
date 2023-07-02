@@ -80,17 +80,42 @@ class TestClient(unittest.TestCase):
             ),
         )
 
-    def test_summary(self):
+    def test_fetch_article(self):
         self.requests.get.return_value.json.return_value = {
-            "source": "Hello, '''bold''' [[link]] (ignore)."
+            "latest": {"id": 123},
+            "source": "Hello, '''bold''' [[link]] (ignore).",
         }
-        summary = self.client.summary("The_Title")
+        article = self.client.fetch_article("The_Title")
 
         self.requests.get.assert_called_once_with(
             f"{self.config.url}{wikipedia.PAGE_PATH}/The_Title"
         )
 
-        assert summary == "Hello, bold link.", f"summary is {summary}"
+        ham.assert_that(
+            article,
+            ham.has_properties(
+                {
+                    "summary": "Hello, bold link.",
+                    "permalink_id": 123,
+                }
+            ),
+        )
+
+    def test_simple(self):
+        story = mock.Mock()
+        story.permalink_ids.return_value = {"a": 1, "b": 2}
+        expected = [
+            "https://creativecommons.org/licenses/by-sa/4.0/",
+            "oldid=1",
+            "oldid=2",
+            "title=a",
+            "title=b",
+        ]
+
+        ham.assert_that(
+            self.client.describe(story),
+            ham.all_of(*[ham.contains_string(s) for s in expected]),
+        )
 
 
 class TestParentheses(unittest.TestCase):
@@ -119,10 +144,10 @@ class TestParentheses(unittest.TestCase):
 
 # Inspired by clever folks on the Internet.
 #
-# Uses an iterator to always scan only forward in seq_a looking for the
-# very next item in seq_b.  Each new item from seq_a consumes as much as
-# it has to from the iterator, so the next item starts consuming from
-# that point in the iterator.
+# Uses an iterator to always scan only forward in seq_b looking for the
+# very next item in seq_a.  Each new item from seq_a consumes as much as
+# it has to from the iterator of seq_b, so the next item starts
+# consuming from that point in the iterator.
 def is_subseq(seq_a, seq_b):
     forward_only = iter(seq_b)
     return all(item in forward_only for item in seq_a)

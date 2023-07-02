@@ -36,6 +36,11 @@ class Headline(BaseModel):
     articles: typing.List[str]
 
 
+class Article(BaseModel):
+    summary: str
+    permalink_id: int
+
+
 # external representations
 
 

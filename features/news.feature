@@ -16,6 +16,7 @@ Scenario: Single headline becomes episode
     Then the audio file is uploaded to Spreaker
     And the episode title is about frogs
     And the episode description complies with Wikipedia's license
+    And the episode description links to articles on frogs
 
 # Rule: The oldest headline without an episode becomes an episode
 

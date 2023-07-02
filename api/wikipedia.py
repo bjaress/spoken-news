@@ -9,6 +9,11 @@ import logging
 API_PATH = "/w/api.php"
 PAGE_PATH = "/w/rest.php/v1/page"
 
+LICENSE_NOTICE = """
+Created from parts of Wikipedia articles and available under the CC
+BY-SA 4.0 license: https://creativecommons.org/licenses/by-sa/4.0/
+"""
+
 
 class Client:
     def __init__(self, config, requests=requests):
@@ -34,12 +39,26 @@ class Client:
         headlines = [extract_headline(item) for item in soup.ul.find_all("li")]
         return headlines
 
-    def summary(self, title):
+    def fetch_article(self, title):
         response = self.requests.get(f"{self.config.url}{PAGE_PATH}/{title}")
-        markup = response.json()["source"]
-        parsed = wtp.parse(markup)
+        json = response.json()
+        parsed = wtp.parse(json["source"])
         intro = parsed.get_sections()[0]
-        return remove_parenthesized(intro.plain_text().strip())
+        return models.Article(
+            summary=remove_parenthesized(intro.plain_text().strip()),
+            permalink_id=json["latest"]["id"],
+        )
+
+    def describe(self, story):
+        notice = " ".join(LICENSE_NOTICE.split())
+        parts = notice, *(
+            permalink(title, id) for title, id in story.permalink_ids().items()
+        )
+        return "\n".join(parts)
+
+
+def permalink(title, id):
+    return f"https://en.wikipedia.org/w/index.php?title={title}&oldid={id}"
 
 
 def extract_headline(li_element):

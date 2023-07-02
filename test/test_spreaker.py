@@ -27,7 +27,9 @@ class TestSpreaker(unittest.TestCase):
 
     def test_upload(self):
         self.requests.post.assert_not_called()
-        self.client.upload(title="THE_TITLE", audio=b"THE_AUDIO")
+        self.client.upload(
+            title="THE_TITLE", audio=b"THE_AUDIO", description="THE_DESC"
+        )
 
         ham.assert_that(
             self.requests.post.call_args.args,
@@ -45,9 +47,7 @@ class TestSpreaker(unittest.TestCase):
                     "data": ham.has_entries(
                         {
                             "title": "THE_TITLE",
-                            "description": ham.contains_string(
-                                "https://creativecommons.org/licenses/by-sa/3.0/"
-                            ),
+                            "description": "THE_DESC",
                         }
                     ),
                 }
@@ -146,7 +146,7 @@ class TestSpreaker(unittest.TestCase):
         too_long = "a" * (limit + 1)
         truncated = "a" * (limit - len(spreaker.ELLIPSIS)) + spreaker.ELLIPSIS
 
-        self.client.upload(title=too_long, audio=b"THE_AUDIO")
+        self.client.upload(title=too_long, audio=b"THE_AUDIO", description="")
         ham.assert_that(
             self.requests.post.call_args.kwargs,
             ham.has_entry("data", ham.has_entry("title", truncated)),
@@ -154,7 +154,7 @@ class TestSpreaker(unittest.TestCase):
 
     @hyp.given(hyp.strategies.text())
     def test_truncate_title_property(self, title):
-        self.client.upload(title=title, audio=b"THE_AUDIO")
+        self.client.upload(title=title, audio=b"THE_AUDIO", description="")
         ham.assert_that(
             self.requests.post.call_args.kwargs,
             ham.has_entry(

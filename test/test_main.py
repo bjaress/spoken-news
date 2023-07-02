@@ -21,8 +21,13 @@ class TestNews(unittest.TestCase):
 
         stories.extract_story.assert_called_with(clients.wikipedia, headline)
         clients.tts.speak.assert_called_with(stories.extract_story.return_value)
+        clients.wikipedia.describe.assert_called_with(
+            stories.extract_story.return_value
+        )
         clients.spreaker.upload.assert_called_with(
-            title=headline.text, audio=clients.tts.speak.return_value
+            title=headline.text,
+            audio=clients.tts.speak.return_value,
+            description=clients.wikipedia.describe.return_value,
         )
 
     def test_news_no_fresh(self):

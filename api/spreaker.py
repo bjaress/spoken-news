@@ -7,11 +7,6 @@ import api.similar as similar
 
 ELLIPSIS = "..."
 
-LICENSE_NOTICE = """
-Created from parts of Wikipedia articles and available under the CC
-BY-SA 3.0 license: https://creativecommons.org/licenses/by-sa/3.0/
-"""
-
 
 class Client:
     def __init__(self, config, requests=requests, first_unknown=similar.first_unknown):
@@ -19,7 +14,7 @@ class Client:
         self.config = config
         self.first_unknown = first_unknown
 
-    def upload(self, title, audio):
+    def upload(self, title, audio, description):
         response = self.requests.post(
             f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
             headers={
@@ -28,7 +23,7 @@ class Client:
             files=[("media_file", ("audio.mp3", audio, "audio/mp3"))],
             data={
                 "title": self.truncate_episode_title(title),
-                "description": " ".join(LICENSE_NOTICE.split()),
+                "description": description,
             },
         )
 

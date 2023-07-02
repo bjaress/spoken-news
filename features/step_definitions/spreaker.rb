@@ -130,7 +130,16 @@ end
 
 Then(/^the episode description complies with Wikipedia's license$/) do
   expect(@spreaker_params["description"]).to include(
-    "https://creativecommons.org/licenses/by-sa/3.0/")
+    "https://creativecommons.org/licenses/by-sa/4.0/")
+end
+
+Then(/^the episode description links to articles on (.*)$/) do |topic|
+  $NEWS[topic][:articles].each do |title, body|
+    oldid = body[:latest][:id]
+    # permalink uses "oldid" for whatever ID was current at the time
+    expect(@spreaker_params["description"]).to include(
+      "https://en.wikipedia.org/w/index.php?title=#{title}&oldid=#{oldid}")
+  end
 end
 
 # https://developers.spreaker.com/api/episodes/#deleting-an-episode

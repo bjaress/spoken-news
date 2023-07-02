@@ -14,7 +14,6 @@ class TestSimple(unittest.TestCase):
 
     def test_extraction(self):
         client = mock.MagicMock()
-        client.summary.return_value = "Summary text\n\nmore"
         headline = models.Headline(
             text="HEADLINE_TEXT",
             articles=["Foo"],
@@ -22,20 +21,23 @@ class TestSimple(unittest.TestCase):
 
         story = stories.extract_story(client, headline)
 
-        client.summary.assert_called_with("Foo")
+        client.fetch_article.assert_called_with("Foo")
 
         ham.assert_that(
             story,
             ham.has_properties(
                 {
-                    "summaries": ham.has_entries({"Foo": ["Summary text", "more"]}),
+                    "articles": ham.has_entries(
+                        {"Foo": client.fetch_article.return_value}
+                    ),
                     "headline": "HEADLINE_TEXT",
                 }
             ),
         )
 
     def test_text(self):
-        story = stories.Story("HEADLINE", {"Foo": ["Summary text", "more"]})
+        article = mock_paragraphs("Summary text", "more")
+        story = stories.Story("HEADLINE", {"Foo": article})
         text = story.text(self.tts_config)
         assert text == "INTRO\n\nHEADLINE\n\nSummary text\n\nmore\n\nOUTRO", text
 
@@ -43,10 +45,10 @@ class TestSimple(unittest.TestCase):
         story = stories.Story(
             "HEADLINE",
             {
-                "FooBarBaz": ["text"],
-                "Foo": ["more"],
+                "FooBarBaz": mock_paragraphs("text"),
+                "Foo": mock_paragraphs("more"),
                 # word count dominates length count
-                "F B B": ["Summary"],
+                "F B B": mock_paragraphs("Summary"),
             },
         )
         text = story.text(self.tts_config)
@@ -58,16 +60,25 @@ class TestTruncateStory(unittest.TestCase):
         story = stories.Story(
             "H",
             {
-                "first article in collection": [
-                    "a",
-                    "really long piece of text that will be skipped",
-                ],
-                "second article": ["b", "c"],
-                "third": ["this entire article will be skipped"],
+                "first article in collection": mock_paragraphs(
+                    "a", "really long piece of text that will be skipped", id=1
+                ),
+                "second article": mock_paragraphs("b", "c", id=2),
+                "third": mock_paragraphs("this entire article will be skipped", id=3),
             },
         )
         text = story.text(mock.Mock(length_limit=30, intro="INTRO", outro="OUTRO"))
         assert text == "INTRO\n\nH\n\na\n\nb\n\nc\n\nOUTRO", text
+        ham.assert_that(
+            story.permalink_ids(),
+            ham.has_entries(
+                {
+                    "first article in collection": 1,
+                    "second article": 2,
+                    "third": 3,
+                }
+            ),
+        )
 
     def test_outro_budgeted(self):
         intro = "intro"
@@ -75,7 +86,7 @@ class TestTruncateStory(unittest.TestCase):
         text_a = "a"
         text_b = "b"
         outro = "outro"
-        story = stories.Story(headline, {"": [text_a, text_b]})
+        story = stories.Story(headline, {"": mock_paragraphs(text_a, text_b)})
         a_only = f"{intro}\n\n{headline}\n\n{text_a}\n\n{outro}"
         both = f"{intro}\n\n{headline}\n\n{text_a}\n\n{text_b}\n\n{outro}"
 
@@ -87,6 +98,10 @@ class TestTruncateStory(unittest.TestCase):
             mock.Mock(length_limit=len(both) - 1, intro=intro, outro=outro)
         )
         assert text == a_only, text
+
+
+def mock_paragraphs(*paragraphs, id=0):
+    return mock.Mock(summary="\n\n".join(paragraphs), permalink_id=id)
 
 
 class TestByteBudgeting(unittest.TestCase):

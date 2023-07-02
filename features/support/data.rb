@@ -30,8 +30,14 @@ $NEWS = {
         episode_id: 111111,
 
         articles: {
-          "Frog" => { source: "Frogs are [[cool]]." },
-          "Frog_Incident" => { source: "A [[frog]] thing happened." },
+          "Frog" => {
+            latest: { id: 1},
+            source: "Frogs are [[cool]]."
+            },
+          "Frog_Incident" => {
+            latest: { id: 2},
+            source: "A [[frog]] thing happened."
+            },
         },
     },
     "toads" => {
@@ -64,8 +70,14 @@ $NEWS = {
         episode_id: 222222,
 
         articles: {
-          "Toad" => { source: "Toads are [[cool]]." },
-          "Toad_Incident" => { source: "A [[toad]] thing happened." },
+          "Toad" => {
+            latest: { id: 3},
+            source: "Toads are [[cool]]."
+            },
+          "Toad_Incident" => {
+            latest: { id: 4},
+            source: "A [[toad]] thing happened."
+            },
         },
     },
     "the nobel prize" => {
@@ -91,7 +103,9 @@ $NEWS = {
         episode_id: 333333,
 
         articles: {
-          "Cloudoligy" => { source: <<~HEREDOC.strip
+          "Cloudoligy" => {
+            latest: { id: 5},
+            source: <<~HEREDOC.strip
             Cloudoligy (unlike
             meteorology (/ˌmiːti.əˈɹɑləd͡ʒi/)) is a [[made-up]] word.
             HEREDOC
@@ -112,6 +126,7 @@ $NEWS = {
 
         articles: {
           "Sports" => {
+            latest: { id: 6},
             source: (
               "Blah blah blah blah." +
               "\n\n" +
@@ -129,6 +144,7 @@ $NEWS = {
               )
             },
           "Championship" => {
+            latest: { id: 7},
             source: (
               "Yada yada yada yada." +
               "\n\n" +
