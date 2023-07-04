@@ -1,43 +1,21 @@
-[i] strip parenthesized expressions, as in old version
-    [i] articles
-        [x] helper method used
-        [x] specific cases
-            [x] comma
-            [x] nested
-            [x] linebreak
-            [x] paragraph
-        [x] properties
-    [x] headlines
-        [x] helper method used
-[i] description
-    - wikipedia requirements
-      - indicate in a reasonable fashion that the original work has been
-        modified
-      - licensing notice stating that the work is released under CC
-        BY-SA
-      - url or link to https://creativecommons.org/licenses/by-sa/3.0/
-      - url or link to articles on Wikipedia
-    [x] licensing
-        - static text with license link
-    [x] article links
-        [x] capture article version
-            [x] rename summary to fetch_article
-            [x] article model
-                - version
-                - summary
-            [x] fetch_article returns article object
-        [x] move description generation to method on wikipedia client
-            [x] add to wikipedia client
-            [x] remove from spreaker client
-        [x] include permalinks
-            - https://en.wikipedia.org/w/index.php?title=Kitten&oldid=4526501
-    [x] creative commons 4.0
-[ ] choose voice/random voice from list
-    [ ] tweak speed and pitch
+[i] random voice from list
+    [x] parameterize speaking speed and pitch
+        - https://cloud.google.com/text-to-speech/docs/reference/rest/v1/AudioConfig
+    [x] voices https://cloud.google.com/text-to-speech/docs/voices
+        [x] en-AU-Neural2-B 0.85 -5.20
+        [x] en-AU-Neural2-C 0.85 -5.20
+        [x] en-GB-Neural2-B 0.85 -5.20
+        [x] en-GB-Neural2-C 0.90 -5.20
+        [x] en-IN-Wavenet-C 0.90 -5.20
+        [x] en-IN-Wavenet-D 0.85 -6.80
+        [x] en-US-Neural2-F 0.85 -5.20
+        [x] en-US-Neural2-J 0.85 -5.20
+[ ] podcast on spotify
+    [ ] spotify settings
+    [ ] spreaker settings
 [ ] podcast on youtube
     [ ] channel
-    [ ] sprout settings
-[ ] podcast on spotify
+    [ ] spreaker settings
 [ ] better error handling
 [ ] exclude "list of" articles
 

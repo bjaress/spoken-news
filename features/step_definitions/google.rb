@@ -44,6 +44,7 @@ Then(/^audio is generated about (.*)$/) do |topic|
   expect(body["input"]["text"]).to eq($NEWS[topic][:episode_contents])
   expect(body["voice"]).to have_key("languageCode")
   expect(body["voice"]).to have_key("name")
-  expect(body["voice"]).to have_key("ssmlGender")
   expect(body["audioConfig"]).to include("audioEncoding" => "MP3")
+  expect(body["audioConfig"]).to have_key("speakingRate")
+  expect(body["audioConfig"]).to have_key("pitch")
 end

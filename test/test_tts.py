@@ -23,16 +23,30 @@ class TestTtsClient(unittest.TestCase):
         story.text.return_value = "THE_WORDS"
         result = client.speak(story)
         story.text.assert_called_with(config)
-        requests.post.assert_called_with(
-            url="THE_SERVER/v1/text:synthesize?key=THE_API_KEY",
-            json={
-                "input": {"text": "THE_WORDS"},
-                "voice": {
-                    "languageCode": "en-gb",
-                    "name": "en-GB-Standard-A",
-                    "ssmlGender": "FEMALE",
-                },
-                "audioConfig": {"audioEncoding": "MP3"},
-            },
+        h.assert_that(
+            requests.post.call_args.kwargs,
+            h.has_entries(
+                {
+                    "url": "THE_SERVER/v1/text:synthesize?key=THE_API_KEY",
+                    "json": h.has_entries(
+                        {
+                            "input": {"text": "THE_WORDS"},
+                            "voice": h.has_entries(
+                                {
+                                    "languageCode": h.anything(),
+                                    "name": h.anything(),
+                                }
+                            ),
+                            "audioConfig": h.has_entries(
+                                {
+                                    "audioEncoding": "MP3",
+                                    "speakingRate": h.anything(),
+                                    "pitch": h.anything(),
+                                }
+                            ),
+                        }
+                    ),
+                }
+            ),
         )
         h.assert_that(result, h.equal_to(base64.b64decode("000MP3BASE64")))
