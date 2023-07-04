@@ -196,7 +196,7 @@ resource "google_cloud_scheduler_job" "cleanup-job-scheduled" {
       show_id = 5657024
       token = local.spreaker_access.access_token
       title_limit = 140
-      age_limit = 14
+      age_limit = 7
     }
   }
 }
