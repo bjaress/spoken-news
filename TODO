@@ -1,15 +1,9 @@
-[i] random voice from list
-    [x] parameterize speaking speed and pitch
-        - https://cloud.google.com/text-to-speech/docs/reference/rest/v1/AudioConfig
-    [x] voices https://cloud.google.com/text-to-speech/docs/voices
-        [x] en-AU-Neural2-B 0.85 -5.20
-        [x] en-AU-Neural2-C 0.85 -5.20
-        [x] en-GB-Neural2-B 0.85 -5.20
-        [x] en-GB-Neural2-C 0.90 -5.20
-        [x] en-IN-Wavenet-C 0.90 -5.20
-        [x] en-IN-Wavenet-D 0.85 -6.80
-        [x] en-US-Neural2-F 0.85 -5.20
-        [x] en-US-Neural2-J 0.85 -5.20
+[i] podcast settings/config
+    [x] description
+    [ ] logo
+    [ ] widget on blog
+[ ] iTunes
+[ ] Google Podcasts
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings
