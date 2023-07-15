@@ -83,7 +83,10 @@ class TestClient(unittest.TestCase):
     def test_fetch_article(self):
         self.requests.get.return_value.json.return_value = {
             "latest": {"id": 123},
-            "source": "Hello, '''bold''' [[link]] (ignore).",
+            "source": """
+                Hello, '''bold''' [[link]].
+                (ignore) <ref>ignore</ref> <ref name="bs">ignore</ref>
+                """,
         }
         article = self.client.fetch_article("The_Title")
 

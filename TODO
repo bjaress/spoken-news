@@ -1,3 +1,10 @@
+[x] omit references
+    parsed = wtp.parse(example)
+    for ref in parsed.get_tags("ref"):
+        ref.contents = ""
+    [x] simple example
+    [x] code change
+print(parsed.plain_text())
 [ ] iTunes
 [ ] Google Podcasts
 [ ] podcast on spotify

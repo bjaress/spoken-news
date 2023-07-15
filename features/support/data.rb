@@ -32,7 +32,11 @@ $NEWS = {
         articles: {
           "Frog" => {
             latest: { id: 1},
-            source: "Frogs are [[cool]]."
+            source: (<<~HEREDOC.strip
+              Frogs are [[cool]].
+              <ref>''International Journal of Because I Said So''</ref>
+              HEREDOC
+              )
             },
           "Frog_Incident" => {
             latest: { id: 2},

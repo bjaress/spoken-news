@@ -44,8 +44,10 @@ class Client:
         json = response.json()
         parsed = wtp.parse(json["source"])
         intro = parsed.get_sections()[0]
+        for ref in parsed.get_tags("ref"):
+            ref.contents = ""
         return models.Article(
-            summary=remove_parenthesized(intro.plain_text().strip()),
+            summary=remove_parenthesized(intro.plain_text()).strip(),
             permalink_id=json["latest"]["id"],
         )
 
