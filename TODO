@@ -4,7 +4,9 @@
         ref.contents = ""
     [x] simple example
     [x] code change
-print(parsed.plain_text())
+[ ] upload in preview mode
+    [ ] config flag (in terraform)
+    [ ] flag controls uploading to spreaker in preview mode
 [ ] iTunes
 [ ] Google Podcasts
 [ ] podcast on spotify
