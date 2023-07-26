@@ -1,9 +1,5 @@
-[x] omit references
-    parsed = wtp.parse(example)
-    for ref in parsed.get_tags("ref"):
-        ref.contents = ""
-    [x] simple example
-    [x] code change
+[ ] figure out why no headlines are selected
+    [ ] more logging
 [ ] upload in preview mode
     [ ] config flag (in terraform)
     [ ] flag controls uploading to spreaker in preview mode

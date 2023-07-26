@@ -1,4 +1,5 @@
 import Levenshtein
+import logging
 
 CUTOFF = 0.6
 
@@ -9,7 +10,11 @@ CUTOFF = 0.6
 def is_similar(string_a, string_b):
     if string_a == string_b:  # shortcut
         return True
-    return Levenshtein.ratio(string_a, string_b, score_cutoff=CUTOFF) > CUTOFF
+    ratio = Levenshtein.ratio(string_a, string_b, score_cutoff=CUTOFF)
+    if ratio > CUTOFF:
+        logging.debug(f"'{string_a}' matches '{string_b}' {ratio}")
+        return True
+    return False
 
 
 def first_unknown(consider, history, match=is_similar):
