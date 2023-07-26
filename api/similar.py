@@ -1,7 +1,7 @@
 import Levenshtein
 import logging
 
-CUTOFF = 0.6
+CUTOFF = 0.8
 
 # https://maxbachmann.github.io/Levenshtein/levenshtein.html
 # https://en.m.wikipedia.org/wiki/Levenshtein_distance

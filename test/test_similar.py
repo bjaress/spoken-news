@@ -36,9 +36,6 @@ class TestFirstUnknown(unittest.TestCase):
 
 
 class TestSimple(unittest.TestCase):
-    def test_kitten_sitting(self):
-        assert is_similar("kitten", "sitting")
-
     def test_flaw_lawn(self):
         assert is_similar("flaw", "lawn")
 
@@ -107,4 +104,28 @@ class TestRealistic(unittest.TestCase):
                     "in the Democratic Republic of the Congo.",
                 ]
             ),
+        )
+
+
+class TestReal(unittest.TestCase):
+    def test_kora_india_floods(self):
+        assert not is_similar(
+            " ".join(
+                [
+                    "Flooding and landslides in South Korea leave at least",
+                    "40 people dead and 6 others missing.",
+                ]
+            ),
+            " ".join(
+                [
+                    "Flooding and landslides in northern India leave",
+                    "at least 100 people dead.",
+                ]
+            ),
+        )
+
+    def test_kundera_bennet_die(self):
+        assert not is_similar(
+            " ".join(["American singer Tony Bennett dies at the age of 96."]),
+            " ".join(["Czech-French writer Milan Kundera dies at the age", "of 94."]),
         )
