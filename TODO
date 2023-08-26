@@ -1,10 +1,26 @@
-[ ] figure out why no headlines are selected
-    [ ] more logging
+[ ] linking to sections
+    [ ] article reference objects
+        [ ] 1-field model
+        [ ] instead of strings in headline object
+        [ ] separate field for section
+            [ ] populate
+    [ ] pick section after fetch
+        [ ] section is None -> first section
+        [ ] section is not None -> fuzzy match
+            - # sometimes gives "Visible<span class='anchor' id='linked_title'>
+            - [s.title.strip() for s in parsed.get_sections() if s.title is not None]
+    [ ] section-aware URLs in description
+        [ ] hash goes after query params
+        [ ] URL encoding in URLs in description
+    [ ] consider sections when ordering articles
+[ ] de-dupe articles
+    [ ] by full reference (title and section)
+[ ] iTunes
 [ ] upload in preview mode
     [ ] config flag (in terraform)
     [ ] flag controls uploading to spreaker in preview mode
-[ ] iTunes
-[ ] Google Podcasts
+[ ] Audible
+[ ] re-assess voices
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings
