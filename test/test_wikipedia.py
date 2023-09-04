@@ -3,8 +3,10 @@ from unittest import mock
 import hamcrest as ham
 import hypothesis as hyp
 import hypothesis.strategies as st
+import textwrap
 
 import api.wikipedia as wikipedia
+import api.models as models
 
 
 class TestClient(unittest.TestCase):
@@ -22,7 +24,7 @@ class TestClient(unittest.TestCase):
                 "text": {
                     "*": """
                     <ul>
-                        <li><a href="/wiki/Greeting">Hello</a>,
+                        <li><a href="/wiki/Greeting#Hello">Hello</a>,
                         <a href="/wiki/Earth">World</a>! (ignore this)</li>
                     </ul>
                     """
@@ -49,7 +51,15 @@ class TestClient(unittest.TestCase):
                 ham.has_properties(
                     {
                         "text": "Hello, World!",
-                        "articles": ham.contains_exactly("Greeting", "Earth"),
+                        "articles": ham.contains_exactly(
+                            ham.has_properties(
+                                {
+                                    "title": "Greeting",
+                                    "section": "Hello",
+                                }
+                            ),
+                            ham.has_properties({"title": "Earth"}),
+                        ),
                     }
                 )
             ),
@@ -88,7 +98,8 @@ class TestClient(unittest.TestCase):
                 (ignore) <ref>ignore</ref> <ref name="bs">ignore</ref>
                 """,
         }
-        article = self.client.fetch_article("The_Title")
+        reference = models.ArticleReference(title="The_Title")
+        article = self.client.fetch_article(reference)
 
         self.requests.get.assert_called_once_with(
             f"{self.config.url}{wikipedia.PAGE_PATH}/The_Title"
@@ -100,17 +111,56 @@ class TestClient(unittest.TestCase):
                 {
                     "summary": "Hello, bold link.",
                     "permalink_id": 123,
+                    "reference": reference,
                 }
             ),
         )
 
-    def test_simple(self):
+    def test_fetch_article_with_section(self):
+        self.requests.get.return_value.json.return_value = {
+            "latest": {"id": 123},
+            "source": textwrap.dedent(
+                """
+                Ignored.
+
+                ==Some Other Section==
+
+                Ignored.
+
+                ==The Section==
+
+                Hello, Section!
+                """
+            ),
+        }
+        reference = models.ArticleReference(title="The_Title", section="The_Section")
+        article = self.client.fetch_article(reference)
+
+        self.requests.get.assert_called_once_with(
+            f"{self.config.url}{wikipedia.PAGE_PATH}/The_Title"
+        )
+
+        ham.assert_that(
+            article,
+            ham.has_properties(
+                {
+                    "summary": "Hello, Section!",
+                    "permalink_id": 123,
+                    "reference": reference,
+                }
+            ),
+        )
+
+    def test_describe_story(self):
         story = mock.Mock()
-        story.permalink_ids.return_value = {"a": 1, "b": 2}
+        story.permalink_ids.return_value = {
+            123: mock.Mock(title="a"),
+            456: mock.Mock(title="b"),
+        }
         expected = [
             "https://creativecommons.org/licenses/by-sa/4.0/",
-            "oldid=1",
-            "oldid=2",
+            "oldid=123",
+            "oldid=456",
             "title=a",
             "title=b",
         ]

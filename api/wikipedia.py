@@ -1,8 +1,10 @@
 import requests
 import re
 from api import models
+from api import similar
 from bs4 import BeautifulSoup
 import wikitextparser as wtp
+from urllib import parse
 
 import logging
 
@@ -39,22 +41,23 @@ class Client:
         headlines = [extract_headline(item) for item in soup.ul.find_all("li")]
         return headlines
 
-    def fetch_article(self, title):
+    def fetch_article(self, article_reference):
+        title = article_reference.title
         response = self.requests.get(f"{self.config.url}{PAGE_PATH}/{title}")
         json = response.json()
         parsed = wtp.parse(json["source"])
-        intro = parsed.get_sections()[0]
-        for ref in parsed.get_tags("ref"):
-            ref.contents = ""
+        text = section_text(article_reference.section, parsed.get_sections())
         return models.Article(
-            summary=remove_parenthesized(intro.plain_text()).strip(),
+            summary=remove_parenthesized(text).strip(),
             permalink_id=json["latest"]["id"],
+            reference=article_reference,
         )
 
     def describe(self, story):
         notice = " ".join(LICENSE_NOTICE.split())
         parts = notice, *(
-            permalink(title, id) for title, id in story.permalink_ids().items()
+            permalink(reference.title, id)
+            for id, reference in story.permalink_ids().items()
         )
         return "\n".join(parts)
 
@@ -66,8 +69,27 @@ def permalink(title, id):
 def extract_headline(li_element):
     return models.Headline(
         text=remove_parenthesized(collapse(li_element.text)),
-        articles=[path_final(link["href"]) for link in li_element.select("a[href]")],
+        articles=[
+            reference_from_url(link["href"]) for link in li_element.select("a[href]")
+        ],
     )
+
+
+def section_text(section_name, sections):
+    best = sections[0]
+    best_score = 0
+    for section in sections:
+        if section.title is None or section_name is None or len(section_name) == 0:
+            continue
+        score = similar.score(section.title, section_name)
+        if score > best_score:
+            best, best_score = section, score
+
+    # omit references
+    for ref in best.get_tags("ref"):
+        ref.contents = ""
+    # omit header of section
+    return wtp.parse(best.contents).plain_text()
 
 
 def remove_parenthesized(text):
@@ -101,8 +123,12 @@ def _pairs(text):
             yield (first, None)
 
 
-def path_final(url):
-    return url.split("/")[-1]
+def reference_from_url(url):
+    parsed = parse.urlparse(url)
+    return models.ArticleReference(
+        title=parsed.path.split("/")[-1],
+        section=parsed.fragment,
+    )
 
 
 def collapse(string):

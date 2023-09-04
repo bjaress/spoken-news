@@ -180,4 +180,40 @@ $NEWS = {
           HEREDOC
         ),
     },
+
+    # article where only a section is linked to
+    "bananas" => {
+        articles: {
+          "Banana" => {
+            latest: { id: 7},
+            source: <<~HEREDOC.strip
+            Don't include this sentence.
+            ==Peel==
+            Banana peels are slippery.
+            HEREDOC
+            },
+        },
+    },
+    "banana peels" => {
+        headline: (
+         "Someone slipped on a " +
+         "<a href='/wiki/Banana#Peel'>banana peel</a>."),
+
+        episode_id: 555555,
+
+        episode_title: (
+          "Someone slipped on a banana peel."
+        ),
+
+        episode_contents: (<<~HEREDOC.strip
+          INTRO
+          
+          Someone slipped on a banana peel.
+          
+          Banana peels are slippery.
+          
+          OUTRO
+          HEREDOC
+        ),
+    },
 }

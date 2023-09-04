@@ -14,22 +14,21 @@ class TestSimple(unittest.TestCase):
 
     def test_extraction(self):
         client = mock.MagicMock()
+        reference = models.ArticleReference(title="Foo")
         headline = models.Headline(
             text="HEADLINE_TEXT",
-            articles=["Foo"],
+            articles=[reference],
         )
 
         story = stories.extract_story(client, headline)
 
-        client.fetch_article.assert_called_with("Foo")
+        client.fetch_article.assert_called_with(reference)
 
         ham.assert_that(
             story,
             ham.has_properties(
                 {
-                    "articles": ham.has_entries(
-                        {"Foo": client.fetch_article.return_value}
-                    ),
+                    "articles": ham.contains_exactly(client.fetch_article.return_value),
                     "headline": "HEADLINE_TEXT",
                 }
             ),
@@ -37,19 +36,19 @@ class TestSimple(unittest.TestCase):
 
     def test_text(self):
         article = mock_paragraphs("Summary text", "more")
-        story = stories.Story("HEADLINE", {"Foo": article})
+        story = stories.Story("HEADLINE", [article])
         text = story.text(self.tts_config)
         assert text == "INTRO\n\nHEADLINE\n\nSummary text\n\nmore\n\nOUTRO", text
 
     def test_article_order(self):
         story = stories.Story(
             "HEADLINE",
-            {
-                "FooBarBaz": mock_paragraphs("text"),
-                "Foo": mock_paragraphs("more"),
+            [
+                mock_paragraphs("text", title="FooBarBaz"),
+                mock_paragraphs("more", title="Foo"),
                 # word count dominates length count
-                "F B B": mock_paragraphs("Summary"),
-            },
+                mock_paragraphs("Summary", title="F B B"),
+            ],
         )
         text = story.text(self.tts_config)
         assert text == "INTRO\n\nHEADLINE\n\nSummary\n\ntext\n\nmore\n\nOUTRO", text
@@ -59,13 +58,18 @@ class TestTruncateStory(unittest.TestCase):
     def test_simple(self):
         story = stories.Story(
             "H",
-            {
-                "first article in collection": mock_paragraphs(
-                    "a", "really long piece of text that will be skipped", id=1
+            [
+                mock_paragraphs(
+                    "a",
+                    "really long piece of text that will be skipped",
+                    id=1,
+                    title="first article in collection",
                 ),
-                "second article": mock_paragraphs("b", "c", id=2),
-                "third": mock_paragraphs("this entire article will be skipped", id=3),
-            },
+                mock_paragraphs("b", "c", id=2, title="second article"),
+                mock_paragraphs(
+                    "this entire article will be skipped", id=3, title="third"
+                ),
+            ],
         )
         text = story.text(mock.Mock(length_limit=30, intro="INTRO", outro="OUTRO"))
         assert text == "INTRO\n\nH\n\na\n\nb\n\nc\n\nOUTRO", text
@@ -73,9 +77,9 @@ class TestTruncateStory(unittest.TestCase):
             story.permalink_ids(),
             ham.has_entries(
                 {
-                    "first article in collection": 1,
-                    "second article": 2,
-                    "third": 3,
+                    1: ham.has_properties({"title": "first article in collection"}),
+                    2: ham.has_properties({"title": "second article"}),
+                    3: ham.has_properties({"title": "third"}),
                 }
             ),
         )
@@ -86,7 +90,7 @@ class TestTruncateStory(unittest.TestCase):
         text_a = "a"
         text_b = "b"
         outro = "outro"
-        story = stories.Story(headline, {"": mock_paragraphs(text_a, text_b)})
+        story = stories.Story(headline, [mock_paragraphs(text_a, text_b)])
         a_only = f"{intro}\n\n{headline}\n\n{text_a}\n\n{outro}"
         both = f"{intro}\n\n{headline}\n\n{text_a}\n\n{text_b}\n\n{outro}"
 
@@ -100,8 +104,12 @@ class TestTruncateStory(unittest.TestCase):
         assert text == a_only, text
 
 
-def mock_paragraphs(*paragraphs, id=0):
-    return mock.Mock(summary="\n\n".join(paragraphs), permalink_id=id)
+def mock_paragraphs(*paragraphs, id=0, title="Title"):
+    return mock.Mock(
+        summary="\n\n".join(paragraphs),
+        permalink_id=id,
+        reference=mock.Mock(title=title),
+    )
 
 
 class TestByteBudgeting(unittest.TestCase):

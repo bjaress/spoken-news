@@ -17,6 +17,10 @@ def is_similar(string_a, string_b):
     return False
 
 
+def score(string_a, string_b):
+    return Levenshtein.ratio(string_a, string_b)
+
+
 def first_unknown(consider, history, match=is_similar):
     for candidate in consider:
         for past in history:

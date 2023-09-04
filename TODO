@@ -1,21 +1,28 @@
-[ ] linking to sections
-    [ ] article reference objects
-        [ ] 1-field model
-        [ ] instead of strings in headline object
-        [ ] separate field for section
-            [ ] populate
-    [ ] pick section after fetch
-        [ ] section is None -> first section
-        [ ] section is not None -> fuzzy match
+[i] linking to sections
+    [i] article reference objects
+        [x] 1-field model
+        [i] instead of strings in headline object
+            [x] in model
+            [x] in wikipedia.py
+                [x] extract headline
+                [x] fetch article
+                [x] describe story
+            [x] in stories.py
+                [x] in extract
+                [x] in story methods
+        [x] separate field for section
+            [x] populate
+    [x] pick section after fetch (wikipedia.py)
+        [x] section is None -> first section
+        [x] section is not None -> fuzzy match
             - # sometimes gives "Visible<span class='anchor' id='linked_title'>
             - [s.title.strip() for s in parsed.get_sections() if s.title is not None]
-    [ ] section-aware URLs in description
-        [ ] hash goes after query params
-        [ ] URL encoding in URLs in description
-    [ ] consider sections when ordering articles
+[ ] urlencoding in description links
+[ ] consider sections when ordering articles
 [ ] de-dupe articles
     [ ] by full reference (title and section)
 [ ] iTunes
+[ ] upgrade/remove libraries (Pydantic?)
 [ ] upload in preview mode
     [ ] config flag (in terraform)
     [ ] flag controls uploading to spreaker in preview mode
@@ -30,3 +37,20 @@
 [ ] better error handling
 [ ] exclude "list of" articles
 
+
+import wikitextparser as wtp
+import textwrap
+source = textwrap.dedent(
+    """
+    Ignored.
+
+    ==The Section==
+
+    ===Foobar===
+
+    Hello, Section!
+    """)
+parsed = wtp.parse(source)
+section = parsed.get_sections()[1]
+parsed = wtp.parse(section.contents)
+parsed.plain_text()

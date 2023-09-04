@@ -18,6 +18,16 @@ Scenario: Single headline becomes episode
     And the episode description complies with Wikipedia's license
     And the episode description links to articles on frogs
 
+Scenario: Linking to section
+    Given there is a headline about banana peels
+    And there are articles about bananas
+    When it is time to generate news
+    Then news is retrieved from Wikipedia
+    Then audio is generated about banana peels
+    Then the audio file is uploaded to Spreaker
+    And the episode description links to articles on bananas
+
+
 # Rule: The oldest headline without an episode becomes an episode
 
 Scenario: Two headlines, oldest has no episode

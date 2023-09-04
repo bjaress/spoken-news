@@ -31,14 +31,20 @@ class Config(BaseModel):
     tts: TtsConfig
 
 
+class ArticleReference(BaseModel):
+    title: str
+    section: typing.Optional[str]
+
+
 class Headline(BaseModel):
     text: str
-    articles: typing.List[str]
+    articles: typing.List[ArticleReference]
 
 
 class Article(BaseModel):
     summary: str
     permalink_id: int
+    reference: ArticleReference
 
 
 # external representations
