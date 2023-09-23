@@ -95,7 +95,7 @@ class TestClient(unittest.TestCase):
             "latest": {"id": 123},
             "source": """
                 Hello, '''bold''' [[link]].
-                (ignore) <ref>ignore</ref> <ref name="bs">ignore</ref>
+                (ignore) <ref>ignore</ref> <ref name="bs"/>
                 """,
         }
         reference = models.ArticleReference(title="The_Title")

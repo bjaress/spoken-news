@@ -35,6 +35,7 @@ $NEWS = {
             source: (<<~HEREDOC.strip
               Frogs are [[cool]].
               <ref>''International Journal of Because I Said So''</ref>
+              <ref name="extraneous-anchor"/>
               HEREDOC
               )
             },

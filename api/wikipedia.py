@@ -87,7 +87,7 @@ def section_text(section_name, sections):
 
     # omit references
     for ref in best.get_tags("ref"):
-        ref.contents = ""
+        del ref[:]
     # omit header of section
     return wtp.parse(best.contents).plain_text()
 
