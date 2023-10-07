@@ -32,9 +32,9 @@ class VoiceProfile:
 
 
 VOICES = [
-    VoiceProfile("en-AU-Neural2-B", "en-au", 0.85, -5.20),
-    VoiceProfile("en-AU-Neural2-C ", "en-au", 0.85, -5.20),
-    VoiceProfile("en-GB-Neural2-B ", "en-gb", 0.85, -5.20),
+    VoiceProfile("en-AU-Neural2-B", "en-au", 0.84, -5.20),
+    VoiceProfile("en-AU-Neural2-C", "en-au", 0.85, -5.20),
+    VoiceProfile("en-GB-Neural2-B", "en-gb", 0.85, -5.20),
     VoiceProfile("en-GB-Neural2-C", "en-gb", 0.90, -5.20),
     VoiceProfile("en-US-Neural2-F", "en-us", 0.85, -5.20),
     VoiceProfile("en-US-Neural2-J", "en-us", 0.85, -5.20),

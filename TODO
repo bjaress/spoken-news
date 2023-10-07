@@ -1,6 +1,8 @@
 [x] fix ref handling
     [x] update test
     [x] fully remove reference
+[ ] fix "thumb" when images are included near the top of articles
+    https://en.wikipedia.org/w/index.php?title=Khalistan_movement&oldid=1176523155
 [ ] urlencoding in description links
 [ ] consider sections when ordering articles
 [ ] de-dupe articles
