@@ -96,6 +96,7 @@ class TestClient(unittest.TestCase):
             "source": """
                 Hello, '''bold''' [[link]].
                 (ignore) <ref>ignore</ref> <ref name="bs"/>
+                [[File:ignore.jpg|ignore]]
                 """,
         }
         reference = models.ArticleReference(title="The_Title")

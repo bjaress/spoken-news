@@ -88,6 +88,10 @@ def section_text(section_name, sections):
     # omit references
     for ref in best.get_tags("ref"):
         del ref[:]
+    # omit images
+    for link in best.wikilinks:
+        if link.target.startswith("File:"):
+            del link[:]
     # omit header of section
     return wtp.parse(best.contents).plain_text()
 

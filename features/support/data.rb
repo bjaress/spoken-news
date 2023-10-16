@@ -36,6 +36,7 @@ $NEWS = {
               Frogs are [[cool]].
               <ref>''International Journal of Because I Said So''</ref>
               <ref name="extraneous-anchor"/>
+              [[File:frog.jpg|alt=don't include this|bogus|9x9px|image thing]]
               HEREDOC
               )
             },
