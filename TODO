@@ -1,17 +1,7 @@
-[x] fix ref handling
-    [x] update test
-    [x] fully remove reference
-[i] fix "thumb" when images are included near the top of articles
-    [ ] integration test case
-    [ ] unit test
-    [ ] fix
-    for link in section.wikilinks:
-        if link.target.startswith("File:"):
-            del link[:]
+[ ] urlencoding in description links
 [ ] consider sections when ordering articles
 [ ] de-dupe articles
     [ ] by full reference (title and section)
-[ ] urlencoding in description links
 [ ] iTunes
 [ ] upgrade/remove libraries (Pydantic?)
 [ ] upload in preview mode
