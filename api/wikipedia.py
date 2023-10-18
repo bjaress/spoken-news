@@ -93,7 +93,7 @@ def section_text(section_name, sections):
         if link.target.startswith("File:"):
             del link[:]
     # omit header of section
-    return wtp.parse(best.contents).plain_text()
+    return wtp.parse(best.contents).plain_text(replace_templates=wiki_template)
 
 
 def remove_parenthesized(text):
@@ -137,3 +137,14 @@ def reference_from_url(url):
 
 def collapse(string):
     return re.sub(r"\s+", " ", string)
+
+
+def wiki_template(template):
+    name, args = template.name, template.arguments
+    if name == "convert":
+        # https://en.m.wikipedia.org/wiki/Help:Convert
+        if len(args) > 2 and args[2].value.isdigit():
+            lead = 4
+        else:
+            lead = 2
+        return " ".join(a.value for a in args[:lead])

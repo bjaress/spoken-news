@@ -218,4 +218,36 @@ $NEWS = {
           HEREDOC
         ),
     },
+    "outer space" => {
+        headline: (
+            "Stuff happened in " +
+            "<a href='/wiki/Outer_Space'>outer space</a>."),
+
+        episode_title: (
+            "Stuff happened in outer space."
+            ),
+
+        episode_contents: (<<~HEREDOC.strip
+          INTRO
+          
+          Stuff happened in outer space.
+          
+          Some asteroid is 220 km long.
+          
+          OUTRO
+          HEREDOC
+        ),
+
+        episode_id: 666666,
+
+        articles: {
+          "Outer_Space" => {
+            latest: { id: 1},
+            source: (<<~HEREDOC.strip
+              Some asteroid is {{convert|220|km|sp=us}} long.
+              HEREDOC
+              )
+            },
+        },
+    },
 }

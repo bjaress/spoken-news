@@ -1,3 +1,14 @@
+[i] fix units
+    [x] test case
+        It has a mean diameter of approximately {{convert|220|km|sp=us}} and
+        contains about one percent of the mass of the [[asteroid belt]].
+    [x] unit test
+        https://en.m.wikipedia.org/wiki/Help:Convert
+        if third arg is number
+            first three args
+        else
+            first two args
+    [ ] fix
 [ ] urlencoding in description links
 [ ] consider sections when ordering articles
 [ ] de-dupe articles
@@ -21,17 +32,15 @@
 
 
 
+
 import wikitextparser as wtp
 import textwrap
 source = textwrap.dedent(
     """
-    {{Short description|none}}
-    {{Use mdy dates|date=October 2021}}
-    [[File:Eliud Kipchoge in Berlin.jpg|alt=Eliud Kipchoge at the Berlin marathon 2022|thumb|396x396px|Eliud Kipchoge during his world record run at the 2022 Berlin marathon with 2:01:09]]
+    It has a mean diameter of approximately {{convert|220|km|sp=us}} and
+    contains about one percent of the mass of the [[asteroid belt]].
     """)
 parsed = wtp.parse(source)
 best = parsed.sections[0]
-for ref in best.get_tags("ref"):
-    del ref[:]
-
-wtp.parse(best.contents).plain_text()
+wtp.parse(best.contents).plain_text(
+    replace_templates=lambda x: str([x.name, x.arguments]))

@@ -27,6 +27,13 @@ Scenario: Linking to section
     Then the audio file is uploaded to Spreaker
     And the episode description links to articles on bananas
 
+Scenario: Handling some templates
+    Given there is a headline about outer space
+    And there are articles about outer space
+    When it is time to generate news
+    Then news is retrieved from Wikipedia
+    Then audio is generated about outer space
+
 
 # Rule: The oldest headline without an episode becomes an episode
 
