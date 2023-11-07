@@ -90,8 +90,11 @@ def section_text(section_name, sections):
         del ref[:]
     # omit images
     for link in best.wikilinks:
-        if link.target.startswith("File:"):
-            del link[:]
+        try:
+            if link.target.startswith("File:"):
+                del link[:]
+        except:
+            pass
     # omit header of section
     return wtp.parse(best.contents).plain_text(replace_templates=wiki_template)
 

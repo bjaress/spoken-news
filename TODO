@@ -43,4 +43,4 @@ source = textwrap.dedent(
 parsed = wtp.parse(source)
 best = parsed.sections[0]
 wtp.parse(best.contents).plain_text(
-    replace_templates=lambda x: str([x.name, x.arguments]))
+    replace_templates=lambda x: str(x.arguments[0].__dir__()))

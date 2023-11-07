@@ -222,6 +222,19 @@ class TestParentheses(unittest.TestCase):
         assert is_subseq(result, input), (result, input)
 
 
+class TestHelperEdges(unittest.TestCase):
+    def test_section_text_link_error(self):
+        section = mock.MagicMock()
+        section.get_tags.return_value = []
+        section.contents = "Hello"
+
+        link = mock.MagicMock()
+        section.wikilinks = [link]
+        link.target.startswith.side_effect = AttributeError()
+        result = wikipedia.section_text(None, [section])
+        assert result == "Hello", result
+
+
 # Inspired by clever folks on the Internet.
 #
 # Uses an iterator to always scan only forward in seq_b looking for the
