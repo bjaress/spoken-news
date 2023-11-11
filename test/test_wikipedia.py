@@ -197,6 +197,25 @@ class TestTemplates(unittest.TestCase):
             ),
         )
 
+    def test_convert_units_decimal(self):
+        self.requests.get.return_value.json.return_value = {
+            "latest": {"id": 123},
+            "source": """
+                {{convert|22.0|km|sp=us}} and {{convert|1.2|to|3.4|ft|m|sp=us}}
+                """,
+        }
+        reference = models.ArticleReference(title="The_Title")
+        article = self.client.fetch_article(reference)
+
+        ham.assert_that(
+            article,
+            ham.has_properties(
+                {
+                    "summary": "22.0 km and 1.2 to 3.4 ft",
+                }
+            ),
+        )
+
 
 class TestParentheses(unittest.TestCase):
     def test_with_comma(self):

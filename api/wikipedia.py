@@ -146,8 +146,11 @@ def wiki_template(template):
     name, args = template.name, template.arguments
     if name == "convert":
         # https://en.m.wikipedia.org/wiki/Help:Convert
-        if len(args) > 2 and args[2].value.isdigit():
-            lead = 4
-        else:
-            lead = 2
-        return " ".join(a.value for a in args[:lead])
+        # could be |1|km|mi| or |3|to|7|in|cm|
+        lead = args[:2]
+        try:
+            float(args[2].value)
+            lead = args[:4]
+        except:
+            pass
+        return " ".join(a.value for a in lead)
