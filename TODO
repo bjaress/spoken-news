@@ -1,15 +1,7 @@
-[i] fix units
-    [x] test case
-        It has a mean diameter of approximately {{convert|220|km|sp=us}} and
-        contains about one percent of the mass of the [[asteroid belt]].
-    [x] unit test
-        https://en.m.wikipedia.org/wiki/Help:Convert
-        if third arg is number
-            first three args
-        else
-            first two args
-    [ ] fix
-[ ] urlencoding in description links
+[ ] language template
+[ ] podcast on spotify
+    [ ] spotify settings
+    [ ] spreaker settings
 [ ] consider sections when ordering articles
 [ ] de-dupe articles
     [ ] by full reference (title and section)
@@ -20,9 +12,6 @@
     [ ] flag controls uploading to spreaker in preview mode
 [ ] Audible
 [ ] re-assess voices
-[ ] podcast on spotify
-    [ ] spotify settings
-    [ ] spreaker settings
 [ ] podcast on youtube
     [ ] channel
     [ ] spreaker settings

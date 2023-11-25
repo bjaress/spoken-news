@@ -4,6 +4,7 @@ import hamcrest as ham
 import hypothesis as hyp
 import hypothesis.strategies as st
 import textwrap
+import re
 
 import api.wikipedia as wikipedia
 import api.models as models
@@ -252,6 +253,25 @@ class TestHelperEdges(unittest.TestCase):
         link.target.startswith.side_effect = AttributeError()
         result = wikipedia.section_text(None, [section])
         assert result == "Hello", result
+
+    def test_permalink_parens(self):
+        result = wikipedia.permalink("BASE", "Title (paren)", "ID")
+        ham.assert_that(
+            result,
+            ham.all_of(
+                ham.starts_with("BASE"),
+                ham.contains_string("title=Title%20%28paren%29"),
+                ham.contains_string("oldid=ID"),
+            ),
+        )
+
+    @hyp.given(st.text(), st.text())
+    def test_permalink_property(self, title, id):
+        base = "BASE"
+        result = wikipedia.permalink(base, title, id)
+        assert result.startswith(base), result
+        match = re.fullmatch(base + r"\?[a-zA-Z0-9=&%/~._-]+", result)
+        assert match is not None, result
 
 
 # Inspired by clever folks on the Internet.

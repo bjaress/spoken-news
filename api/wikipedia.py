@@ -10,6 +10,7 @@ import logging
 
 API_PATH = "/w/api.php"
 PAGE_PATH = "/w/rest.php/v1/page"
+PERMALINK_PATH = "/w/index.php"
 
 LICENSE_NOTICE = """
 Created from parts of Wikipedia articles and available under the CC
@@ -56,14 +57,25 @@ class Client:
     def describe(self, story):
         notice = " ".join(LICENSE_NOTICE.split())
         parts = notice, *(
-            permalink(reference.title, id)
+            permalink(f"{self.config.url}{PERMALINK_PATH}", reference.title, id)
             for id, reference in story.permalink_ids().items()
         )
         return "\n".join(parts)
 
 
-def permalink(title, id):
-    return f"https://en.wikipedia.org/w/index.php?title={title}&oldid={id}"
+def permalink(base, title, id):
+    parts = parse.urlparse(base)
+    parts = parts._replace(
+        query=parse.urlencode(
+            {
+                "title": title,
+                "oldid": id,
+            },
+            quote_via=parse.quote,
+            safe="",
+        )
+    )
+    return parse.urlunparse(parts)
 
 
 def extract_headline(li_element):
