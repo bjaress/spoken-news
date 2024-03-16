@@ -1,5 +1,25 @@
-[ ] language template
-[ ] nihongo template
+[i] scrape wikipedia using HTML, not wiki markup
+  - too many random, quirky templates
+  [x] separate branch
+    html-based-scraping
+  [i] convert one simple integration test, temporarily disable others
+    [i] convert integration test
+      [ ] find api call
+      [ ] choose test to convert
+      [ ] comment out others
+      [ ] update relevant mocking
+        [ ] url
+        [ ] format
+      [ ] update unit tests
+        [ ] use beautiful soup to grab section
+        [ ] html-sanitizer
+        [ ] beautiful soup again to get text of paragraphs (and others)
+          p blockquote ul ol dl
+        [ ] remove square-bracketed citations as well as parenthesized expressions
+  [ ] convert other integrations tests
+    - TBD
+  [ ] merge branch in
+[ ] use studio voices
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings
