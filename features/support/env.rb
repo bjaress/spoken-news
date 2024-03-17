@@ -25,7 +25,7 @@ def poll(description, target)
     rescue => error
       puts(error)
     end
-    sleep(1)
+    sleep(0.1 * 2**([attempt, 12].min))
   end
   puts("Done trying #{description}.")
   STDOUT.flush

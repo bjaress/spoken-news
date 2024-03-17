@@ -138,7 +138,7 @@ Then(/^the episode description links to articles on (.*)$/) do |topic|
     oldid = body[:latest][:id]
     # permalink uses "oldid" for whatever ID was current at the time
     expect(@spreaker_params["description"]).to include(
-      "https://en.wikipedia.org/w/index.php?title=#{title}&oldid=#{oldid}")
+      "#{$url[:wikipedia]}/w/index.php?title=#{title}&oldid=#{oldid}")
   end
 end
 

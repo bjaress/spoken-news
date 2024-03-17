@@ -8,6 +8,8 @@ docker_tag=./built/image.tag
 docker_hash=./built/image.hash
 docker_name=us-central1-docker.pkg.dev/spoken-news/app-repo/app-image
 # TODO something cleaner?
+# Do I need this?:
+# export DOCKER_HOST="unix:$XDG_RUNTIME_DIR/podman/podman.sock"
 
 deploy=./built/terraform.backup
 
@@ -20,10 +22,8 @@ clean :
 
 $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 		$(features) $(docker_hash)
-	docker-compose -f docker/docker-compose.yml \
-		--no-ansi up --build --no-color --remove-orphans \
-		--exit-code-from app-tests | tee $@
-	docker-compose -f docker/docker-compose.yml down --remove-orphans | tee -a $@
+	docker/integration_test.sh > $@.partial
+	mv $@.partial $@
 
 
 $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
