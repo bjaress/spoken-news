@@ -26,10 +26,10 @@ services:
       TODAY: "2017-01-05"
 
   spreaker:
-    image: wiremock/wiremock
+    image: docker.io/wiremock/wiremock
 
   google:
-    image: wiremock/wiremock
+    image: docker.io/wiremock/wiremock
 
   en.wikipedia.org:
-    image: wiremock/wiremock
+    image: docker.io/wiremock/wiremock
