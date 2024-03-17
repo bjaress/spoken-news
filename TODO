@@ -1,31 +1,107 @@
-[i] scrape wikipedia using HTML, not wiki markup
+[i] switch to Behave
   - too many random, quirky templates
   [x] separate branch
     html-based-scraping
-  [i] convert one simple integration test, temporarily disable others
-    [i] convert integration test
-      [ ] find api call
-      [ ] choose test to convert
-      [ ] comment out others
-      [ ] update relevant mocking
-        [ ] url
-        [ ] format
-      [ ] update unit tests
-        [ ] use beautiful soup to grab section
-        [ ] html-sanitizer
-        [ ] beautiful soup again to get text of paragraphs (and others)
-          p blockquote ul ol dl
-        [ ] remove square-bracketed citations as well as parenthesized expressions
-  [ ] convert other integrations tests
-    - TBD
+  [x] set up Behave
+    [x] replace Dockerfile.tests
+      [x] /features
+    [x] requirements-integration.txt
+    [x] environment.py
+      https://behave.readthedocs.io/en/stable/tutorial.html#environmental-controls
+      [x] url lookups
+      [x] poll wiremock ready
+  [x] convert happy path integration test from cucumber to behave
+      - convert from cucumber to behave as is
+      [x] confirm all mocks up
+      [x] mock news item
+        - helpers that populate context
+        - helper that syncs mock to context
+        [x] headline with links
+          [x] mock wikipedia headline
+          [x] expected spreaker episode title (unabridged)
+        [x] linked articles
+          [x] expected wikipedia request info
+          [x] mock wikipedia response info
+          [x] expected tts request fragment
+        [x] spreaker
+          [x] mock spreaker response (no existing episodes)
+            [x] store mock in context
+          [x] sync to wiremock
+        [x] google
+          [x] mock google tts response
+            [x] dummy mp3 data
+      [x] trigger call to app
+        [x] create payload
+        [x] send
+      [x] expect calls to wikipedia
+        [x] headlines
+        [x] articles in context
+      [x] expect calls to tts
+        [x] combination of title and article fragments from context
+      [x] improve test framework
+        [x] move polling into background section
+        [x] logging during polling
+        [x] do not require container level dependencies
+      [x] expect audio upload to spreaker
+        [x] parse multipart form data
+        [x] abridged version of title from context
+        [x] mock mp3 data from context
+        [x] show, other metadata
+    [x] expect success from app
+  [x] convert cleanup tests from cucumber to behave
+    [x] episode class
+      [x] compute published_at from TODAY and age
+    [x] use episodes from context when syncing
+    [x] Given there is a 10 day old episode about frogs
+    [x] Given there is a 3 day old episode about toads
+    [x] When it is time to clean up episodes older than 5 days
+    [x] Then the list of past episodes is retrieved from Spreaker
+    [x] And the episode about frogs is deleted
+    [x] And the episode about toads is kept
+  [x] convert other integration tests from cucumber to behave
+    [x] Scenario: Linking to section
+    [x] Scenario: Two headlines, oldest has no episode
+    [x] Scenario: Two headlines, oldest has an episode
+    [x] Scenario: Two headlines, both have episodes
+    [x] Scenario: Long episode name
+  [ ] merge branch in
+[i] convert app to use html
+  [x] find api call
+    section list
+      curl 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=Frog&prop=sections&disabletoc=1'
+         | jq '.parse.sections|map({index, linkAnchor})'
+    section HTML
+      curl 'https://en.wikipedia.org/w/api.php?action=parse&page=Frog&prop=text&format=json&section=0'
+         | jq '.parse.text["*"]'
+  [x] figure out processing
+    exclude
+      table .reference, .references, .shortdescription, .note
+    extract text from
+      p, blockquote, ol, ul, dl
+        entire contents of tag are indivisible chunk
+        can have paragraphs within chunk for e.g. list items
+        filter out empties
+  [ ] update unit tests
+    [ ] use beautiful soup to grab section
+    [ ] html-sanitizer
+    [ ] beautiful soup again to get text of paragraphs (and others)
+      p blockquote ul ol dl
+    [ ] remove square-bracketed citations as well as parenthesized expressions
   [ ] merge branch in
 [ ] use studio voices
+[ ] randomize story selection
+  [ ] identify selected story in HTTP response
+  [ ] use selected story to drive assertions
+  [ ] weighted random selection of story (age in days is weight)
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings
-[ ] consider sections when ordering articles
+[ ] consider sections when ordering articles within story
 [ ] de-dupe articles
     [ ] by full reference (title and section)
+[ ] weighted random selection of story
+  - rank by age (oldest is heaviest)
+  - number of articles in story (more articles are heavier)
 [ ] iTunes
 [ ] upgrade/remove libraries (Pydantic?)
 [ ] upload in preview mode

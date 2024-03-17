@@ -7,9 +7,6 @@ test_log=./built/test.log
 docker_tag=./built/image.tag
 docker_hash=./built/image.hash
 docker_name=us-central1-docker.pkg.dev/spoken-news/app-repo/app-image
-# TODO something cleaner?
-# Do I need this?:
-# export DOCKER_HOST="unix:$XDG_RUNTIME_DIR/podman/podman.sock"
 
 deploy=./built/terraform.backup
 
@@ -22,8 +19,9 @@ clean :
 
 $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 		$(features) $(docker_hash)
-	docker/integration_test.sh > $@.partial
-	mv $@.partial $@
+	docker/integration_test.sh $@
+	echo '\n\n' ; grep 'app-test.*[0-9]\+ failed, [0-9]\+ skipped' $@|sed 's/^[^ ]*//'
+
 
 
 $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
