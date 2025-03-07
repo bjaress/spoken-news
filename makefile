@@ -10,7 +10,7 @@ docker_name=us-central1-docker.pkg.dev/spoken-news/app-repo/app-image
 
 deploy=./built/terraform.backup
 
-.PHONY : test deploy clean
+.PHONY : test deploy clean wikiscrape
 
 test : $(test_log)
 
@@ -51,3 +51,7 @@ $(deploy) : ./built/terraform.plan
 	docker tag `cat $(docker_hash)` $(docker_name):`cat $(docker_tag)`
 	PATH="${PWD}/docker:${PATH}" docker --debug --config docker push \
 		"$(docker_name):`cat $(docker_tag)`" | tee $@
+
+# manual spot-checking and debugging of wikipedia article scraping
+wikiscrape : $(docker_hash)
+	docker run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)"

@@ -10,8 +10,8 @@ def news_frogs(context):
         headline_html="""A <a href='/wiki/Frog'>frog</a> said hi.""",
         headline_plain="""A frog said hi.""",
         Frog=d.Article(
-            markup="""A frog is a type of animal.""",
             plain="""A frog is a type of animal.""",
+            html="""<p>A frog is a type of animal.</p>""",
         ),
     )
     d.sync(context)
@@ -22,11 +22,11 @@ def news_bananas(context):
         headline_html="""A <a href='/wiki/Fruit#Banana'>banana</a> said hi.""",
         headline_plain="""A banana said hi.""",
         Fruit=d.Article(
-            markup=textwrap.dedent("""
-            Don't include this sentence.
-            ==Banana==
-            Banana peels are slippery.
-            """),
+            html="""
+            <h3>Peels</h3>
+            <p>Banana peels are slippery.</p>
+            """,
+            section_title = "Banana",
             plain="""Banana peels are slippery.""",
         ),
     )
@@ -39,9 +39,8 @@ def news_sports(context):
     headline_filler = " ".join(["yada"] * title_limit)
 
     def article_filler(text, length):
-        population = [char for char in text] + [" ", "\n\n"]
-        weights = [20] * len(text) + [40, 1]
-        return "".join(random.choices(population, k=length, weights=weights))
+        count = length // len(text)
+        return f"{text}. {"\n\n".join([text] * count)}"
 
     article_length = script_limit // 3 * 2
     football_filler = article_filler("football", article_length)
@@ -53,12 +52,12 @@ def news_sports(context):
         headline_plain=(
             f"baseball football {headline_filler}"[:title_limit - 3] + "..."),
         Baseball=d.Article(
-            markup=baseball_filler,
             plain=baseball_filler,
+            html="<p>" + baseball_filler.replace("\n\n", "</p><p>") + "</p>",
         ),
         American_Football=d.Article(
-            markup=football_filler,
             plain=football_filler,
+            html="<p>" + football_filler.replace("\n\n", "</p><p>") + "</p>",
         ),
     )
     d.sync(context)

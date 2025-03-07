@@ -6,6 +6,7 @@ import hypothesis.strategies as st
 import textwrap
 import re
 
+from bs4 import BeautifulSoup
 import api.wikipedia as wikipedia
 import api.models as models
 
@@ -22,6 +23,7 @@ class TestClient(unittest.TestCase):
 
         self.requests.get.return_value.json.return_value = {
             "parse": {
+                "revid": 1234,
                 "text": {
                     "*": """
                     <ul>
@@ -29,7 +31,7 @@ class TestClient(unittest.TestCase):
                         <a href="/wiki/Earth">World</a>! (ignore this)</li>
                     </ul>
                     """
-                }
+                },
             }
         }
 
@@ -40,7 +42,8 @@ class TestClient(unittest.TestCase):
             params={
                 "action": "parse",
                 "section": 0,
-                "prop": "text",
+                "redirects": "",
+                "prop": "text|revid",
                 "format": "json",
                 "page": self.config.headlines_page,
             },
@@ -70,6 +73,7 @@ class TestClient(unittest.TestCase):
 
         self.requests.get.return_value.json.return_value = {
             "parse": {
+                "revid": 1234,
                 "text": {
                     "*": """
                     <ul>
@@ -77,7 +81,7 @@ class TestClient(unittest.TestCase):
                         <li>Hello, World!</li>
                     </ul>
                     """
-                }
+                },
             }
         }
 
@@ -88,68 +92,6 @@ class TestClient(unittest.TestCase):
             ham.contains_exactly(
                 ham.has_property("text", "Goodby, World!"),
                 ham.has_property("text", "Hello, World!"),
-            ),
-        )
-
-    def test_fetch_article(self):
-        self.requests.get.return_value.json.return_value = {
-            "latest": {"id": 123},
-            "source": """
-                Hello, '''bold''' [[link]].
-                (ignore) <ref>ignore</ref> <ref name="bs"/>
-                [[File:ignore.jpg|ignore]]
-                """,
-        }
-        reference = models.ArticleReference(title="The_Title")
-        article = self.client.fetch_article(reference)
-
-        self.requests.get.assert_called_once_with(
-            f"{self.config.url}{wikipedia.PAGE_PATH}/The_Title"
-        )
-
-        ham.assert_that(
-            article,
-            ham.has_properties(
-                {
-                    "summary": "Hello, bold link.",
-                    "permalink_id": 123,
-                    "reference": reference,
-                }
-            ),
-        )
-
-    def test_fetch_article_with_section(self):
-        self.requests.get.return_value.json.return_value = {
-            "latest": {"id": 123},
-            "source": textwrap.dedent(
-                """
-                Ignored.
-
-                ==Some Other Section==
-
-                Ignored.
-
-                ==The Section==
-
-                Hello, Section!
-                """
-            ),
-        }
-        reference = models.ArticleReference(title="The_Title", section="The_Section")
-        article = self.client.fetch_article(reference)
-
-        self.requests.get.assert_called_once_with(
-            f"{self.config.url}{wikipedia.PAGE_PATH}/The_Title"
-        )
-
-        ham.assert_that(
-            article,
-            ham.has_properties(
-                {
-                    "summary": "Hello, Section!",
-                    "permalink_id": 123,
-                    "reference": reference,
-                }
             ),
         )
 
@@ -170,51 +112,6 @@ class TestClient(unittest.TestCase):
         ham.assert_that(
             self.client.describe(story),
             ham.all_of(*[ham.contains_string(s) for s in expected]),
-        )
-
-
-class TestTemplates(unittest.TestCase):
-    def setUp(self):
-        self.requests = mock.MagicMock()
-        self.config = mock.MagicMock()
-        self.client = wikipedia.Client(self.config, requests=self.requests)
-
-    def test_convert_units(self):
-        self.requests.get.return_value.json.return_value = {
-            "latest": {"id": 123},
-            "source": """
-                {{convert|220|km|sp=us}} and {{convert|1|to|3|ft|m|sp=us}}
-                """,
-        }
-        reference = models.ArticleReference(title="The_Title")
-        article = self.client.fetch_article(reference)
-
-        ham.assert_that(
-            article,
-            ham.has_properties(
-                {
-                    "summary": "220 km and 1 to 3 ft",
-                }
-            ),
-        )
-
-    def test_convert_units_decimal(self):
-        self.requests.get.return_value.json.return_value = {
-            "latest": {"id": 123},
-            "source": """
-                {{convert|22.0|km|sp=us}} and {{convert|1.2|to|3.4|ft|m|sp=us}}
-                """,
-        }
-        reference = models.ArticleReference(title="The_Title")
-        article = self.client.fetch_article(reference)
-
-        ham.assert_that(
-            article,
-            ham.has_properties(
-                {
-                    "summary": "22.0 km and 1.2 to 3.4 ft",
-                }
-            ),
         )
 
 
@@ -243,17 +140,6 @@ class TestParentheses(unittest.TestCase):
 
 
 class TestHelperEdges(unittest.TestCase):
-    def test_section_text_link_error(self):
-        section = mock.MagicMock()
-        section.get_tags.return_value = []
-        section.contents = "Hello"
-
-        link = mock.MagicMock()
-        section.wikilinks = [link]
-        link.target.startswith.side_effect = AttributeError()
-        result = wikipedia.section_text(None, [section])
-        assert result == "Hello", result
-
     def test_permalink_parens(self):
         result = wikipedia.permalink("BASE", "Title (paren)", "ID")
         ham.assert_that(
@@ -272,6 +158,153 @@ class TestHelperEdges(unittest.TestCase):
         assert result.startswith(base), result
         match = re.fullmatch(base + r"\?[a-zA-Z0-9=&%/~._-]+", result)
         assert match is not None, result
+
+
+class TestHtmlHandling(unittest.TestCase):
+    def setUp(self):
+        self.requests = mock.MagicMock()
+        self.config = mock.MagicMock()
+        self.client = wikipedia.Client(self.config, requests=self.requests)
+
+    def test_fetch_html(self):
+        self.requests.get.return_value.json.return_value = {
+            "parse": {"text": {"*": "<p>The text.</p>"}, "revid": 1234}
+        }
+        soup, version = article = self.client.fetch_html("The_Title")
+
+        self.requests.get.assert_called_once_with(
+            f"{self.config.url}{wikipedia.API_PATH}",
+            params={
+                "action": "parse",
+                "redirects": "",
+                "section": 0,
+                "prop": "text|revid",
+                "format": "json",
+                "page": "The_Title",
+            },
+        )
+
+        ham.assert_that(soup.string, ham.contains_string("The text."))
+        ham.assert_that(version, ham.equal_to(1234))
+
+    def test_fetch_html_section(self):
+        self.requests.get.return_value.json.return_value = {
+            "parse": {"revid": 5678, "text": {"*": "<p>The text.</p>"}}
+        }
+        soup, version = self.client.fetch_html("The_Other_Title", 7)
+
+        self.requests.get.assert_called_once_with(
+            f"{self.config.url}{wikipedia.API_PATH}",
+            params={
+                "action": "parse",
+                "redirects": "",
+                "section": 7,
+                "prop": "text|revid",
+                "format": "json",
+                "page": "The_Other_Title",
+            },
+        )
+
+        ham.assert_that(soup.string, ham.contains_string("The text."))
+        ham.assert_that(version, ham.equal_to(5678))
+
+    def test_section_index_for_reference(self):
+        self.requests.get.return_value.json.return_value = {
+            "parse": {
+                "sections": [
+                    {
+                        "index": 123,
+                        "linkAnchor": "Weird_section",
+                    },
+                    {
+                        "index": 456,
+                        "linkAnchor": "Cool_section",
+                    },
+                    {
+                        "index": 789,
+                        "linkAnchor": "Boring_section",
+                    },
+                ]
+            }
+        }
+        id = self.client.section_index_for_reference(
+            models.ArticleReference(title="The_Title", section="Cool_section")
+        )
+
+        self.requests.get.assert_called_once_with(
+            f"{self.config.url}{wikipedia.API_PATH}",
+            params={
+                "action": "parse",
+                "prop": "sections",
+                "format": "json",
+                "page": "The_Title",
+            },
+        )
+
+        ham.assert_that(id, ham.equal_to(456))
+
+    def test_section_index_for_reference_default(self):
+        id = self.client.section_index_for_reference(
+            models.ArticleReference(title="The_Title")
+        )
+        ham.assert_that(id, ham.equal_to(0))
+
+    def test_fetch_and_parse_article(self):
+        self.client.fetch_html = mock.MagicMock()
+        self.client.section_index_for_reference = mock.MagicMock()
+        self.client.extract_text_chunks = mock.MagicMock()
+
+        reference = models.ArticleReference(title="The_Title", section="Cool_section")
+        self.client.fetch_html.return_value = ("soup", 1234)
+        self.client.extract_text_chunks.return_value = ["some text"]
+        article = self.client.fetch_and_parse_article(reference)
+
+        self.client.section_index_for_reference.assert_called_with(reference)
+        self.client.fetch_html.assert_called_with(
+            "The_Title", self.client.section_index_for_reference.return_value
+        )
+        self.client.extract_text_chunks.assert_called_with("soup")
+
+        ham.assert_that(
+            article,
+            ham.has_properties(
+                {
+                    "summary": self.client.extract_text_chunks.return_value,
+                    "permalink_id": 1234,
+                    "reference": reference,
+                }
+            ),
+        )
+
+    def test_extract_text_chunks(self):
+        html = """
+        <h3>Omit This</h3>
+
+        <ul><li>omit this</li></ul>
+        <p>omit this</p>
+        <p>One two <a
+            href="ignore url" title="ignore title">three</a>.<sup><a
+            href="#cite_note-2">[2]</a><a
+            href="#cite_note-3">[3]</a></sup>
+            <em>Four</em> <strong>five</strong>.
+            <a href="/wiki/Wikipedia:Disputed_statement">[omit this]</a>
+            <a href="/wiki/Help:Cite_errors">[omit this]</a>
+        </p>
+        <p>Cite error: omit this</p>
+        <ul>
+            <li>six</li>
+            <li>seven</li>
+        </ul>
+        <p>Eight (omit this).</p>
+        <ol>
+            <li><strong><a href="#cite_ref-1">^</a></strong> Omit this.</li>
+        </ol>
+        """
+        expect = ["One two three. Four five.", "  - six\n  - seven", "Eight."]
+        soup = BeautifulSoup(html)
+        result = self.client.extract_text_chunks(soup)
+
+        ham.assert_that(result, ham.contains_exactly(*expect), result)
 
 
 # Inspired by clever folks on the Internet.

@@ -13,6 +13,7 @@ import logging
 app = fa.FastAPI()
 logging.basicConfig(level=logging.DEBUG)
 
+
 # Converts models.NewsTrigger to models.Config
 # Does not assume field names, but does assume a naming convention with
 # two-part names.

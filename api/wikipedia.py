@@ -3,8 +3,9 @@ import re
 from api import models
 from api import similar
 from bs4 import BeautifulSoup
-import wikitextparser as wtp
 from urllib import parse
+import html_sanitizer
+import html2text
 
 import logging
 
@@ -23,36 +24,94 @@ class Client:
         self.requests = requests
         self.config = config
 
-    def headlines(self):
-        response = self.requests.get(
-            f"{self.config.url}{API_PATH}",
-            params={
-                "action": "parse",
-                "section": 0,
-                "prop": "text",
-                "format": "json",
-                "page": self.config.headlines_page,
-            },
-        )
-        logging.info(f"Wikipedia Request: {response.status_code}")
+        ht = html2text.HTML2Text()
+        ht.ignore_emphasis = True
+        ht.ignore_links = True
+        ht.ignore_images = True
+        ht.ul_item_mark = "-"
+        ht.unicode_snob = True
+        self.html2text = ht
 
-        html = response.json()["parse"]["text"]["*"]
-        soup = BeautifulSoup(html, "html.parser")
+    def headlines(self):
+        soup, _ = self.fetch_html(self.config.headlines_page)
 
         headlines = [extract_headline(item) for item in soup.ul.find_all("li")]
         return headlines
 
-    def fetch_article(self, article_reference):
-        title = article_reference.title
-        response = self.requests.get(f"{self.config.url}{PAGE_PATH}/{title}")
-        json = response.json()
-        parsed = wtp.parse(json["source"])
-        text = section_text(article_reference.section, parsed.get_sections())
+    def fetch_html(self, title, id=0):
+        response = self.requests.get(
+            f"{self.config.url}{API_PATH}",
+            params={
+                "action": "parse",
+                "redirects": "",
+                "section": id,
+                "prop": "text|revid",
+                "format": "json",
+                "page": title,
+            },
+        )
+        logging.info(f"Wikipedia Request: {response.status_code}")
+        response.raise_for_status()
+        parse = response.json()["parse"]
+        html = parse["text"]["*"]
+        html = html_sanitizer.Sanitizer().sanitize(html)
+        soup = BeautifulSoup(html, "html.parser")
+        return soup, parse["revid"]
+
+    def section_index_for_reference(self, reference):
+        if reference.section is None or len(reference.section) == 0:
+            return 0
+        response = self.requests.get(
+            f"{self.config.url}{API_PATH}",
+            params={
+                "action": "parse",
+                "prop": "sections",
+                "format": "json",
+                "page": reference.title,
+            },
+        )
+        logging.info(f"Wikipedia Request: {response.status_code}")
+        response.raise_for_status()
+
+        for section in response.json()["parse"]["sections"]:
+            if section["linkAnchor"] == reference.section:
+                return section["index"]
+        return 0
+
+    def fetch_and_parse_article(self, article_reference):
+        soup, version = self.fetch_html(
+            article_reference.title,
+            self.section_index_for_reference(article_reference),
+        )
         return models.Article(
-            summary=remove_parenthesized(text).strip(),
-            permalink_id=json["latest"]["id"],
+            summary=self.extract_text_chunks(soup),
+            permalink_id=version,
             reference=article_reference,
         )
+
+    def extract_text_chunks(self, soup):
+        selector = ":is(p, ol, ul, dl, blockquote):not(:is(p, ol, ul, dl, blockquote, table) *)"
+        past_boilerplate = False
+        result = []
+        for elem in soup.select(selector):
+            # skip references at end
+            if len(elem.select('a[href*="cite_ref-"]')):
+                continue
+            # remove metadata
+            for cite in elem.select('a[href*="cite_note-"], a[href*=":"]'):
+                cite.clear()
+            # skip to first real paragraph
+            if elem.name == "p" and "." in " ".join(elem.strings):
+                past_boilerplate = True
+            elif not past_boilerplate:
+                continue
+
+            text = self.html2text.handle(str(elem)).removesuffix("\n\n")
+            if text.startswith("Cite error:"):
+                continue
+
+            result.append(remove_parenthesized(text))
+        return result
 
     def describe(self, story):
         notice = " ".join(LICENSE_NOTICE.split())
@@ -85,30 +144,6 @@ def extract_headline(li_element):
             reference_from_url(link["href"]) for link in li_element.select("a[href]")
         ],
     )
-
-
-def section_text(section_name, sections):
-    best = sections[0]
-    best_score = 0
-    for section in sections:
-        if section.title is None or section_name is None or len(section_name) == 0:
-            continue
-        score = similar.score(section.title, section_name)
-        if score > best_score:
-            best, best_score = section, score
-
-    # omit references
-    for ref in best.get_tags("ref"):
-        del ref[:]
-    # omit images
-    for link in best.wikilinks:
-        try:
-            if link.target.startswith("File:"):
-                del link[:]
-        except:
-            pass
-    # omit header of section
-    return wtp.parse(best.contents).plain_text(replace_templates=wiki_template)
 
 
 def remove_parenthesized(text):
@@ -154,15 +189,15 @@ def collapse(string):
     return re.sub(r"\s+", " ", string)
 
 
-def wiki_template(template):
-    name, args = template.name, template.arguments
-    if name == "convert":
-        # https://en.m.wikipedia.org/wiki/Help:Convert
-        # could be |1|km|mi| or |3|to|7|in|cm|
-        lead = args[:2]
-        try:
-            float(args[2].value)
-            lead = args[:4]
-        except:
-            pass
-        return " ".join(a.value for a in lead)
+if __name__ == "__main__":
+    import sys
+
+    class DummyConfig:
+        def __init__(self, wikipedia_url):
+            self.url = wikipedia_url
+
+    page_url = sys.argv[1]
+    client = Client(DummyConfig("https://en.wikipedia.org"))
+    article = client.fetch_and_parse_article(reference_from_url(page_url))
+    print(f"{article.reference} {article.permalink_id}")
+    print("\n\n".join(article.summary))

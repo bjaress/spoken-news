@@ -13,11 +13,15 @@ def article_fetches(context, topic):
         response = requests.post(
             f"{context.prop.wikipedia.url}/__admin/requests/find",
             json={
-                "urlPath": f"/w/rest.php/v1/page/{title}",
+                "urlPath": "/w/api.php",
+                'queryParameters': {
+                    'page': {'equalTo': title},
+                }
+
             },
         )
         response.raise_for_status()
-        assert len(response.json()["requests"]) == 1, (response.json(), title)
+        assert len(response.json()["requests"]) >= 1, (response.json(), title)
 
 @bhv.then("headlines are retrieved from Wikipedia")
 def headline_fetch(context):
@@ -29,7 +33,7 @@ def headline_fetch(context):
             "queryParameters": {
                 "action": {"equalTo": "parse"},
                 "format": {"equalTo": "json"},
-                "prop": {"equalTo": "text"},
+                "prop": {"equalTo": "text|revid"},
                 "page": {"equalTo": "Template:In_the_news"},
                 "section": {"equalTo": "0"},
             },

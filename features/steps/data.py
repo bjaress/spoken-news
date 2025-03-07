@@ -45,13 +45,26 @@ def sync_articles(context):
         for title, article in news_item.articles.items():
             data = {
                 'request': {
-                    'urlPath': f"/w/rest.php/v1/page/{title}"
+                    'urlPath': "/w/api.php",
+                    'queryParameters': {
+                        'page': {'equalTo': title},
+                        'action': {'equalTo': 'parse'},
+                        'prop': {'equalTo': 'text|revid'},
+                        'format': {'equalTo': 'json'},
+                        'section': {'equalTo':
+                            '0' if article.section_title is None else '1'
+                        },
+                        'redirects': {'equalTo': ''},
+                    }
                 },
                 'response': {
                     'status': 200,
                     'jsonBody': {
-                        'latest': {'id': article.id},
-                        'source': article.markup
+                        "parse": {
+                            'pageid': article.id,
+                            'revid': article.id + '0000',
+                            'text': {"*": article.html},
+                        },
                     },
                 }
             }
@@ -59,6 +72,36 @@ def sync_articles(context):
                 f"{context.prop.wikipedia.url}/__admin/mappings", json=data
             )
             response.raise_for_status()
+
+            if article.section_title is None:
+                continue
+            data = {
+                'request': {
+                    'urlPath': "/w/api.php",
+                    'queryParameters': {
+                        'page': {'equalTo': title},
+                        'action': {'equalTo': 'parse'},
+                        'prop': {'equalTo': 'sections'},
+                        'format': {'equalTo': 'json'},
+                    }
+                },
+                'response': {
+                    'status': 200,
+                    'jsonBody': {
+                        "parse": {
+                            'sections': [{
+                                "index": '1',
+                                "linkAnchor": article.section_title,
+                            }],
+                        },
+                    },
+                }
+            }
+            response = requests.post(
+                f"{context.prop.wikipedia.url}/__admin/mappings", json=data
+            )
+            response.raise_for_status()
+
 
 def sync_headlines(context):
     data = {
@@ -71,7 +114,7 @@ def sync_headlines(context):
             "jsonBody": {
                 "parse": {
                     "title": "Template:In the news",
-                    "pageid": 482256,
+                    "revid": 482256,
                     "text": {"*": headlines_html(context)},
                 }
             },
@@ -124,9 +167,10 @@ class NewsItem:
         self.articles = articles
 
 class Article:
-    def __init__(self, markup, plain):
-        self.markup = markup
+    def __init__(self, plain, html, section_title=None):
         self.plain = plain
+        self.html = html
+        self.section_title = section_title
         self.id = str(random.randint(1, 2**30))
 
 class ExistingEpisode:
