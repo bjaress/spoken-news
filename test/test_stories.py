@@ -22,13 +22,15 @@ class TestSimple(unittest.TestCase):
 
         story = stories.extract_story(client, headline)
 
-        client.fetch_article.assert_called_with(reference)
+        client.fetch_and_parse_article.assert_called_with(reference)
 
         ham.assert_that(
             story,
             ham.has_properties(
                 {
-                    "articles": ham.contains_exactly(client.fetch_article.return_value),
+                    "articles": ham.contains_exactly(
+                        client.fetch_and_parse_article.return_value
+                    ),
                     "headline": "HEADLINE_TEXT",
                 }
             ),
@@ -106,7 +108,7 @@ class TestTruncateStory(unittest.TestCase):
 
 def mock_paragraphs(*paragraphs, id=0, title="Title"):
     return mock.Mock(
-        summary="\n\n".join(paragraphs),
+        summary=paragraphs,
         permalink_id=id,
         reference=mock.Mock(title=title),
     )

@@ -7,13 +7,10 @@ test_log=./built/test.log
 docker_tag=./built/image.tag
 docker_hash=./built/image.hash
 docker_name=us-central1-docker.pkg.dev/spoken-news/app-repo/app-image
-# TODO something cleaner?
-# Do I need this?:
-# export DOCKER_HOST="unix:$XDG_RUNTIME_DIR/podman/podman.sock"
 
 deploy=./built/terraform.backup
 
-.PHONY : test deploy clean
+.PHONY : test deploy clean wikiscrape
 
 test : $(test_log)
 
@@ -22,8 +19,9 @@ clean :
 
 $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 		$(features) $(docker_hash)
-	docker/integration_test.sh > $@.partial
-	mv $@.partial $@
+	docker/integration_test.sh $@
+	echo '\n\n' ; grep 'app-test.*[0-9]\+ failed, [0-9]\+ skipped' $@|sed 's/^[^ ]*//'
+
 
 
 $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
@@ -53,3 +51,7 @@ $(deploy) : ./built/terraform.plan
 	docker tag `cat $(docker_hash)` $(docker_name):`cat $(docker_tag)`
 	PATH="${PWD}/docker:${PATH}" docker --debug --config docker push \
 		"$(docker_name):`cat $(docker_tag)`" | tee $@
+
+# manual spot-checking and debugging of wikipedia article scraping
+wikiscrape : $(docker_hash)
+	docker run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)"

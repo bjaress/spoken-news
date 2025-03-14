@@ -3,6 +3,7 @@ import logging
 
 CUTOFF = 0.8
 
+
 # https://maxbachmann.github.io/Levenshtein/levenshtein.html
 # https://en.m.wikipedia.org/wiki/Levenshtein_distance
 # Normalized similarity is documented as (1 - normalized distance).

@@ -42,7 +42,7 @@ class Headline(BaseModel):
 
 
 class Article(BaseModel):
-    summary: str
+    summary: typing.List[str]
     permalink_id: int
     reference: ArticleReference
 

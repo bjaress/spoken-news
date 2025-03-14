@@ -1,4 +1,4 @@
-FROM python:3.10-alpine as requirements
+FROM docker.io/python:3.10-alpine as requirements
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt

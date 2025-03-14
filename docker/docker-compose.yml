@@ -5,17 +5,13 @@ services:
       context: ..
       dockerfile: ./docker/Dockerfile.tests
     environment:
-      app.url: http://app:8000
-      spreaker.url: http://spreaker:8080
-      spreaker.title_limit: 140
-      google.url: http://google:8080
-      wikipedia.url: http://en.wikipedia.org:8080
-      TODAY: "2017-01-05"
-    depends_on:
-    - app
-    - spreaker
-    - google
-    - en.wikipedia.org
+      prop.app.url: http://app:8000
+      prop.spreaker.url: http://spreaker:8080
+      prop.spreaker.title_limit: 140
+      prop.tts.length_limit: 600
+      prop.google.url: http://google:8080
+      prop.wikipedia.url: http://en.wikipedia.org:8080
+      prop.TODAY: "2017-01-05"
 
   app:
     build:
@@ -27,9 +23,13 @@ services:
 
   spreaker:
     image: docker.io/wiremock/wiremock
+    #entrypoint: ["/docker-entrypoint.sh", "--verbose"]
 
   google:
     image: docker.io/wiremock/wiremock
+    #entrypoint: ["/docker-entrypoint.sh", "--verbose"]
 
   en.wikipedia.org:
     image: docker.io/wiremock/wiremock
+    #entrypoint: ["/docker-entrypoint.sh", "--verbose"]
+

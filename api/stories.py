@@ -4,7 +4,10 @@ SEPARATOR = "\n\n"
 def extract_story(wikipedia_client, headline):
     return Story(
         headline.text,
-        [wikipedia_client.fetch_article(reference) for reference in headline.articles],
+        [
+            wikipedia_client.fetch_and_parse_article(reference)
+            for reference in headline.articles
+        ],
     )
 
 
@@ -20,7 +23,7 @@ class Story:
         paragraphs, budget = include_if_room(paragraphs, budget, [self.headline])
 
         for article in sorted(self.articles, key=sort_key, reverse=True):
-            head, *tail = article.summary.split("\n\n")
+            head, *tail = article.summary
             paragraphs, budget = include_if_room(paragraphs, budget, [head])
             paragraphs, budget = include_if_room(paragraphs, budget, tail)
 

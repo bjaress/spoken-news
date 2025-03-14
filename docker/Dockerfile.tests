@@ -1,14 +1,15 @@
-FROM debian:bullseye-slim
+FROM docker.io/python:3.12
 
-RUN apt-get --yes update
-RUN apt-get --yes upgrade
-RUN apt-get --yes install cucumber
-RUN apt-get --yes install ruby-httparty
-RUN apt-get --yes install ruby-rspec
-# https://stackoverflow.com/a/73551605
-RUN apt-get --yes install ruby-rack
+WORKDIR /var/www
 
+COPY requirements-integration.txt .
+RUN pip install -r requirements-integration.txt
 
-CMD ["cucumber", "features"]
+COPY features features/
+RUN find
 
-COPY features /features
+COPY docker/behave.ini ./
+
+USER www-data
+
+ENTRYPOINT ["behave"]

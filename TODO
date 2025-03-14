@@ -1,11 +1,74 @@
-[ ] language template
-[ ] nihongo template
+[i] convert app to use html
+  [x] find api call
+    section list
+      curl 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=Frog&prop=sections&disabletoc=1'
+         | jq '.parse.sections|map({index, linkAnchor})'
+    section HTML
+      curl 'https://en.wikipedia.org/w/api.php?action=parse&page=Frog&prop=text|revid&format=json&section=0'
+         | jq '.parse.text["*"]'
+  [x] figure out processing
+    exclude
+      table .reference, .references, .shortdescription, .note
+    extract text from
+      p, blockquote, ol, ul, dl
+        entire contents of tag are indivisible chunk
+        can have paragraphs within chunk for e.g. list items
+        filter out empties
+  [x] add (page, section) -> paragraphs that works via HTML
+    [x] manual spot-checking harness
+      - try with existing
+    [x] html-sanitizer dependency
+    - TDD!
+    [x] fetch unspecified section HTML
+      - use section zero
+      [x] duplicate headline fetching
+      [x] consolidate with headline fetching
+    [x] fetch specific section HTML
+    [x] page index from reference
+      curl 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=Frog&prop=sections&disabletoc=1'
+    [x] helper to get the index then fetch
+    [x] sanitize HTML
+    [x] separate out chunks
+      [x] extract text
+        [x] html2text
+          ignore_emphasis
+          ignore_links
+          ignore_images
+          dash_unordered_list
+          unicode_snob
+      [x] beautiful soup to get text of paragraphs (and others?)
+        p ol ul dl blockquote
+        maybe with css selectors?
+          :is(p ol ul dl blockquote):not(:is(p ol ul dl blockquote) *)
+        [x] grab only top level (no repeat of nested elements)
+        [x] process each chunk
+        [x] omit citations at end
+        [x] remove square-bracketed citations
+  [x] handle redirects
+    https://en.m.wikipedia.org/wiki/Ofunato_fire
+  [x] omit extra garbage
+    https://en.m.wikipedia.org/wiki/Russian_invasion_of_Ukraine
+  [x] update integration tests to use HTML
+    [x] html
+    [x] wikipedia urls
+    [x] section index
+  [x] use instead of old version that works via wiki markup
+    [x] capture article ID
+    [x] call html version
+    [x] cleanup
+  [ ] merge branch in
+[ ] use studio voices
+[ ] fall back on more recent articles if oldest fails
+  - do not fall back after tts!
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings
-[ ] consider sections when ordering articles
+[ ] consider sections when ordering articles within story
 [ ] de-dupe articles
     [ ] by full reference (title and section)
+[ ] weighted random selection of story
+  - rank by age (oldest is heaviest)
+  - number of articles in story (more articles are heavier)
 [ ] iTunes
 [ ] upgrade/remove libraries (Pydantic?)
 [ ] upload in preview mode
