@@ -30,6 +30,7 @@ class Client:
         ht.ignore_images = True
         ht.ul_item_mark = "-"
         ht.unicode_snob = True
+        ht.body_width = 0
         self.html2text = ht
 
     def headlines(self):
@@ -106,7 +107,7 @@ class Client:
             elif not past_boilerplate:
                 continue
 
-            text = self.html2text.handle(str(elem)).removesuffix("\n\n")
+            text = self.html2text.handle(str(elem)).rstrip()
             if text.startswith("Cite error:"):
                 continue
 
