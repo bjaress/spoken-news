@@ -3,36 +3,37 @@ import operator as op
 import hypothesis as hy
 import hypothesis.strategies as st
 
-from api.similar import is_similar, first_unknown
+from api.similar import is_similar, unknowns
 
 
-class TestFirstUnknown(unittest.TestCase):
+class TestUnknowns(unittest.TestCase):
     def test_single_known(self):
         consider = [1]
         history = [1]
-        assert first_unknown(consider, history, match=op.eq) is None
+        with self.assertRaises(StopIteration):
+            next(unknowns(consider, history, match=op.eq))
 
     def test_single_unknown(self):
         consider = [2]
         history = [1]
-        assert first_unknown(consider, history, match=op.eq) == 2
+        assert next(unknowns(consider, history, match=op.eq)) == 2
 
     def test_skips(self):
         consider = [1, 2, 3, 4, 5, 6]
         history = [1, 1, 2, 3, 5, 8]
-        assert first_unknown(consider, history, match=op.eq) == 4
+        assert next(unknowns(consider, history, match=op.eq)) == 4
 
     @hy.given(st.lists(st.integers()), st.lists(st.integers()))
     def test_knownness(self, consider, history):
-        result = first_unknown(consider, history, match=op.eq)
+        result = set(unknowns(consider, history, match=op.eq))
+        context = (result, consider, history)
+
         consider_set = set(consider)
         history_set = set(history)
 
-        assert result not in history_set, (result, consider, history)
-        if result is not None:
-            assert result in consider_set, (result, consider, history)
-        else:
-            assert consider_set.issubset(history_set), (result, consider, history)
+        assert len(result & history_set) == 0, context
+        assert result <= consider_set, context
+        assert (consider_set - result) <= history_set, context
 
 
 class TestSimple(unittest.TestCase):

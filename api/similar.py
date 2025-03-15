@@ -22,10 +22,10 @@ def score(string_a, string_b):
     return Levenshtein.ratio(string_a, string_b)
 
 
-def first_unknown(consider, history, match=is_similar):
+def unknowns(consider, history, match=is_similar):
     for candidate in consider:
         for past in history:
             if match(candidate, past):
                 break  # out of inner for loop
-        else:  # executed after loop if no break
-            return candidate
+        else:  # executed after inner loop if no break
+            yield candidate

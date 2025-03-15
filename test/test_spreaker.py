@@ -20,9 +20,9 @@ class TestSpreaker(unittest.TestCase):
         self.config = config
         self.requests = mock.Mock()
         self.requests.get.return_value.json.return_value = episodes_with_titles([])
-        self.first_unknown = mock.Mock()
+        self.unknowns = mock.Mock()
         self.client = spreaker.Client(
-            config, requests=self.requests, first_unknown=self.first_unknown
+            config, requests=self.requests, unknowns=self.unknowns
         )
 
     def test_upload(self):
@@ -54,11 +54,11 @@ class TestSpreaker(unittest.TestCase):
             ),
         )
 
-    def test_fresh_headline(self):
+    def test_fresh_headlines(self):
         fresh = models.Headline(text="THE_TITLE", articles=[])
-        self.first_unknown.return_value = fresh.text
+        self.unknowns.return_value = iter([fresh.text])
 
-        response = self.client.fresh_headline([fresh])
+        response = next(self.client.fresh_headlines([fresh]))
 
         self.requests.get.assert_called_with(
             "THE_URL/v2/shows/0/episodes",
@@ -67,22 +67,22 @@ class TestSpreaker(unittest.TestCase):
             },
             params={"filter": "editable", "sorting": "oldest"},
         )
-        self.first_unknown.assert_called_with([fresh.text], [])
+        self.unknowns.assert_called_with([fresh.text], [])
         ham.assert_that(
             response, ham.equal_to(fresh), "The fresh headline should be chosen."
         )
 
-    def test_fresh_headline_multiple(self):
+    def test_fresh_headlines_multiple(self):
         headline_a = models.Headline(text="HEADLINE_A", articles=[])
         headline_b = models.Headline(text="HEADLINE_B", articles=[])
         self.requests.get.return_value.json.return_value = episodes_with_titles(
             ["EPISODE_C", "EPISODE_D"]
         )
-        self.first_unknown.return_value = headline_b.text
+        self.unknowns.return_value = iter([headline_b.text])
 
-        response = self.client.fresh_headline([headline_a, headline_b])
+        response = next(self.client.fresh_headlines([headline_a, headline_b]))
 
-        self.first_unknown.assert_called_with(
+        self.unknowns.assert_called_with(
             [headline_b.text, headline_a.text], ["EPISODE_C", "EPISODE_D"]
         )
         ham.assert_that(
@@ -91,25 +91,25 @@ class TestSpreaker(unittest.TestCase):
             "The oldest unknown headline should be chosen.",
         )
 
-    def test_fresh_headline_truncated(self):
+    def test_fresh_headlines_truncated(self):
         headline = models.Headline(text=("long" * self.config.title_limit), articles=[])
         assert len(headline.text) > self.config.title_limit
         truncated = self.client.truncate_episode_title(headline.text)
-        self.first_unknown.return_value = truncated
+        self.unknowns.return_value = iter([truncated])
 
-        response = self.client.fresh_headline([headline])
-        self.first_unknown.assert_called_with([truncated], [])
+        response = next(self.client.fresh_headlines([headline]))
+        self.unknowns.assert_called_with([truncated], [])
         ham.assert_that(
             response,
             ham.equal_to(headline),
             "The oldest unknown headline should be chosen.",
         )
 
-    def test_fresh_headline_all_stale(self):
+    def test_fresh_headlines_all_stale(self):
         stale = models.Headline(text="STALE", articles=[])
-        self.first_unknown.return_value = None
+        self.unknowns.return_value = iter([])
 
-        response = self.client.fresh_headline([stale])
+        response = next(self.client.fresh_headlines([stale]), None)
         ham.assert_that(
             response,
             ham.none(),

@@ -34,10 +34,10 @@ class VoiceProfile:
 VOICES = [
     VoiceProfile("en-US-Studio-O", "en-US", 0.85, -5.20),  # female
     VoiceProfile("en-US-Studio-Q", "en-US", 0.89, -8.00),  # male
-    VoiceProfile("en-GB-Studio-C", "en-GB", 0.93, -10.00), # female
-    VoiceProfile("en-GB-News-L",   "en-GB", 0.78, -4.00),  # male
-    VoiceProfile("en-AU-News-F",   "en-AU", 0.81, -3.60),  # female
-    VoiceProfile("en-AU-News-G",   "en-AU", 0.85, -3.20),  # male
+    VoiceProfile("en-GB-Studio-C", "en-GB", 0.93, -10.00),  # female
+    VoiceProfile("en-GB-News-L", "en-GB", 0.78, -4.00),  # male
+    VoiceProfile("en-AU-News-F", "en-AU", 0.81, -3.60),  # female
+    VoiceProfile("en-AU-News-G", "en-AU", 0.85, -3.20),  # male
     #    VoiceProfile("en-AU-Neural2-B", "en-au", 0.84, -5.20),
     #    VoiceProfile("en-AU-Neural2-C", "en-au", 0.85, -5.20),
     #    VoiceProfile("en-GB-Neural2-B", "en-gb", 0.85, -5.20),

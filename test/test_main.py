@@ -11,13 +11,15 @@ class TestNews(unittest.TestCase):
     def test_news(self):
         clients = Mock()
         stories = Mock()
+        headline = Mock()
+
+        clients.spreaker.fresh_headlines.return_value = iter([headline])
+
         main.generate_news(clients, stories=stories)
 
-        clients.spreaker.fresh_headline.assert_called_with(
+        clients.spreaker.fresh_headlines.assert_called_with(
             clients.wikipedia.headlines.return_value
         )
-
-        headline = clients.spreaker.fresh_headline.return_value
 
         stories.extract_story.assert_called_with(clients.wikipedia, headline)
         clients.tts.speak.assert_called_with(stories.extract_story.return_value)
@@ -33,7 +35,7 @@ class TestNews(unittest.TestCase):
     def test_news_no_fresh(self):
         clients = Mock()
         stories = Mock()
-        clients.spreaker.fresh_headline.return_value = None
+        clients.spreaker.fresh_headlines.return_value = iter([])
         main.generate_news(clients, stories)
 
         clients.tts.speak.assert_not_called()
@@ -98,6 +100,29 @@ class TestClientConfigs(unittest.TestCase):
                     ),
                 }
             ),
+        )
+
+    def test_news_extraction_fallback(self):
+        clients = Mock()
+        stories = Mock()
+        headline_a = Mock()
+        headline_b = Mock()
+        extracted_story = Mock()
+
+        clients.spreaker.fresh_headlines.return_value = iter([headline_a, headline_b])
+
+        stories.extract_story.side_effect = [KeyError(), extracted_story]
+
+        main.generate_news(clients, stories=stories)
+
+        stories.extract_story.assert_any_call(clients.wikipedia, headline_a)
+        stories.extract_story.assert_called_with(clients.wikipedia, headline_b)
+        clients.tts.speak.assert_called_with(extracted_story)
+        clients.wikipedia.describe.assert_called_with(extracted_story)
+        clients.spreaker.upload.assert_called_with(
+            title=headline_b.text,
+            audio=clients.tts.speak.return_value,
+            description=clients.wikipedia.describe.return_value,
         )
 
 

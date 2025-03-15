@@ -45,12 +45,16 @@ def generate_news_external(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
 
 def generate_news(clients, stories):
     headlines = clients.wikipedia.headlines()
-    fresh_headline = clients.spreaker.fresh_headline(headlines)
-
-    if fresh_headline is None:
+    for fresh_headline in clients.spreaker.fresh_headlines(headlines):
+        try:
+            story = stories.extract_story(clients.wikipedia, fresh_headline)
+            break  # found one that works
+        except Exception as e:
+            print(e)
+            continue  # keep trying
+    else:
         return {}
 
-    story = stories.extract_story(clients.wikipedia, fresh_headline)
     clients.spreaker.upload(
         title=fresh_headline.text,
         audio=clients.tts.speak(story),

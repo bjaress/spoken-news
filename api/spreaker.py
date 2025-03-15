@@ -9,10 +9,10 @@ ELLIPSIS = "..."
 
 
 class Client:
-    def __init__(self, config, requests=requests, first_unknown=similar.first_unknown):
+    def __init__(self, config, requests=requests, unknowns=similar.unknowns):
         self.requests = requests
         self.config = config
-        self.first_unknown = first_unknown
+        self.unknowns = unknowns
 
     def upload(self, title, audio, description):
         response = self.requests.post(
@@ -38,15 +38,17 @@ class Client:
         return response.json()["response"]["items"]
 
     def fresh_headline(self, headlines):
+        return next(self.fresh_headlines(headlines), None)
+
+    def fresh_headlines(self, headlines):
         episodes = [episode["title"] for episode in self._existing_episodes()]
         # in current Python versions, dicts are ordered
         potential_episodes = {
             self.truncate_episode_title(h.text): h for h in reversed(headlines)
         }
 
-        return potential_episodes.get(
-            self.first_unknown(list(potential_episodes.keys()), episodes)
-        )
+        for unknown_episode in self.unknowns(list(potential_episodes.keys()), episodes):
+            yield potential_episodes.get(unknown_episode)
 
     def truncate_episode_title(self, title):
         if len(title) > self.config.title_limit:
