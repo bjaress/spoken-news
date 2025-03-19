@@ -55,7 +55,6 @@ class Client:
         response.raise_for_status()
         parse = response.json()["parse"]
         html = parse["text"]["*"]
-        html = html_sanitizer.Sanitizer().sanitize(html)
         soup = BeautifulSoup(html, "html.parser")
         return soup, parse["revid"]
 
@@ -107,7 +106,10 @@ class Client:
             elif not past_boilerplate:
                 continue
 
-            text = self.html2text.handle(str(elem)).rstrip()
+            text = self.html2text.handle(
+                html_sanitizer.Sanitizer().sanitize(str(elem))
+            ).rstrip()
+
             if text.startswith("Cite error:"):
                 continue
 
@@ -198,7 +200,12 @@ if __name__ == "__main__":
             self.url = wikipedia_url
 
     page_url = sys.argv[1]
+    reference = reference_from_url(page_url)
     client = Client(DummyConfig("https://en.wikipedia.org"))
-    article = client.fetch_and_parse_article(reference_from_url(page_url))
-    print(f"{article.reference} {article.permalink_id}")
-    print("\n\n".join(article.summary))
+    if len(sys.argv) == 2:
+        article = client.fetch_and_parse_article(reference)
+        print(f"{article.reference} {article.permalink_id}")
+        print("\n\n".join(article.summary))
+    else:
+        section = int(sys.argv[2])
+        print(client.fetch_html(reference.title, section)[0])

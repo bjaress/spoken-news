@@ -54,4 +54,4 @@ $(deploy) : ./built/terraform.plan
 
 # manual spot-checking and debugging of wikipedia article scraping
 wikiscrape : $(docker_hash)
-	docker run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)"
+	docker run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)" $(SECTION)
