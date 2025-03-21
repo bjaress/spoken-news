@@ -77,8 +77,8 @@ class TestClient(unittest.TestCase):
                 "text": {
                     "*": """
                     <ul>
-                        <li>Goodby, World!</li>
                         <li>Hello, World!</li>
+                        <li><a href="/wiki/%25#%26">percent, ampersand</a></li>
                     </ul>
                     """
                 },
@@ -90,8 +90,20 @@ class TestClient(unittest.TestCase):
         ham.assert_that(
             headlines,
             ham.contains_exactly(
-                ham.has_property("text", "Goodby, World!"),
                 ham.has_property("text", "Hello, World!"),
+                ham.has_properties(
+                    {
+                        "text": "percent, ampersand",
+                        "articles": ham.contains_exactly(
+                            ham.has_properties(
+                                {
+                                    "title": "%",
+                                    "section": "&",
+                                }
+                            )
+                        ),
+                    }
+                ),
             ),
         )
 

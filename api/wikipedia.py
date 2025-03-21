@@ -183,8 +183,8 @@ def _pairs(text):
 def reference_from_url(url):
     parsed = parse.urlparse(url)
     return models.ArticleReference(
-        title=parsed.path.split("/")[-1],
-        section=parsed.fragment,
+        title=parse.unquote(parsed.path.split("/")[-1]),
+        section=parse.unquote(parsed.fragment),
     )
 
 
@@ -198,10 +198,21 @@ if __name__ == "__main__":
     class DummyConfig:
         def __init__(self, wikipedia_url):
             self.url = wikipedia_url
+            self.headlines_page = "Template:In_the_news"
+
+    client = Client(DummyConfig("https://en.wikipedia.org"))
+
+    # supply URL= to get a page
+    # supply SECTION= as a number to show raw HTML (as an #anchor to
+    # show a processed section)
+    # when nothing is supplied, shows headlines
+    if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
+        print(client.fetch_html(client.config.headlines_page))
+        print(client.headlines())
+        exit(0)
 
     page_url = sys.argv[1]
     reference = reference_from_url(page_url)
-    client = Client(DummyConfig("https://en.wikipedia.org"))
     if len(sys.argv) == 2:
         article = client.fetch_and_parse_article(reference)
         print(f"{article.reference} {article.permalink_id}")
