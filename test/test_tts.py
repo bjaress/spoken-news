@@ -40,8 +40,6 @@ class TestTtsClient(unittest.TestCase):
                             "audioConfig": h.has_entries(
                                 {
                                     "audioEncoding": "MP3",
-                                    "speakingRate": h.anything(),
-                                    "pitch": h.anything(),
                                 }
                             ),
                         }

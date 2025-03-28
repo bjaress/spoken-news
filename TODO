@@ -1,11 +1,3 @@
-[i] unpublished uploads
-  [x] publish delay in integration test
-    spreaker_publish_delay_minutes
-  [x] carry through to spreaker
-    auto_published_at=2020-04-20 18:00:00
-  [i] include flag in pubsub message
-[ ] "chirp" voices
-  [ ] all us, gb, au voices OK
 [ ] podcast on spotify
     [ ] spotify settings
     [ ] spreaker settings

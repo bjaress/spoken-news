@@ -10,11 +10,9 @@ import api.error
 
 
 class VoiceProfile:
-    def __init__(self, name, language, speed, pitch):
+    def __init__(self, name, language):
         self.name = name
         self.language = language
-        self.speed = speed
-        self.pitch = pitch
 
     def payload(self, text):
         return {
@@ -25,25 +23,35 @@ class VoiceProfile:
             },
             "audioConfig": {
                 "audioEncoding": "MP3",
-                "speakingRate": self.speed,
-                "pitch": self.pitch,
             },
         }
 
 
 VOICES = [
-    VoiceProfile("en-US-Studio-O", "en-US", 0.85, -5.20),  # female
-    VoiceProfile("en-US-Studio-Q", "en-US", 0.89, -8.00),  # male
-    VoiceProfile("en-GB-Studio-C", "en-GB", 0.93, -10.00),  # female
-    VoiceProfile("en-GB-News-L", "en-GB", 0.78, -4.00),  # male
-    VoiceProfile("en-AU-News-F", "en-AU", 0.86, -3.10),  # female
-    VoiceProfile("en-AU-News-G", "en-AU", 0.85, -3.20),  # male
-    #    VoiceProfile("en-AU-Neural2-B", "en-au", 0.84, -5.20),
-    #    VoiceProfile("en-AU-Neural2-C", "en-au", 0.85, -5.20),
-    #    VoiceProfile("en-GB-Neural2-B", "en-gb", 0.85, -5.20),
-    #    VoiceProfile("en-GB-Neural2-C", "en-gb", 0.90, -5.20),
-    #    VoiceProfile("en-US-Neural2-F", "en-us", 0.85, -5.20),
-    #    VoiceProfile("en-US-Neural2-J", "en-us", 0.85, -5.20),
+    VoiceProfile("en-US-Chirp3-HD-Aoede", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Charon", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Fenrir", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Kore", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Leda", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Orus", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Puck", "en-US"),
+    VoiceProfile("en-US-Chirp3-HD-Zephyr", "en-US"),
+    VoiceProfile("en-GB-Chirp3-HD-Aoede", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Charon", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Fenrir", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Kore", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Leda", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Orus", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Puck", "en-GB"),
+    VoiceProfile("en-GB-Chirp3-HD-Zephyr", "en-GB"),
+    VoiceProfile("en-AU-Chirp3-HD-Aoede", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Charon", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Fenrir", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Kore", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Leda", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Orus", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Puck", "en-AU"),
+    VoiceProfile("en-AU-Chirp3-HD-Zephyr", "en-AU"),
 ]
 
 
