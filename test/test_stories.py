@@ -55,6 +55,25 @@ class TestSimple(unittest.TestCase):
         text = story.text(self.tts_config)
         assert text == "INTRO\n\nHEADLINE\n\nSummary\n\ntext\n\nmore\n\nOUTRO", text
 
+    def test_sort_key_order(self):
+        assert sort_key("a") < sort_key("b")
+        assert sort_key("aa") > sort_key("b")
+        assert sort_key("aa") < sort_key("ab")
+
+        assert sort_key("a a") > sort_key("ab")
+        assert sort_key("a a") < sort_key("a b")
+        assert sort_key("a a") < sort_key("a b")
+
+        assert sort_key("a_a") > sort_key("ab")
+        assert sort_key("a_a") < sort_key("a_b")
+        assert sort_key("a_a") < sort_key("a_b")
+
+        assert sort_key("aaa") > sort_key("aa")
+        assert sort_key("aaa") < sort_key("a a")
+
+        assert sort_key("List of Hats") < sort_key("Hat")
+        assert sort_key("List_of_Hats") < sort_key("Hat")
+
 
 class TestTruncateStory(unittest.TestCase):
     def test_simple(self):
@@ -112,6 +131,12 @@ def mock_paragraphs(*paragraphs, id=0, title="Title"):
         permalink_id=id,
         reference=mock.Mock(title=title),
     )
+
+
+def sort_key(title):
+    article = mock.Mock()
+    article.reference.title = title
+    return stories.sort_key(article)
 
 
 class TestByteBudgeting(unittest.TestCase):

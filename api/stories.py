@@ -1,3 +1,5 @@
+import re
+
 SEPARATOR = "\n\n"
 
 
@@ -55,4 +57,9 @@ def include_if_room(
 
 def sort_key(article):
     title = article.reference.title
-    return (len(title.split()), len(title), title)
+    title_parts = re.split(r"[_\W]+", title)
+
+    # De-prioritize some Wikipedia articles
+    normal = not (title_parts[:2] == ["List", "of"])
+
+    return (normal, len(title_parts), len(title), title)
