@@ -4,6 +4,7 @@ import requests
 from inputs import SHOW_ID
 import json
 import email
+from datetime import datetime
 
 import data as d
 
@@ -103,7 +104,6 @@ def spreaker_upload(context, topic):
     response.raise_for_status()
     captured = response.json()["requests"][0]
     headers = captured["headers"]
-
     assert headers["Authorization"] == "Bearer DUMMY_TOKEN", headers
 
     msg = email.message_from_string(
@@ -116,6 +116,10 @@ def spreaker_upload(context, topic):
     assert fields["media_file"] == 'foo', msg # from BASE_64_MP3
     assert "CC BY-SA 4.0" in fields["description"], msg
     assert fields["title"] == context.topics[topic].headline_plain, (msg, context)
+
+    publish_time = datetime.strptime(fields["auto_published_at"], "%Y-%m-%d %H:%M:%S")
+    assert datetime.now() < publish_time
+
 
 @bhv.then("no episodes are uploaded to Spreaker")
 def spreaker_upload(context):

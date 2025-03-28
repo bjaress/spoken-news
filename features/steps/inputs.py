@@ -13,6 +13,7 @@ def trigger_app(context):
           "spreaker_show_id": SHOW_ID,
           "spreaker_title_limit": int(context.prop.spreaker.title_limit),
           "spreaker_age_limit": 30,
+          "spreaker_publish_delay_minutes": 60 * 24,
           "tts_api_key": "DUMMY_KEY",
           "tts_server": context.prop.google.url,
           "tts_length_limit": int(context.prop.tts.length_limit),
@@ -38,6 +39,7 @@ def cleanup(context, age_days):
         "show_id":  SHOW_ID,
         "title_limit":  context.prop.spreaker.title_limit,
         "age_limit":  age_days,
+        "publish_delay_minutes": 60 * 24,
         },
         "messageId": "blahblah"
       },

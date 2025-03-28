@@ -10,6 +10,7 @@ class SpreakerConfig(BaseModel):
     show_id: int
     title_limit: int
     age_limit: int
+    publish_delay_minutes: int
 
 
 class TtsConfig(BaseModel):
@@ -56,6 +57,7 @@ class Attributes(BaseModel):
     spreaker_show_id: int
     spreaker_title_limit: int
     spreaker_age_limit: int
+    spreaker_publish_delay_minutes: int
     tts_api_key: str
     tts_server: str
     tts_length_limit: int

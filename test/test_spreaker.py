@@ -17,6 +17,7 @@ class TestSpreaker(unittest.TestCase):
         config.token = "THE_TOKEN"
         config.show_id = 0
         config.title_limit = 50
+        config.publish_delay_minutes = 7
         self.config = config
         self.requests = mock.Mock()
         self.requests.get.return_value.json.return_value = episodes_with_titles([])
@@ -26,9 +27,12 @@ class TestSpreaker(unittest.TestCase):
         )
 
     def test_upload(self):
+        now = datetime.datetime.strptime(
+            "2000-01-01 00:00:00", spreaker.DATETIME_FORMAT
+        )
         self.requests.post.assert_not_called()
         self.client.upload(
-            title="THE_TITLE", audio=b"THE_AUDIO", description="THE_DESC"
+            title="THE_TITLE", audio=b"THE_AUDIO", description="THE_DESC", now=now
         )
 
         ham.assert_that(
@@ -48,6 +52,7 @@ class TestSpreaker(unittest.TestCase):
                         {
                             "title": "THE_TITLE",
                             "description": "THE_DESC",
+                            "auto_published_at": f"2000-01-01 00:{self.config.publish_delay_minutes:02d}:00",
                         }
                     ),
                 }

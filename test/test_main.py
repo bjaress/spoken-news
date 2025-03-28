@@ -62,6 +62,7 @@ DUMMY_ATTRIBUTES = {
     "spreaker_show_id": 1234,
     "spreaker_title_limit": 1234,
     "spreaker_age_limit": 30,
+    "spreaker_publish_delay_minutes": 60,
     "wikipedia_url": "THE_WIKIPEDIA_URL",
     "wikipedia_headlines_page": "THE_WIKIPEDIA_HEADLINES",
 }

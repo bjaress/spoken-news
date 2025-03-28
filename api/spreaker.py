@@ -7,6 +7,8 @@ import api.similar as similar
 
 ELLIPSIS = "..."
 
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 
 class Client:
     def __init__(self, config, requests=requests, unknowns=similar.unknowns):
@@ -14,7 +16,10 @@ class Client:
         self.config = config
         self.unknowns = unknowns
 
-    def upload(self, title, audio, description):
+    def upload(self, title, audio, description, now=None):
+        if now is None:
+            now = dt.datetime.now()
+        publish_time = now + dt.timedelta(minutes=self.config.publish_delay_minutes)
         response = self.requests.post(
             f"{self.config.url}/v2/shows/{self.config.show_id}/episodes",
             headers={
@@ -24,6 +29,7 @@ class Client:
             data={
                 "title": self.truncate_episode_title(title),
                 "description": description,
+                "auto_published_at": publish_time.strftime(DATETIME_FORMAT),
             },
         )
 
@@ -58,7 +64,7 @@ class Client:
     def cleanup(self, now):
         for episode in self._existing_episodes():
             published_at = dt.datetime.strptime(
-                episode["published_at"], "%Y-%m-%d %H:%M:%S"
+                episode["published_at"], DATETIME_FORMAT
             )
             episode_id = episode["episode_id"]
             if published_at < now - dt.timedelta(days=self.config.age_limit):

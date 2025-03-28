@@ -156,7 +156,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
   name        = "news-job"
   description = "trigger the news process"
 
-  schedule = "00 00 * * MON,TUE,WED,THU,FRI"
+  schedule = "00 23 * * SUN,MON,TUE,WED,THU"
   time_zone = "America/Los_Angeles"
 
   pubsub_target {
@@ -169,6 +169,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       spreaker_token = local.spreaker_access.access_token
       spreaker_title_limit = 140
       spreaker_age_limit = 140
+      spreaker_publish_delay_minutes = 60
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
       # 100k characters divided over a maximum of 23 weekdays in a month
@@ -198,6 +199,7 @@ resource "google_cloud_scheduler_job" "cleanup-job-scheduled" {
       token = local.spreaker_access.access_token
       title_limit = 140
       age_limit = 21
+      publish_delay_minutes = 60
     }
   }
 }
