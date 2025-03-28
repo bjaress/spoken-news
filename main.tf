@@ -172,8 +172,13 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       spreaker_publish_delay_minutes = 60
       tts_api_key = local.google_access.api_key
       tts_server = "https://texttospeech.googleapis.com"
-      # 100k characters divided over a maximum of 23 weekdays in a month
-      tts_length_limit = 4347
+      # The "Chirp HD" voices have a free tier of 10^6 characters per
+      # month.  At a maximum of 23 episodes per month, that's
+      # potentially over 40k characters per episode.
+      # However, the Google tts API sets a limit of 5k.  The voices
+      # speak at about 700 characters per minute, so that's about 7
+      # minutes
+      tts_length_limit = 5000
       tts_intro = "Welcome to Spoken News, I'm a computer.  The following information is from Wikipedia:"
       tts_outro = "Thanks for listening!  See the episode notes for details, including content licensing."
       wikipedia_url = "https://en.wikipedia.org"
