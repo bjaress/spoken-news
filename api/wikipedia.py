@@ -143,9 +143,7 @@ def permalink(base, title, id):
 def extract_headline(li_element):
     return models.Headline(
         text=remove_parenthesized(collapse(li_element.text)),
-        articles=[
-            reference_from_url(link["href"]) for link in li_element.select("a[href]")
-        ],
+        articles=[reference_from_link(link) for link in li_element.select("a[href]")],
     )
 
 
@@ -185,7 +183,14 @@ def reference_from_url(url):
     return models.ArticleReference(
         title=parse.unquote(parsed.path.split("/")[-1]),
         section=parse.unquote(parsed.fragment),
+        featured=False,
     )
+
+
+def reference_from_link(link):
+    reference = reference_from_url(link["href"])
+    reference.featured = link.parent.name == "b"
+    return reference
 
 
 def collapse(string):

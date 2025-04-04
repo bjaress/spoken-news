@@ -28,7 +28,7 @@ class TestClient(unittest.TestCase):
                     "*": """
                     <ul>
                         <li><a href="/wiki/Greeting#Hello">Hello</a>,
-                        <a href="/wiki/Earth">World</a>! (ignore this)</li>
+                        <b><a href="/wiki/Earth">World</a></b>! (ignore this)</li>
                     </ul>
                     """
                 },
@@ -60,9 +60,15 @@ class TestClient(unittest.TestCase):
                                 {
                                     "title": "Greeting",
                                     "section": "Hello",
+                                    "featured": False,
                                 }
                             ),
-                            ham.has_properties({"title": "Earth"}),
+                            ham.has_properties(
+                                {
+                                    "title": "Earth",
+                                    "featured": True,
+                                }
+                            ),
                         ),
                     }
                 )
@@ -240,7 +246,9 @@ class TestHtmlHandling(unittest.TestCase):
             }
         }
         id = self.client.section_index_for_reference(
-            models.ArticleReference(title="The_Title", section="Cool_section")
+            models.ArticleReference(
+                title="The_Title", section="Cool_section", featured=False
+            )
         )
 
         self.requests.get.assert_called_once_with(
@@ -257,7 +265,7 @@ class TestHtmlHandling(unittest.TestCase):
 
     def test_section_index_for_reference_default(self):
         id = self.client.section_index_for_reference(
-            models.ArticleReference(title="The_Title")
+            models.ArticleReference(title="The_Title", featured=False)
         )
         ham.assert_that(id, ham.equal_to(0))
 
@@ -266,7 +274,9 @@ class TestHtmlHandling(unittest.TestCase):
         self.client.section_index_for_reference = mock.MagicMock()
         self.client.extract_text_chunks = mock.MagicMock()
 
-        reference = models.ArticleReference(title="The_Title", section="Cool_section")
+        reference = models.ArticleReference(
+            title="The_Title", section="Cool_section", featured=False
+        )
         self.client.fetch_html.return_value = ("soup", 1234)
         self.client.extract_text_chunks.return_value = ["some text"]
         article = self.client.fetch_and_parse_article(reference)

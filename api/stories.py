@@ -59,7 +59,8 @@ def sort_key(article):
     title = article.reference.title
     title_parts = re.split(r"[_\W]+", title)
 
-    # De-prioritize some Wikipedia articles
+    # Prioritize and de-prioritize some Wikipedia articles
     normal = not (title_parts[:2] == ["List", "of"])
+    rank = normal + article.reference.featured
 
-    return (normal, len(title_parts), len(title), title)
+    return (rank, len(title_parts), len(title), title)

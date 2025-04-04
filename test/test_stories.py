@@ -14,7 +14,7 @@ class TestSimple(unittest.TestCase):
 
     def test_extraction(self):
         client = mock.MagicMock()
-        reference = models.ArticleReference(title="Foo")
+        reference = models.ArticleReference(title="Foo", featured=False)
         headline = models.Headline(
             text="HEADLINE_TEXT",
             articles=[reference],
@@ -50,10 +50,14 @@ class TestSimple(unittest.TestCase):
                 mock_paragraphs("more", title="Foo"),
                 # word count dominates length count
                 mock_paragraphs("Summary", title="F B B"),
+                # featured articles should go first
+                mock_paragraphs("featured", title="featured", featured=True),
             ],
         )
         text = story.text(self.tts_config)
-        assert text == "INTRO\n\nHEADLINE\n\nSummary\n\ntext\n\nmore\n\nOUTRO", text
+        assert (
+            text == "INTRO\n\nHEADLINE\n\nfeatured\n\nSummary\n\ntext\n\nmore\n\nOUTRO"
+        ), text
 
     def test_sort_key_order(self):
         assert sort_key("a") < sort_key("b")
@@ -73,6 +77,8 @@ class TestSimple(unittest.TestCase):
 
         assert sort_key("List of Hats") < sort_key("Hat")
         assert sort_key("List_of_Hats") < sort_key("Hat")
+
+        assert sort_key("b b b") < sort_key("a", featured=True)
 
 
 class TestTruncateStory(unittest.TestCase):
@@ -125,17 +131,18 @@ class TestTruncateStory(unittest.TestCase):
         assert text == a_only, text
 
 
-def mock_paragraphs(*paragraphs, id=0, title="Title"):
+def mock_paragraphs(*paragraphs, id=0, title="Title", featured=False):
     return mock.Mock(
         summary=paragraphs,
         permalink_id=id,
-        reference=mock.Mock(title=title),
+        reference=mock.Mock(title=title, featured=featured),
     )
 
 
-def sort_key(title):
+def sort_key(title, featured=False):
     article = mock.Mock()
     article.reference.title = title
+    article.reference.featured = featured
     return stories.sort_key(article)
 
 

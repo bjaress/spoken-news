@@ -1,6 +1,7 @@
-[ ] podcast on spotify
-    [ ] spotify settings
-    [ ] spreaker settings
+[i] bolded articles first
+  [x] capture boldness
+    [x] model field
+  [i] use in ordering
 [ ] consider sections when ordering articles within story
 [ ] iTunes
 [ ] upgrade/remove libraries (Pydantic?)

@@ -35,6 +35,7 @@ class Config(BaseModel):
 class ArticleReference(BaseModel):
     title: str
     section: typing.Optional[str]
+    featured: bool
 
 
 class Headline(BaseModel):
