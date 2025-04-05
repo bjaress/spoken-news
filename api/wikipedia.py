@@ -126,7 +126,7 @@ class Client:
                 for id, reference in story.permalink_ids().items()
             ),
         )
-        return "\n\n".join(parts)
+        return "\n \n".join(parts)
 
 
 def permalink(base, title, id):
