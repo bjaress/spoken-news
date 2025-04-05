@@ -1,17 +1,8 @@
-[i] bolded articles first
-  [x] capture boldness
-    [x] model field
-  [i] use in ordering
+[i] better episode description
+  [ ] include headline
+  [ ] license at bottom
 [ ] consider sections when ordering articles within story
 [ ] iTunes
-[ ] upgrade/remove libraries (Pydantic?)
-[ ] upload in preview mode
-    [ ] config flag (in terraform)
-    [ ] flag controls uploading to spreaker in preview mode
+[ ] upgrade libraries (Pydantic?)
 [ ] Audible
-[ ] re-assess voices
-[ ] podcast on youtube
-    [ ] channel
-    [ ] spreaker settings
 [ ] better error handling
-[ ] exclude "list of" articles

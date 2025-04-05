@@ -118,11 +118,15 @@ class Client:
 
     def describe(self, story):
         notice = " ".join(LICENSE_NOTICE.split())
-        parts = notice, *(
-            permalink(f"{self.config.url}{PERMALINK_PATH}", reference.title, id)
-            for id, reference in story.permalink_ids().items()
+        parts = (
+            story.headline,
+            notice,
+            *(
+                permalink(f"{self.config.url}{PERMALINK_PATH}", reference.title, id)
+                for id, reference in story.permalink_ids().items()
+            ),
         )
-        return "\n".join(parts)
+        return "\n\n".join(parts)
 
 
 def permalink(base, title, id):

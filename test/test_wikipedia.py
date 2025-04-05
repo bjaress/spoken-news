@@ -119,7 +119,9 @@ class TestClient(unittest.TestCase):
             123: mock.Mock(title="a"),
             456: mock.Mock(title="b"),
         }
+        story.headline = "HEADLINE"
         expected = [
+            "HEADLINE",
             "https://creativecommons.org/licenses/by-sa/4.0/",
             "oldid=123",
             "oldid=456",
