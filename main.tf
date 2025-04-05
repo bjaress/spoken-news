@@ -156,7 +156,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
   name        = "news-job"
   description = "trigger the news process"
 
-  schedule = "00 23 * * SUN,MON,TUE,WED,THU"
+  schedule = "00 05 * * MON,TUE,WED,THU,FRI"
   time_zone = "America/Los_Angeles"
 
   pubsub_target {
