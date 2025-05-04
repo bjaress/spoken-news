@@ -1,5 +1,28 @@
 [x] update intro, outro
-[ ] include recent deaths
+[x] include recent deaths
+  [x] integration test
+    [x] RD section of headlines page
+      <div>
+        <b><a href="/wiki/Deaths_in_2025" title="Deaths in 2025">Recent deaths</a></b>:
+        <link href="mw-data:TemplateStyles:r1129693374" rel="mw-deduplicated-inline-style"/>
+        <div class="hlist inline">
+          <ul>
+            <li><a href="/wiki/Kari_L%C3%B8vaas" title="Kari Løvaas">Kari Løvaas</a></li>
+          </ul>
+        </div>
+      </div>
+    [x] ignore RD in favor of regular headlines
+      [x] pass
+    [x] use RD when headlines are old
+      [x] expected failure
+  [x] unit test:
+    [x] regular headlines and RD
+      [x] mock both on page
+      [x] confirm both included in story list
+    [x] pass
+      css selector for div:
+        div:where(b:first-child a:first-child[href^="/wiki/Deaths_in_"])
+  [x] pass integration tests
 [ ] weighted dialect selection
 [ ] dynamic voice list
 [ ] consider sections when ordering articles within story

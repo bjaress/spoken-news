@@ -16,6 +16,19 @@ def news_frogs(context):
     )
     d.sync(context)
 
+@given("there is a recent death of John Doe")
+def death_doe(context):
+    d.topics(context)["john"] = d.NewsItem(
+        type="death",
+        headline_html="""<a href='/wiki/John_Doe'>John Doe</a>""",
+        headline_plain="""John Doe dies.""",
+        John_Doe=d.Article(
+            plain="""John Doe was a generic pseudonym.""",
+            html="""<p>John Doe was a generic pseudonym.</p>""",
+        ),
+    )
+    d.sync(context)
+
 @bhv.given("there is a news item about bananas that links to a section")
 def news_bananas(context):
     d.topics(context)["bananas"] = d.NewsItem(

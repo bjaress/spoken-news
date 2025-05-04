@@ -36,8 +36,18 @@ class Client:
     def headlines(self):
         soup, _ = self.fetch_html(self.config.headlines_page)
 
-        headlines = [extract_headline(item) for item in soup.ul.find_all("li")]
-        return headlines
+        news = [extract_headline(item) for item in soup.ul.find_all("li")]
+
+        death_soups = soup.select(
+            'div:has(b:first-child a:first-child[href^="/wiki/Deaths_in_"])'
+        )
+        deaths = [
+            extract_death(item)
+            for ds in death_soups
+            for item in ds.select("li a[href]")
+        ]
+
+        return deaths + news
 
     def fetch_html(self, title, id=0):
         response = self.requests.get(
@@ -148,6 +158,13 @@ def extract_headline(li_element):
     return models.Headline(
         text=remove_parenthesized(collapse(li_element.text)),
         articles=[reference_from_link(link) for link in li_element.select("a[href]")],
+    )
+
+
+def extract_death(link_element):
+    return models.Headline(
+        text=collapse(link_element.text + " dies."),
+        articles=[reference_from_link(link_element)],
     )
 
 

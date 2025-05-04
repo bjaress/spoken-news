@@ -26,10 +26,21 @@ class TestClient(unittest.TestCase):
                 "revid": 1234,
                 "text": {
                     "*": """
+                    <div>
                     <ul>
                         <li><a href="/wiki/Greeting#Hello">Hello</a>,
                         <b><a href="/wiki/Earth">World</a></b>! (ignore this)</li>
                     </ul>
+                    </div>
+                    <div>
+                        <b><a href="/wiki/Deaths_in_1492">Recent-ish deaths</a></b>:
+                        <div>
+                            <ul>
+                                <li><a href="/wiki/Alice_Smith">Alice
+                                Smith</a></li>
+                            </ul>
+                        </div>
+                    </div>
                     """
                 },
             }
@@ -54,6 +65,19 @@ class TestClient(unittest.TestCase):
             ham.contains_exactly(
                 ham.has_properties(
                     {
+                        "text": "Alice Smith dies.",
+                        "articles": ham.contains_exactly(
+                            ham.has_properties(
+                                {
+                                    "title": "Alice_Smith",
+                                    "featured": False,
+                                }
+                            ),
+                        ),
+                    }
+                ),
+                ham.has_properties(
+                    {
                         "text": "Hello, World!",
                         "articles": ham.contains_exactly(
                             ham.has_properties(
@@ -71,7 +95,7 @@ class TestClient(unittest.TestCase):
                             ),
                         ),
                     }
-                )
+                ),
             ),
         )
 

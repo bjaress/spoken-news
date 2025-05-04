@@ -67,3 +67,24 @@ Feature: speaking the news
     And the episode list from Spreaker is retrieved
     And no scripts are sent for text-to-speech processing
     And no episodes are uploaded to Spreaker
+
+  Scenario: Recent deaths, ignored
+    Given there is a simple news item about frogs
+    And there is a recent death of John Doe
+    When it is time to generate news
+    Then headlines are retrieved from Wikipedia
+    And the episode list from Spreaker is retrieved
+    And Wikipedia articles about frogs are retrieved
+    And a script about frogs is sent for text-to-speech processing
+    And an episode about frogs is uploaded to Spreaker
+
+  Scenario: Recent deaths used when news topics already have episodes
+    Given there is a 10 day old episode about frogs
+    And there is a simple news item about frogs
+    And there is a recent death of John Doe
+    When it is time to generate news
+    Then headlines are retrieved from Wikipedia
+    And the episode list from Spreaker is retrieved
+    And Wikipedia articles about john are retrieved
+    And a script about john is sent for text-to-speech processing
+    And an episode about john is uploaded to Spreaker

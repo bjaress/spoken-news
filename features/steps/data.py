@@ -127,8 +127,22 @@ def sync_headlines(context):
 
 
 def headlines_html(context):
-    inner = "</li><li>".join(item.headline_html for item in topics(context).values())
-    return f"<div><ul><li>{inner}</li></ul></div>"
+    news_inner = "</li><li>".join(
+        item.headline_html for item in topics(context).values() if item.type == "news")
+    deaths_inner = "</li><li>".join(
+        item.headline_html for item in topics(context).values() if item.type == "death")
+    return f"""
+        <div><ul><li>{news_inner}</li></ul></div>
+        <div>
+          <b><a href="/wiki/Deaths_in_1776" title="Deaths in 2049">Recent deaths</a></b>:
+          <link href="mw-data:TemplateStyles:r1129693374" rel="mw-deduplicated-inline-style"/>
+          <div class="hlist inline">
+            <ul>
+              <li>{deaths_inner}</li>
+            </ul>
+          </div>
+        </div>
+        """
 
 
 
@@ -161,10 +175,11 @@ def mp3(context):
 
 
 class NewsItem:
-    def __init__(self, headline_html, headline_plain, **articles):
+    def __init__(self, headline_html, headline_plain, type="news", **articles):
         self.headline_html = headline_html
         self.headline_plain = headline_plain
         self.articles = articles
+        self.type = type
 
 class Article:
     def __init__(self, plain, html, section_title=None):
