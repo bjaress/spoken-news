@@ -177,10 +177,10 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       # potentially over 40k characters per episode.
       # However, the Google tts API sets a limit of 5k.  The voices
       # speak at about 700 characters per minute, so that's about 7
-      # minutes
+      # minutes max.
       tts_length_limit = 5000
-      tts_intro = "Welcome to Spoken News, I'm a computer.  The following information is from Wikipedia:"
-      tts_outro = "Thanks for listening!  See the episode notes for details, including content licensing."
+      tts_intro = "Welcome to Spoken News! I'm a computer."
+      tts_outro = "That's it for now! See the episode notes for Wikipedia sources and licensing. Thanks!"
       wikipedia_url = "https://en.wikipedia.org"
       wikipedia_headlines_page = "Template:In_the_news"
     }

@@ -1,3 +1,7 @@
+[x] update intro, outro
+[ ] include recent deaths
+[ ] weighted dialect selection
+[ ] dynamic voice list
 [ ] consider sections when ordering articles within story
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)
