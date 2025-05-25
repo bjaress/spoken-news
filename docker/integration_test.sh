@@ -1,10 +1,12 @@
 #! /bin/bash
 
 set -x
+container_tool="$1"
+shift
 outfile="$1"
 
 up() {
-  podman-compose -f docker/docker-compose.yml up \
+  "${container_tool}"-compose -f docker/docker-compose.yml up \
     --build \
     --remove-orphans \
     --exit-code-from app-tests \
@@ -12,11 +14,11 @@ up() {
 }
 
 down() {
-  podman-compose -f docker/docker-compose.yml down --remove-orphans
+  "${container_tool}"-compose -f docker/docker-compose.yml down --remove-orphans
 }
 
 save_logs() {
-  podman-compose -f docker/docker-compose.yml logs --names > "$outfile"
+  "${container_tool}"-compose -f docker/docker-compose.yml logs --names > "$outfile"
   down
 }
 

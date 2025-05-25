@@ -12,6 +12,8 @@ deploy=./built/terraform.backup
 
 .PHONY : test deploy clean wikiscrape
 
+container_tool=docker
+
 test : $(test_log)
 
 clean :
@@ -19,14 +21,14 @@ clean :
 
 $(test_log) : docker/docker-compose.yml docker/Dockerfile.tests \
 		$(features) $(docker_hash)
-	docker/integration_test.sh $@
+	docker/integration_test.sh $(container_tool) $@
 	echo '\n\n' ; grep 'app-test.*[0-9]\+ failed, [0-9]\+ skipped' $@|sed 's/^[^ ]*//'
 
 
 
 $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
 		requirements.txt requirements-dev.txt .dockerignore
-	podman build --iidfile $(docker_hash) --file docker/Dockerfile .
+	$(container_tool) build --iidfile $(docker_hash) --file docker/Dockerfile .
 	# Allow building on a with uncommitted changes, but don't tag for push unless
 	# it's clean.
 	[ -z "`git status --porcelain`" ] \
@@ -48,10 +50,10 @@ $(deploy) : ./built/terraform.plan
 	# Fail on missing tag (due to uncommitted changes during docker build)
 	[ -n "`cat $(docker_tag)`" ] || ( rm $(docker_tag) ; exit 1 )
 
-	podman tag `cat $(docker_hash)` $(docker_name):`cat $(docker_tag)`
+	$(container_tool) tag `cat $(docker_hash)` $(docker_name):`cat $(docker_tag)`
 	PATH="${PWD}/docker:${PATH}" docker --debug --config docker push \
 		"$(docker_name):`cat $(docker_tag)`" | tee $@
 
 # manual spot-checking and debugging of wikipedia article scraping
 wikiscrape : $(docker_hash)
-	podman run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)" $(SECTION)
+	$(container_tool) run --entrypoint "python" `cat $(docker_hash)` -m api.wikipedia "$(URL)" $(SECTION)
