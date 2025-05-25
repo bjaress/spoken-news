@@ -337,6 +337,7 @@ class TestHtmlHandling(unittest.TestCase):
             <em>Four</em> <strong>five</strong>.
             <a href="/wiki/Wikipedia:Disputed_statement">[omit this]</a>
             <a href="/wiki/Help:Cite_errors">[omit this]</a>
+            <span class="error"> also [omit this]</span>
         </p>
         <p>Cite error: omit this</p>
         <ul>
