@@ -137,6 +137,41 @@ class TestClient(unittest.TestCase):
             ),
         )
 
+    def test_headlines_slash(self):
+
+        self.requests.get.return_value.json.return_value = {
+            "parse": {
+                "revid": 1234,
+                "text": {
+                    "*": """
+                    <ul>
+                        <li><a href="/wiki/I3/ATLAS">a comet</a></li>
+                    </ul>
+                    """
+                },
+            }
+        }
+
+        headlines = self.client.headlines()
+
+        ham.assert_that(
+            headlines,
+            ham.contains_exactly(
+                ham.has_properties(
+                    {
+                        "text": "a comet",
+                        "articles": ham.contains_exactly(
+                            ham.has_properties(
+                                {
+                                    "title": "I3/ATLAS",
+                                }
+                            )
+                        ),
+                    }
+                ),
+            ),
+        )
+
     def test_describe_story(self):
         story = mock.Mock()
         story.permalink_ids.return_value = {

@@ -88,3 +88,12 @@ Feature: speaking the news
     And Wikipedia articles about john are retrieved
     And a script about john is sent for text-to-speech processing
     And an episode about john is uploaded to Spreaker
+
+  Scenario: Article with slash in the title
+    Given there is a news item about comets
+    When it is time to generate news
+    Then headlines are retrieved from Wikipedia
+    And the episode list from Spreaker is retrieved
+    And Wikipedia articles about comets are retrieved
+    And a script about comets is sent for text-to-speech processing
+    And an episode about comets is uploaded to Spreaker

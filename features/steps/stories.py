@@ -83,3 +83,15 @@ def old_episode(context, age_days, topic):
         age_days=age_days,
         topic=topic))
     d.sync(context)
+
+@bhv.given("there is a news item about comets")
+def news_comets(context):
+    d.topics(context)["comets"] = d.NewsItem(
+        headline_html="""A <a href='/wiki/3I/ATLAS'>comet</a> said hi.""",
+        headline_plain="""A comet said hi.""",
+        **{"3I/ATLAS": d.Article(
+            plain="""A comet is a type of object.""",
+            html="""<p>A comet is a type of object.</p>""",
+        )},
+    )
+    d.sync(context)

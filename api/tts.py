@@ -26,6 +26,9 @@ class VoiceProfile:
             },
         }
 
+    def __str__(self):
+        return f"VoiceProfile({self.name}, {self.language})"
+
 
 VOICES = [
     VoiceProfile("en-US-Chirp3-HD-Aoede", "en-US"),
@@ -54,6 +57,20 @@ VOICES = [
     VoiceProfile("en-AU-Chirp3-HD-Zephyr", "en-AU"),
 ]
 
+POPULATION = {
+    "en-GB": 66,
+    "en-AU": 27,
+    "en-US": 340,
+}
+
+
+def pick_voice():
+    return random.choices(
+        VOICES,
+        [POPULATION.get(v.language, min(POPULATION.values())) for v in VOICES],
+        k=1,
+    )[0]
+
 
 class Client:
     def __init__(self, config, requests=requests):
@@ -62,9 +79,11 @@ class Client:
         self.config = config
 
     def speak(self, story):
+        voice = random.choice(VOICES)
+        logging.info(voice)
         response = self.requests.post(
             url=self.url,
-            json=random.choice(VOICES).payload(story.text(self.config)),
+            json=voice.payload(story.text(self.config)),
         )
         api.error.check_response(response)
         return base64.b64decode(response.json()["audioContent"])

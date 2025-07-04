@@ -202,7 +202,7 @@ def _pairs(text):
 def reference_from_url(url):
     parsed = parse.urlparse(url)
     return models.ArticleReference(
-        title=parse.unquote(parsed.path.split("/")[-1]),
+        title=parse.unquote(parsed.path.split("/wiki/")[-1]),
         section=parse.unquote(parsed.fragment),
         featured=False,
     )
