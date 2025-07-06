@@ -1,6 +1,7 @@
 import requests
 import base64
 import random
+import collections
 
 # https://cloud.google.com/text-to-speech/docs/basics
 
@@ -58,6 +59,7 @@ VOICES = [
 ]
 
 POPULATION = {
+    # millions of people in primary country
     "en-GB": 66,
     "en-AU": 27,
     "en-US": 340,
@@ -65,9 +67,10 @@ POPULATION = {
 
 
 def pick_voice():
+    counts = collections.Counter(v.language for v in VOICES)
     return random.choices(
         VOICES,
-        [POPULATION.get(v.language, min(POPULATION.values())) for v in VOICES],
+        [POPULATION.get(v.language, 1) / counts[v.language] for v in VOICES],
         k=1,
     )[0]
 
