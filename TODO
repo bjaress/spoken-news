@@ -1,16 +1,10 @@
-[i] better citation removal
-  https://en.m.wikipedia.org/wiki/Treatment_of_women_by_the_Taliban
-  <sup class="reference" id="cite_ref-physicians_8-0"><a
-  href="#cite_note-physicians-8"><span
-  class="cite-bracket">[</span>8<span
-  class="cite-bracket">]</span></a></sup><sup class="reference
-  nowrap"><span title="Page / location: 12,
-  31–32">: 12, 31–32 </span></sup><sup class="reference"
-  id="cite_ref-9"><a href="#cite_note-9"><span
-  class="cite-bracket">[</span>9<span
-  class="cite-bracket">]</span></a></sup>
-[ ] include death section when reporting recent death
+[x] better citation removal
+[i] fix headline list
+  [x] bug: reporting that everything "dies"
+  [i] return it in the order we want to use it
+[i] include death section when reporting recent death
   section title ends with "\<death"?
+  lazy parse deaths, since they involve fetching section list
 [ ] skip stories with very little text (unless there's nothing beter)
   400-ish characters at least?
   just keep going until one is long enough, or use the longest

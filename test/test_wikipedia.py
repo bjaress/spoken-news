@@ -40,6 +40,11 @@ class TestClient(unittest.TestCase):
                                 Smith</a></li>
                             </ul>
                         </div>
+                        <ul>
+                            <li>
+                                <a href="/wiki/IgnoreThis">Ignore This</a>
+                            </li>
+                        </ul>
                     </div>
                     """
                 },

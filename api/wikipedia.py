@@ -38,14 +38,10 @@ class Client:
 
         news = [extract_headline(item) for item in soup.ul.find_all("li")]
 
-        death_soups = soup.select(
-            'div:has(b:first-child a:first-child[href^="/wiki/Deaths_in_"])'
+        death_links = soup.select(
+            'b:first-child:has(a:first-child[href^="/wiki/Deaths_in_"]) ~ div a[href]'
         )
-        deaths = [
-            extract_death(item)
-            for ds in death_soups
-            for item in ds.select("li a[href]")
-        ]
+        deaths = [extract_death(link) for link in death_links]
 
         return deaths + news
 
