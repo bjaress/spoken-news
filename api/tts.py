@@ -37,7 +37,7 @@ VOICES = [
     VoiceProfile("en-US-Chirp3-HD-Fenrir", "en-US"),
     VoiceProfile("en-US-Chirp3-HD-Kore", "en-US"),
     VoiceProfile("en-US-Chirp3-HD-Leda", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Orus", "en-US"),
+    # VoiceProfile("en-US-Chirp3-HD-Orus", "en-US"),
     VoiceProfile("en-US-Chirp3-HD-Puck", "en-US"),
     VoiceProfile("en-US-Chirp3-HD-Zephyr", "en-US"),
     VoiceProfile("en-GB-Chirp3-HD-Aoede", "en-GB"),

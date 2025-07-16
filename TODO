@@ -1,4 +1,8 @@
-[ ] consider sections when ordering articles within story
+[ ] better citation removal
+  https://en.m.wikipedia.org/wiki/Treatment_of_women_by_the_Taliban
+[ ] include death section when reporting recent death
+  section title ends with "\<death"?
+[ ] consider section title when ordering articles within story
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)
 [ ] Audible
