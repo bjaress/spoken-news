@@ -108,7 +108,7 @@ class Client:
             if len(elem.select('a[href*="cite_ref-"]')):
                 continue
             # remove metadata
-            for cite in elem.select('a[href*="cite_note-"], a[href*=":"], .error'):
+            for cite in elem.select('sup.reference, a[href*=":"], .error'):
                 cite.clear()
             # skip to first real paragraph
             if elem.name == "p" and "." in " ".join(elem.strings):

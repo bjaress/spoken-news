@@ -366,9 +366,11 @@ class TestHtmlHandling(unittest.TestCase):
         <ul><li>omit this</li></ul>
         <p>omit this</p>
         <p>One two <a
-            href="ignore url" title="ignore title">three</a>.<sup><a
+            href="ignore url" title="ignore title">three</a>.<sup class="reference"><a
             href="#cite_note-2">[2]</a><a
-            href="#cite_note-3">[3]</a></sup>
+            href="#cite_note-3">[3]</a>
+            arbitrary stuff to remove
+            </sup>
             <em>Four</em> <strong>five</strong>.
             <a href="/wiki/Wikipedia:Disputed_statement">[omit this]</a>
             <a href="/wiki/Help:Cite_errors">[omit this]</a>
