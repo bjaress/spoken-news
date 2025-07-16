@@ -43,7 +43,7 @@ class Client:
         )
         deaths = [extract_death(link) for link in death_links]
 
-        return deaths + news
+        return reversed(deaths + news)
 
     def fetch_html(self, title, id=0):
         response = self.requests.get(

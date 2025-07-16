@@ -49,9 +49,7 @@ class Client:
     def fresh_headlines(self, headlines):
         episodes = [episode["title"] for episode in self._existing_episodes()]
         # in current Python versions, dicts are ordered
-        potential_episodes = {
-            self.truncate_episode_title(h.text): h for h in reversed(headlines)
-        }
+        potential_episodes = {self.truncate_episode_title(h.text): h for h in headlines}
 
         for unknown_episode in self.unknowns(list(potential_episodes.keys()), episodes):
             yield potential_episodes.get(unknown_episode)

@@ -1,7 +1,7 @@
 [x] better citation removal
-[i] fix headline list
+[x] fix headline list
   [x] bug: reporting that everything "dies"
-  [i] return it in the order we want to use it
+  [x] return it in the order we want to use it
 [i] include death section when reporting recent death
   section title ends with "\<death"?
   lazy parse deaths, since they involve fetching section list

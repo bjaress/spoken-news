@@ -70,19 +70,6 @@ class TestClient(unittest.TestCase):
             ham.contains_exactly(
                 ham.has_properties(
                     {
-                        "text": "Alice Smith dies.",
-                        "articles": ham.contains_exactly(
-                            ham.has_properties(
-                                {
-                                    "title": "Alice_Smith",
-                                    "featured": False,
-                                }
-                            ),
-                        ),
-                    }
-                ),
-                ham.has_properties(
-                    {
                         "text": "Hello, World!",
                         "articles": ham.contains_exactly(
                             ham.has_properties(
@@ -96,6 +83,19 @@ class TestClient(unittest.TestCase):
                                 {
                                     "title": "Earth",
                                     "featured": True,
+                                }
+                            ),
+                        ),
+                    }
+                ),
+                ham.has_properties(
+                    {
+                        "text": "Alice Smith dies.",
+                        "articles": ham.contains_exactly(
+                            ham.has_properties(
+                                {
+                                    "title": "Alice_Smith",
+                                    "featured": False,
                                 }
                             ),
                         ),
@@ -125,7 +125,6 @@ class TestClient(unittest.TestCase):
         ham.assert_that(
             headlines,
             ham.contains_exactly(
-                ham.has_property("text", "Hello, World!"),
                 ham.has_properties(
                     {
                         "text": "percent, ampersand",
@@ -139,6 +138,7 @@ class TestClient(unittest.TestCase):
                         ),
                     }
                 ),
+                ham.has_property("text", "Hello, World!"),
             ),
         )
 

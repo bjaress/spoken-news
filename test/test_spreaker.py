@@ -80,20 +80,24 @@ class TestSpreaker(unittest.TestCase):
     def test_fresh_headlines_multiple(self):
         headline_a = models.Headline(text="HEADLINE_A", articles=[])
         headline_b = models.Headline(text="HEADLINE_B", articles=[])
+        headline_c = models.Headline(text="HEADLINE_C", articles=[])
         self.requests.get.return_value.json.return_value = episodes_with_titles(
-            ["EPISODE_C", "EPISODE_D"]
+            ["EPISODE_A", "EPISODE_D"]
         )
         self.unknowns.return_value = iter([headline_b.text])
 
-        response = next(self.client.fresh_headlines([headline_a, headline_b]))
+        response = next(
+            self.client.fresh_headlines([headline_a, headline_b, headline_c])
+        )
 
         self.unknowns.assert_called_with(
-            [headline_b.text, headline_a.text], ["EPISODE_C", "EPISODE_D"]
+            [headline_a.text, headline_b.text, headline_c.text],
+            ["EPISODE_A", "EPISODE_D"],
         )
         ham.assert_that(
             response,
             ham.equal_to(headline_b),
-            "The oldest unknown headline should be chosen.",
+            "The first unknown headline should be chosen.",
         )
 
     def test_fresh_headlines_truncated(self):
@@ -107,7 +111,7 @@ class TestSpreaker(unittest.TestCase):
         ham.assert_that(
             response,
             ham.equal_to(headline),
-            "The oldest unknown headline should be chosen.",
+            "The first unknown headline should be chosen.",
         )
 
     def test_fresh_headlines_all_stale(self):
