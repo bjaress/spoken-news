@@ -1,14 +1,14 @@
-[x] better citation removal
-[x] fix headline list
-  [x] bug: reporting that everything "dies"
-  [x] return it in the order we want to use it
-[i] include death section when reporting recent death
+[ ] consider section title when ordering articles within story
+[ ] include death section when reporting recent death
+  intro is featured
   section title ends with "\<death"?
+  just throw in all the sections?
+  whitelist of sections?
   lazy parse deaths, since they involve fetching section list
 [ ] skip stories with very little text (unless there's nothing beter)
   400-ish characters at least?
-  just keep going until one is long enough, or use the longest
-[ ] consider section title when ordering articles within story
+    just keep going until one is long enough
+    use the longest, if none are long enough
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)
 [ ] Audible

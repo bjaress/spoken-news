@@ -230,7 +230,7 @@ if __name__ == "__main__":
     # when nothing is supplied, shows headlines
     if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
         print(client.fetch_html(client.config.headlines_page))
-        print(client.headlines())
+        print(list(client.headlines()))
         exit(0)
 
     page_url = sys.argv[1]
