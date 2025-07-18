@@ -183,6 +183,9 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       tts_outro = "That's it for now! See the episode notes for Wikipedia sources, and licensing. THANK you!"
       wikipedia_url = "https://en.wikipedia.org"
       wikipedia_headlines_page = "Template:In_the_news"
+      # Wikipedia has gotten aggressive with throttling.
+      # Wait some number of seconds before each call after the first.
+      wikipedia_polite_delay = 2
     }
   }
 }

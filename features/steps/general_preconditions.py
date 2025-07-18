@@ -29,11 +29,15 @@ def poll(context, description, expected, action):
     # unless you want to ignore the log level in the config file. :(
     context.config.setup_logging()
     exception = Exception(f"Exhausted attempts at {description}")
+    is_expected = (
+        expected if callable(expected) else lambda x: x == expected
+        )
     result = None
     for attempt in range(300):
         try:
             result = action()
-            if result == expected:
+            logging.debug(result)
+            if is_expected(result):
                 logging.debug(
                     f"Attempt {attempt} at {description} succeeded.")
                 return result

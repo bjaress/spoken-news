@@ -24,6 +24,7 @@ class TtsConfig(BaseModel):
 class WikipediaConfig(BaseModel):
     url: str
     headlines_page: str
+    polite_delay: int
 
 
 class Config(BaseModel):
@@ -66,6 +67,7 @@ class Attributes(BaseModel):
     tts_outro: str
     wikipedia_url: str
     wikipedia_headlines_page: str
+    wikipedia_polite_delay: int
 
 
 class NewsMessage(BaseModel):

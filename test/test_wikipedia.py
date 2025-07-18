@@ -15,6 +15,7 @@ class TestClient(unittest.TestCase):
     def setUp(self):
         self.requests = mock.MagicMock()
         self.config = mock.MagicMock()
+        self.config.polite_delay = 0
         self.client = wikipedia.Client(self.config, requests=self.requests)
 
     def test_headlines_happypath(self):

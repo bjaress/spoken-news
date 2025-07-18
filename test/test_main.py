@@ -65,6 +65,7 @@ DUMMY_ATTRIBUTES = {
     "spreaker_publish_delay_minutes": 60,
     "wikipedia_url": "THE_WIKIPEDIA_URL",
     "wikipedia_headlines_page": "THE_WIKIPEDIA_HEADLINES",
+    "wikipedia_polite_delay": 0,
 }
 
 

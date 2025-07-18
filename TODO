@@ -1,36 +1,9 @@
-[i] avoid wikipedia 429 throttling
-  [x] look up GCP free tier limits
-    - CPU - First 180,000 vCPU-seconds free per month
-    - RAM - First 360,000 GiB-seconds free per month
-    - Requests - 2 million requests free per month
-    [x] calculate per run limits
-      - Assume up to three tries per day, up to 31 days per month
-      180,000 / (3 * 31) ~= 1935 sec ~= 30 minutes
-      360,000 / (3 * 31) / 1936 ~= 2 GiB
-      2,000,000 / (3 * 31) ~= 20,000 requests
-  [x] calculate backoff and retry
-    - Six retries (not counting the first try)
-    - initial delay of 11/64 minutes ~= 10 sec
-    - double each time
-    - total delay sum((11/64) * 2**i for i in range(6)) ~= 11
-    - final delay = 5.5 minutes
-  [i] introduce concept of unrecoverable error
-    [ ] push the looping from main into the story module
-      [ ] return found story insted of breaking
-      [ ] return None after loop
-      [ ] main returns 200 on no stories (None)
-    [ ] define unrecoverable error
-    [ ] re-raise unrecoverable error (in story loop)
-    [ ] wrap 429 from client in unrecoverable error
-  [ ] add backoff and retry in client
-    https://requests.readthedocs.io/en/latest/user/advanced/#transport-adapters
-    https://requests.readthedocs.io/en/latest/user/advanced/#example-automatic-retries
-    [ ] 429 is retried with backoff in the client, up to limit
-[ ] set up retries in queue
-  - one hour backoff
-  - three attempts total
+[x] avoid wikipedia 429 throttling
+  [x] configure prod with 2 sec delay
+  [x] configure test with 0 sec delay
+  [x] accept delay sec as input
+  [x] sleep before aricle fetch
 [ ] skip stories with fewer than 400-ish characters
-  - up to three tries todal
 [ ] consider section title when ordering articles within story
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)

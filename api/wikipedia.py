@@ -1,5 +1,6 @@
 import requests
 import re
+import time
 from api import models
 from api import similar
 from bs4 import BeautifulSoup
@@ -85,6 +86,8 @@ class Client:
         return 0
 
     def fetch_and_parse_article(self, article_reference):
+        time.sleep(self.config.polite_delay)
+
         soup, version = self.fetch_html(
             article_reference.title,
             self.section_index_for_reference(article_reference),

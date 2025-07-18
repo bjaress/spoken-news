@@ -20,7 +20,8 @@ def trigger_app(context):
           "tts_intro": "INTRO",
           "tts_outro": "OUTRO",
           "wikipedia_url": context.prop.wikipedia.url,
-          "wikipedia_headlines_page": "Template:In_the_news"
+          "wikipedia_headlines_page": "Template:In_the_news",
+          "wikipedia_polite_delay": 0,
         },
         "messageId": "blahblah"
       },
