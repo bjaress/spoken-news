@@ -105,13 +105,13 @@ resource "google_pubsub_subscription" "news_subscription" {
   }
 
   message_retention_duration = "600s"
-  ack_deadline_seconds = 60
+  ack_deadline_seconds = 600
   retry_policy {
-    minimum_backoff = "60s"
+    minimum_backoff = "600s"
   }
   dead_letter_policy {
     dead_letter_topic = google_pubsub_topic.news_topic_dlq.id
-    max_delivery_attempts = 5
+    max_delivery_attempts = 3
   }
 }
 
@@ -131,9 +131,9 @@ resource "google_pubsub_subscription" "cleanup_subscription" {
   }
 
   message_retention_duration = "600s"
-  ack_deadline_seconds = 600
+  ack_deadline_seconds = 60
   retry_policy {
-    minimum_backoff = "3600s"
+    minimum_backoff = "60s"
   }
   dead_letter_policy {
     dead_letter_topic = google_pubsub_topic.cleanup_topic_dlq.id
