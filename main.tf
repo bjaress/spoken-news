@@ -185,7 +185,7 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       wikipedia_headlines_page = "Template:In_the_news"
       # Wikipedia has gotten aggressive with throttling.
       # Wait some number of seconds before each call after the first.
-      wikipedia_polite_delay = 2
+      wikipedia_polite_delay = 60
     }
   }
 }
