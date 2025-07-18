@@ -111,7 +111,7 @@ resource "google_pubsub_subscription" "news_subscription" {
   }
   dead_letter_policy {
     dead_letter_topic = google_pubsub_topic.news_topic_dlq.id
-    max_delivery_attempts = 3
+    max_delivery_attempts = 5
   }
 }
 
@@ -137,7 +137,7 @@ resource "google_pubsub_subscription" "cleanup_subscription" {
   }
   dead_letter_policy {
     dead_letter_topic = google_pubsub_topic.cleanup_topic_dlq.id
-    max_delivery_attempts = 3
+    max_delivery_attempts = 5
   }
 }
 
