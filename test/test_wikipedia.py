@@ -64,6 +64,7 @@ class TestClient(unittest.TestCase):
                 "format": "json",
                 "page": self.config.headlines_page,
             },
+            headers=wikipedia.HEADERS,
         )
 
         ham.assert_that(
@@ -267,6 +268,7 @@ class TestHtmlHandling(unittest.TestCase):
                 "format": "json",
                 "page": "The_Title",
             },
+            headers=wikipedia.HEADERS,
         )
 
         ham.assert_that(soup.string, ham.contains_string("The text."))
@@ -288,6 +290,7 @@ class TestHtmlHandling(unittest.TestCase):
                 "format": "json",
                 "page": "The_Other_Title",
             },
+            headers=wikipedia.HEADERS,
         )
 
         ham.assert_that(soup.string, ham.contains_string("The text."))

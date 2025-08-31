@@ -1,8 +1,3 @@
-[x] avoid wikipedia 429 throttling
-  [x] configure prod with 2 sec delay
-  [x] configure test with 0 sec delay
-  [x] accept delay sec as input
-  [x] sleep before aricle fetch
 [ ] skip stories with fewer than 400-ish characters
 [ ] consider section title when ordering articles within story
 [ ] iTunes

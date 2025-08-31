@@ -13,6 +13,7 @@ import logging
 API_PATH = "/w/api.php"
 PAGE_PATH = "/w/rest.php/v1/page"
 PERMALINK_PATH = "/w/index.php"
+HEADERS = {"User-Agent": "SpokenNewsBot/2025 (bjaress@gmail.com) python/requests/2.x"}
 
 LICENSE_NOTICE = """
 Created from parts of Wikipedia articles and available under the CC
@@ -57,6 +58,7 @@ class Client:
                 "format": "json",
                 "page": title,
             },
+            headers=HEADERS,
         )
         logging.info(f"Wikipedia Request: {response.status_code}")
         response.raise_for_status()
