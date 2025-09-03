@@ -95,3 +95,8 @@ def news_comets(context):
         )},
     )
     d.sync(context)
+
+
+@bhv.given("text-to-speech rejects the item about {topic}")
+def tts_reject(context, topic):
+    d.tts_reject(context, topic)

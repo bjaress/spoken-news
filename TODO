@@ -1,4 +1,5 @@
 [ ] skip stories with fewer than 400-ish characters
+[ ] skip articles with sentences over 700 characters
 [ ] consider section title when ordering articles within story
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)

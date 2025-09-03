@@ -226,6 +226,7 @@ if __name__ == "__main__":
         def __init__(self, wikipedia_url):
             self.url = wikipedia_url
             self.headlines_page = "Template:In_the_news"
+            self.polite_delay = 1
 
     client = Client(DummyConfig("https://en.wikipedia.org"))
 

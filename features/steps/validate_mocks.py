@@ -74,7 +74,7 @@ def tts_processing(context, topic):
         json={ "method": "POST", "urlPath": "/v1/text:synthesize" }
     )
     response.raise_for_status()
-    payload = json.loads(response.json()["requests"][0]["body"])
+    payload = json.loads(response.json()["requests"][-1]["body"])
     text = payload["input"]["text"]
     assert len(text) <= int(context.prop.tts.length_limit), text
     actual = {p.strip() for p in text.split("\n\n")}

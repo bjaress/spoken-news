@@ -5,6 +5,7 @@ import datetime as dt
 
 from api import models
 from api import main
+from api import error
 
 
 class TestNews(unittest.TestCase):
@@ -40,6 +41,65 @@ class TestNews(unittest.TestCase):
 
         clients.tts.speak.assert_not_called()
         clients.spreaker.upload.assert_not_called()
+
+    def test_speak_freshest_happy_path(self):
+        clients = Mock()
+        stories = Mock()
+        headline = Mock()
+
+        result = main.speak_freshest(clients, stories, iter([headline]))
+
+        stories.extract_story.assert_called_with(clients.wikipedia, headline)
+        clients.tts.speak.assert_called_with(stories.extract_story.return_value)
+        clients.wikipedia.describe.assert_called_with(
+            stories.extract_story.return_value
+        )
+
+        h.assert_that(
+            result,
+            h.has_entries(
+                {
+                    "title": headline.text,
+                    "audio": clients.tts.speak.return_value,
+                    "description": clients.wikipedia.describe.return_value,
+                }
+            ),
+        )
+
+    def test_speak_freshest_error_recoverable(self):
+        clients = Mock()
+        stories = Mock()
+        headline = Mock()
+
+        clients.tts.speak.side_effect = [
+            error.DependencyResponseError(Mock(status_code=400, text="RECOVERABLE")),
+            "DUMMY_DATA",
+        ]
+
+        result = main.speak_freshest(clients, stories, iter([headline, headline]))
+
+        h.assert_that(
+            result,
+            h.has_entries(
+                {
+                    "title": headline.text,
+                    "audio": "DUMMY_DATA",
+                    "description": clients.wikipedia.describe.return_value,
+                }
+            ),
+        )
+
+    def test_speak_freshest_error_none_work(self):
+        clients = Mock()
+        stories = Mock()
+        headline = Mock()
+
+        clients.tts.speak.side_effect = error.DependencyResponseError(
+            Mock(status_code=400, text="RECOVERABLE")
+        )
+
+        result = main.speak_freshest(clients, stories, iter([headline, headline]))
+        assert result is None
 
 
 class TestCleanup(unittest.TestCase):

@@ -97,3 +97,16 @@ Feature: speaking the news
     And Wikipedia articles about comets are retrieved
     And a script about comets is sent for text-to-speech processing
     And an episode about comets is uploaded to Spreaker
+
+  # Handling errors from Google
+
+  Scenario: Two headlines, oldest is rejected by text-to-speech
+    Given there is a news item about bananas that links to a section
+    Given there is a simple news item about frogs
+    Given text-to-speech rejects the item about frogs
+    When it is time to generate news
+    Then headlines are retrieved from Wikipedia
+    And the episode list from Spreaker is retrieved
+    And Wikipedia articles about bananas are retrieved
+    And a script about bananas is sent for text-to-speech processing
+    And an episode about bananas is uploaded to Spreaker

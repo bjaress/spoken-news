@@ -7,6 +7,7 @@ from api import tts
 from api import spreaker
 from api import models
 from api import wikipedia
+from api import error
 import api.stories
 import logging
 
@@ -45,23 +46,28 @@ def generate_news_external(clients: tp.Annotated[Clients, fa.Depends(Clients)]):
 
 def generate_news(clients, stories):
     headlines = clients.wikipedia.headlines()
-    for fresh_headline in clients.spreaker.fresh_headlines(headlines):
+    spoken = speak_freshest(
+        clients, stories, clients.spreaker.fresh_headlines(headlines)
+    )
+    if spoken is not None:
+        clients.spreaker.upload(**spoken)
+    return {}
+
+
+def speak_freshest(clients, stories, fresh_headlines):
+    for fresh_headline in fresh_headlines:
         try:
             story = stories.extract_story(clients.wikipedia, fresh_headline)
-            break  # found one that works
+            audio = clients.tts.speak(story)
+            return {
+                "title": fresh_headline.text,
+                "audio": audio,
+                "description": clients.wikipedia.describe(story),
+            }
         except Exception as e:
             print(e)
-            continue  # keep trying
-    else:
-        return {}
-
-    clients.spreaker.upload(
-        title=fresh_headline.text,
-        audio=clients.tts.speak(story),
-        description=clients.wikipedia.describe(story),
-    )
-
-    return {}
+            continue  # try the next one
+    return None
 
 
 def cleanup_client(trigger: models.CleanupTrigger):

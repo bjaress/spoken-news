@@ -158,6 +158,7 @@ def episodes(context):
 
 def mp3(context):
     data = {
+        "priority": 2,
         "request": {
             "urlPath": "/v1/text:synthesize"
         },
@@ -166,6 +167,24 @@ def mp3(context):
             "jsonBody": {
                 "audioContent": BASE_64_MP3
             },
+        },
+    }
+    response = requests.post(
+        f"{context.prop.google.url}/__admin/mappings", json=data
+    )
+    response.raise_for_status()
+
+def tts_reject(context, topic):
+    data = {
+        "priority": 1,
+        "request": {
+            "urlPath": "/v1/text:synthesize",
+            "bodyPatterns": [
+                { "contains": context.topics[topic].headline_plain },
+            ],
+        },
+        "response": {
+            "status": 400,
         },
     }
     response = requests.post(
