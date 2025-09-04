@@ -52,7 +52,7 @@ VOICES = [
     VoiceProfile("en-AU-Chirp3-HD-Charon", "en-AU"),
     VoiceProfile("en-AU-Chirp3-HD-Fenrir", "en-AU"),
     VoiceProfile("en-AU-Chirp3-HD-Kore", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Leda", "en-AU"),
+    # VoiceProfile("en-AU-Chirp3-HD-Leda", "en-AU"),
     VoiceProfile("en-AU-Chirp3-HD-Orus", "en-AU"),
     VoiceProfile("en-AU-Chirp3-HD-Puck", "en-AU"),
     VoiceProfile("en-AU-Chirp3-HD-Zephyr", "en-AU"),
