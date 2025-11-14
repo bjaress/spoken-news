@@ -70,7 +70,7 @@ def pick_voice():
     counts = collections.Counter(v.language for v in VOICES)
     return random.choices(
         VOICES,
-        [POPULATION.get(v.language, 1) / counts[v.language] for v in VOICES],
+        [POPULATION.get(v.language, 1) for v in VOICES],
         k=1,
     )[0]
 
