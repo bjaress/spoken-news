@@ -179,8 +179,8 @@ resource "google_cloud_scheduler_job" "news-job-scheduled" {
       # speak at about 700 characters per minute, so that's about 7
       # minutes max.
       tts_length_limit = 5000
-      tts_intro = "Welcome to Spoken News! I'm a computer."
-      tts_outro = "That's it for now! See the episode notes for Wikipedia sources, and licensing. THANK you!"
+      tts_intro = "Welcome to Spoken News, where Wikipedia excerpts are read verbatim by a computer."
+      tts_outro = "That's it for now! See the episode notes for sources and licensing. THANK you!"
       wikipedia_url = "https://en.wikipedia.org"
       wikipedia_headlines_page = "Template:In_the_news"
       # Wikipedia has gotten aggressive with throttling.
