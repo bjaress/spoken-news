@@ -16,8 +16,12 @@ PERMALINK_PATH = "/w/index.php"
 HEADERS = {"User-Agent": "SpokenNewsBot/2025 (bjaress@gmail.com) python/requests/2.x"}
 
 LICENSE_NOTICE = """
-Created from parts of Wikipedia articles and available under the CC
-BY-SA 4.0 license: https://creativecommons.org/licenses/by-sa/4.0/
+This podcast is based on excerpts from articles and the In The News
+section of Wikipedia, using the CC BY-SA 4.0 license
+(https://creativecommons.org/licenses/by-sa/4.0/).
+The script is converted to audio by Google's text-to-speech service, but
+Wikipedia relies on human volunteers, and the code for extracting
+excerpts is written by hand.
 """
 
 

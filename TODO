@@ -1,6 +1,10 @@
-[ ] skip stories with fewer than 400-ish characters
-[ ] skip articles with sentences over 700 characters
+[ ] strip internal commas from numbers
+[ ] use every voice name for chirp3
+  [ ] weight by something other than population (GDP?)
+  [ ] include India
 [ ] consider section title when ordering articles within story
+[ ] skip stories with fewer than 400-ish characters?
+[ ] skip articles with sentences over 700 characters?
 [ ] iTunes
 [ ] upgrade libraries (Pydantic?)
 [ ] Audible
