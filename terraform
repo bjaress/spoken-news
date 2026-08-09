@@ -1,6 +1,6 @@
 #! /bin/bash
 
-image=docker.io/hashicorp/terraform:1.11
+image=docker.io/hashicorp/terraform:1.15
 
 
 exec docker run --rm -i -t \
