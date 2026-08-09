@@ -40,6 +40,9 @@ $(docker_hash) $(docker_tag) : docker/Dockerfile $(code) $(unit_tests) \
 
 deploy : $(deploy)
 
+# Might need to update auth/.config/gcloud/application_default_credentials.json
+# by running:
+# ./gcloud auth application-default login
 $(deploy) : ./built/terraform.plan
 	./terraform apply -backup=$@ $<
 
