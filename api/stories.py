@@ -64,3 +64,8 @@ def sort_key(article):
     rank = normal + article.reference.featured
 
     return (rank, len(title_parts), len(title), title)
+
+
+def normalize(text):
+    # strip commas between digits
+    return re.sub(r"([\d]),([\d])", r"\1\2", text)

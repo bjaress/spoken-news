@@ -25,8 +25,7 @@ class TestClient(unittest.TestCase):
         self.requests.get.return_value.json.return_value = {
             "parse": {
                 "revid": 1234,
-                "text": {
-                    "*": """
+                "text": {"*": """
                     <div>
                     <ul>
                         <li><a href="/wiki/Greeting#Hello">Hello</a>,
@@ -47,8 +46,7 @@ class TestClient(unittest.TestCase):
                             </li>
                         </ul>
                     </div>
-                    """
-                },
+                    """},
             }
         }
 
@@ -111,14 +109,12 @@ class TestClient(unittest.TestCase):
         self.requests.get.return_value.json.return_value = {
             "parse": {
                 "revid": 1234,
-                "text": {
-                    "*": """
+                "text": {"*": """
                     <ul>
                         <li>Hello, World!</li>
                         <li><a href="/wiki/%25#%26">percent, ampersand</a></li>
                     </ul>
-                    """
-                },
+                    """},
             }
         }
 
@@ -149,13 +145,11 @@ class TestClient(unittest.TestCase):
         self.requests.get.return_value.json.return_value = {
             "parse": {
                 "revid": 1234,
-                "text": {
-                    "*": """
+                "text": {"*": """
                     <ul>
                         <li><a href="/wiki/I3/ATLAS">a comet</a></li>
                     </ul>
-                    """
-                },
+                    """},
             }
         }
 

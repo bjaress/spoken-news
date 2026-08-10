@@ -131,6 +131,14 @@ class TestTruncateStory(unittest.TestCase):
         assert text == a_only, text
 
 
+class TestTextNormalization(unittest.TestCase):
+    def test_commas_in_numbers(self):
+        input = "Yes, we have 486,973 bananas."
+        expected = "Yes, we have 486973 bananas."
+        actual = stories.normalize(input)
+        ham.assert_that(actual, ham.equal_to(expected))
+
+
 def mock_paragraphs(*paragraphs, id=0, title="Title", featured=False):
     return mock.Mock(
         summary=paragraphs,
