@@ -31,62 +31,76 @@ class VoiceProfile:
         return f"VoiceProfile({self.name}, {self.language})"
 
 
-VOICES = [
-    VoiceProfile("en-US-Chirp3-HD-Aoede", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Charon", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Fenrir", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Kore", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Leda", "en-US"),
-    # VoiceProfile("en-US-Chirp3-HD-Orus", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Puck", "en-US"),
-    VoiceProfile("en-US-Chirp3-HD-Zephyr", "en-US"),
-    # VoiceProfile("en-GB-Chirp3-HD-Aoede", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Charon", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Fenrir", "en-GB"),
-    # VoiceProfile("en-GB-Chirp3-HD-Kore", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Leda", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Orus", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Puck", "en-GB"),
-    VoiceProfile("en-GB-Chirp3-HD-Zephyr", "en-GB"),
-    # VoiceProfile("en-AU-Chirp3-HD-Aoede", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Charon", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Fenrir", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Kore", "en-AU"),
-    # VoiceProfile("en-AU-Chirp3-HD-Leda", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Orus", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Puck", "en-AU"),
-    VoiceProfile("en-AU-Chirp3-HD-Zephyr", "en-AU"),
-]
-
-POPULATION = {
-    # millions of people in primary country
-    "en-GB": 66,
-    "en-AU": 27,
-    "en-US": 340,
+# Completely arbitrary use of fibonacci numbers
+#
+# This is absolutely favoritism, but people in certain places are more
+# likely to find the podcast, and English is mostly a second language in
+# India.
+LANGUAGES = {
+    "en-US": 13,
+    "en-GB": 8,
+    "en-AU": 5,
+    "en-IN": 3,
 }
 
+PERSONALITIES = [
+    "Achernar",
+    "Achird",
+    "Algenib",
+    "Algieba",
+    "Alnilam",
+    "Aoede",
+    "Autonoe",
+    "Callirrhoe",
+    "Charon",
+    "Despina",
+    "Enceladus",
+    "Erinome",
+    "Fenrir",
+    "Gacrux",
+    "Iapetus",
+    "Kore",
+    "Laomedeia",
+    "Leda",
+    "Orus",
+    "Pulcherrima",
+    "Puck",
+    "Rasalgethi",
+    "Sadachbia",
+    "Sadaltager",
+    "Schedar",
+    "Sulafat",
+    "Umbriel",
+    "Vindemiatrix",
+    "Zephyr",
+    "Zubenelgenubi",
+]
 
-def pick_voice():
-    counts = collections.Counter(v.language for v in VOICES)
-    return random.choices(
-        VOICES,
-        [POPULATION.get(v.language, 1) for v in VOICES],
+
+def pick_voice(languages=LANGUAGES, personalities=PERSONALITIES, random=random):
+    lang = random.choices(
+        list(languages.keys()),
+        list(languages.values()),
         k=1,
     )[0]
 
+    person = random.choice(personalities)
+
+    return VoiceProfile(f"{lang}-Chirp3-HD-{person}", lang)
+
 
 class Client:
-    def __init__(self, config, requests=requests):
+    def __init__(self, config, requests=requests, pick_voice=pick_voice):
         self.requests = requests
         self.url = f"{config.server}/v1/text:synthesize?key={config.api_key}"
         self.config = config
+        self.voice = pick_voice()
 
     def speak(self, story):
-        voice = random.choice(VOICES)
-        logging.info(voice)
+        logging.info(self.voice)
         response = self.requests.post(
             url=self.url,
-            json=voice.payload(story.text(self.config)),
+            json=self.voice.payload(story.text(self.config)),
         )
         api.error.check_response(response)
         return base64.b64decode(response.json()["audioContent"])
